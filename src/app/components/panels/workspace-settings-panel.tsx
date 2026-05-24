@@ -12,36 +12,31 @@
  * @tags P1,frontend,panels,settings,workspace
  */
 
-import {
-  Check,
-  Code,
-  Monitor,
-  Palette,
-  RotateCcw,
-  Settings,
-  Zap,
-} from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
-import { useState } from 'react'
+import { Check, Code, Monitor, Palette, RotateCcw, Settings, Zap } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useState } from 'react';
 
-import { useSettingsStore } from '../../stores/useSettingsStore'
-import { useI18n } from '../context/i18n-context'
-import { useThemeSwitcher } from '../context/theme-switcher-context'
+import { useSettingsStore } from '../../stores/useSettingsStore';
+import { useI18n } from '../context/i18n-context';
+import { useThemeSwitcher } from '../context/theme-switcher-context';
+import type { ThemeColors } from '../hooks/use-theme-colors';
+import { usePanelStore } from './panel-store';
 
-import { usePanelStore } from './panel-store'
-
-import type { ThemeColors } from '../hooks/use-theme-colors'
-
-type SettingsSection = 'editor' | 'theme' | 'keybindings' | 'ai' | 'workspace'
+type SettingsSection = 'editor' | 'theme' | 'keybindings' | 'ai' | 'workspace';
 
 export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
-  const { settings, updateGeneralSettings } = useSettingsStore()
-  const { theme, setTheme } = useThemeSwitcher()
-  const { locale, setLocale } = useI18n()
-  const { aiProviderConfig, setAIProviderConfig: _setAIProviderConfig, panelWidth, setPanelWidth } = usePanelStore()
-  const [activeSection, setActiveSection] = useState<SettingsSection>('editor')
+  const { settings, updateGeneralSettings } = useSettingsStore();
+  const { theme, setTheme } = useThemeSwitcher();
+  const { locale, setLocale } = useI18n();
+  const {
+    aiProviderConfig,
+    setAIProviderConfig: _setAIProviderConfig,
+    panelWidth,
+    setPanelWidth,
+  } = usePanelStore();
+  const [activeSection, setActiveSection] = useState<SettingsSection>('editor');
 
-  const { generalSettings } = settings
+  const { generalSettings } = settings;
 
   const sections: { key: SettingsSection; label: string; icon: typeof Settings }[] = [
     { key: 'editor', label: '编辑器', icon: Code },
@@ -49,7 +44,7 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
     { key: 'keybindings', label: '快捷键', icon: Zap },
     { key: 'ai', label: 'AI 配置', icon: Monitor },
     { key: 'workspace', label: '工作区', icon: Settings },
-  ]
+  ];
 
   return (
     <div className="flex flex-col h-full">
@@ -68,8 +63,8 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
         className="flex gap-0.5 px-3 py-2 overflow-x-auto border-b"
         style={{ borderColor: tc.borderSubtle }}
       >
-        {sections.map((s) => {
-          const Icon = s.icon
+        {sections.map(s => {
+          const Icon = s.icon;
           return (
             <button
               key={s.key}
@@ -83,7 +78,7 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
               <Icon className="w-3 h-3" />
               {s.label}
             </button>
-          )
+          );
         })}
       </div>
 
@@ -101,7 +96,7 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
                 <SettingRow label="字体" tc={tc}>
                   <select
                     value={generalSettings.editorFont}
-                    onChange={(e) => updateGeneralSettings({ editorFont: e.target.value })}
+                    onChange={e => updateGeneralSettings({ editorFont: e.target.value })}
                     className="text-[10px] px-2 py-1 rounded-lg border outline-none w-full"
                     style={{
                       background: tc.bgInput,
@@ -126,8 +121,8 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
                       max="24"
                       step="1"
                       value={generalSettings.editorFontSize}
-                      onChange={(e) =>
-                        updateGeneralSettings({ editorFontSize: parseInt(e.target.value) })
+                      onChange={e =>
+                        updateGeneralSettings({ editorFontSize: parseInt(e.target.value, 10) })
                       }
                       className="flex-1 h-1 rounded-full appearance-none cursor-pointer"
                       style={{
@@ -143,7 +138,7 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
                 <SettingRow label="自动换行" tc={tc}>
                   <ToggleSwitch
                     checked={generalSettings.wordWrap}
-                    onChange={(v) => updateGeneralSettings({ wordWrap: v })}
+                    onChange={v => updateGeneralSettings({ wordWrap: v })}
                     tc={tc}
                   />
                 </SettingRow>
@@ -151,7 +146,7 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
                 <SettingRow label="动画效果" tc={tc}>
                   <ToggleSwitch
                     checked={generalSettings.enableAnimations}
-                    onChange={(v) => updateGeneralSettings({ enableAnimations: v })}
+                    onChange={v => updateGeneralSettings({ enableAnimations: v })}
                     tc={tc}
                   />
                 </SettingRow>
@@ -159,7 +154,7 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
                 <SettingRow label="音效" tc={tc}>
                   <ToggleSwitch
                     checked={generalSettings.enableSounds}
-                    onChange={(v) => updateGeneralSettings({ enableSounds: v })}
+                    onChange={v => updateGeneralSettings({ enableSounds: v })}
                     tc={tc}
                   />
                 </SettingRow>
@@ -170,7 +165,7 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
               <div className="space-y-3">
                 <SettingRow label="主题" tc={tc}>
                   <div className="flex gap-2">
-                    {(['cyberpunk', 'liquidGlass'] as const).map((t) => (
+                    {(['cyberpunk', 'liquidGlass'] as const).map(t => (
                       <button
                         key={t}
                         onClick={() => setTheme(t)}
@@ -191,7 +186,7 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
                 <SettingRow label="语言" tc={tc}>
                   <select
                     value={locale}
-                    onChange={(e) => setLocale(e.target.value as any)}
+                    onChange={e => setLocale(e.target.value as unknown as typeof locale)}
                     className="text-[10px] px-2 py-1 rounded-lg border outline-none w-full"
                     style={{
                       background: tc.bgInput,
@@ -211,9 +206,7 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
                 <SettingRow label="快捷键方案" tc={tc}>
                   <select
                     value="vscode"
-                    onChange={(e) =>
-                      e.preventDefault()
-                    }
+                    onChange={e => e.preventDefault()}
                     className="text-[10px] px-2 py-1 rounded-lg border outline-none w-full"
                     style={{
                       background: tc.bgInput,
@@ -240,7 +233,7 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
                     { keys: 'Ctrl+Shift+P', action: '命令面板' },
                     { keys: 'Ctrl+/', action: '切换注释' },
                     { keys: 'Ctrl+D', action: '选中下一匹配' },
-                  ].map((s) => (
+                  ].map(s => (
                     <div key={s.keys} className="flex items-center justify-between py-1 px-1">
                       <span className="text-[10px]" style={{ color: tc.textSecondary }}>
                         {s.action}
@@ -312,7 +305,7 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
                       max="600"
                       step="10"
                       value={panelWidth}
-                      onChange={(e) => setPanelWidth(parseInt(e.target.value))}
+                      onChange={e => setPanelWidth(parseInt(e.target.value, 10))}
                       className="flex-1 h-1 rounded-full appearance-none cursor-pointer"
                       style={{
                         background: `linear-gradient(to right, ${tc.primary} 0%, ${tc.primary} ${((panelWidth - 200) / 400) * 100}%, ${tc.borderDefault} ${((panelWidth - 200) / 400) * 100}%, ${tc.borderDefault} 100%)`,
@@ -333,8 +326,8 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
                         wordWrap: true,
                         enableAnimations: true,
                         enableSounds: true,
-                      })
-                      setPanelWidth(300)
+                      });
+                      setPanelWidth(300);
                     }}
                     className="w-full text-[10px] py-1.5 rounded-lg border transition-all hover:bg-white/5 flex items-center justify-center gap-1.5"
                     style={{ borderColor: 'rgba(239,68,68,0.3)', color: '#ef4444' }}
@@ -349,7 +342,7 @@ export function WorkspaceSettingsPanel({ tc }: { tc: ThemeColors }) {
         </AnimatePresence>
       </div>
     </div>
-  )
+  );
 }
 
 // ==========================================
@@ -361,9 +354,9 @@ function SettingRow({
   tc,
   children,
 }: {
-  label: string
-  tc: ThemeColors
-  children: React.ReactNode
+  label: string;
+  tc: ThemeColors;
+  children: React.ReactNode;
 }) {
   return (
     <div>
@@ -375,7 +368,7 @@ function SettingRow({
       </label>
       {children}
     </div>
-  )
+  );
 }
 
 function ToggleSwitch({
@@ -383,9 +376,9 @@ function ToggleSwitch({
   onChange,
   tc,
 }: {
-  checked: boolean
-  onChange: (v: boolean) => void
-  tc: ThemeColors
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  tc: ThemeColors;
 }) {
   return (
     <button
@@ -398,5 +391,5 @@ function ToggleSwitch({
         style={{ background: checked ? tc.primary : tc.textMuted, left: checked ? '18px' : '2px' }}
       />
     </button>
-  )
+  );
 }

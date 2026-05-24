@@ -10,8 +10,8 @@ import {
   Pause,
   Play,
   TrendingUp,
-} from 'lucide-react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { useState } from 'react';
 import {
   Area,
   AreaChart,
@@ -21,31 +21,31 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts'
+} from 'recharts';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 数据集成页面 - Data Integration
 // 企业级数据集成 · 实时CDC同步 · 数据质量保障
 // ==========================================
 
-type IntegrationTab = 'sources' | 'sync' | 'transform' | 'quality' | 'lineage' | 'monitoring'
+type IntegrationTab = 'sources' | 'sync' | 'transform' | 'quality' | 'lineage' | 'monitoring';
 
 interface DataSource {
-  id: string
-  name: string
-  type: string
-  status: 'connected' | 'disconnected' | 'error'
-  lastSync: string
-  records: number
-  quality: number
+  id: string;
+  name: string;
+  type: string;
+  status: 'connected' | 'disconnected' | 'error';
+  lastSync: string;
+  records: number;
+  quality: number;
 }
 
 export function DataIntegrationPage() {
-  const tc = useThemeColors()
-  const [activeTab, setActiveTab] = useState<IntegrationTab>('sources')
+  const tc = useThemeColors();
+  const [activeTab, setActiveTab] = useState<IntegrationTab>('sources');
 
   const dataSources: DataSource[] = [
     {
@@ -102,20 +102,20 @@ export function DataIntegrationPage() {
       records: 0,
       quality: 0,
     },
-  ]
+  ];
 
   const syncThroughputData = Array.from({ length: 24 }, (_, i) => ({
     hour: `${i}:00`,
     records: 5000 + Math.random() * 10000,
     errors: Math.random() * 100,
-  }))
+  }));
 
   const qualityTrendData = Array.from({ length: 7 }, (_, i) => ({
     day: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'][i],
     completeness: 92 + Math.random() * 6,
     accuracy: 88 + Math.random() * 8,
     consistency: 90 + Math.random() * 7,
-  }))
+  }));
 
   const tabs = [
     { id: 'sources' as const, label: '数据源', icon: Database },
@@ -124,39 +124,39 @@ export function DataIntegrationPage() {
     { id: 'quality' as const, label: '数据质量', icon: CheckCircle2 },
     { id: 'lineage' as const, label: '数据血缘', icon: GitBranch },
     { id: 'monitoring' as const, label: '监控', icon: BarChart3 },
-  ]
+  ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'connected':
-        return tc.success
+        return tc.success;
       case 'error':
-        return tc.destructive
+        return tc.destructive;
       case 'disconnected':
-        return tc.muted
+        return tc.muted;
       default:
-        return tc.muted
+        return tc.muted;
     }
-  }
+  };
 
   const getStatusText = (status: string) => {
     switch (status) {
       case 'connected':
-        return '已连接'
+        return '已连接';
       case 'error':
-        return '错误'
+        return '错误';
       case 'disconnected':
-        return '未连接'
+        return '未连接';
       default:
-        return '未知'
+        return '未知';
     }
-  }
+  };
 
   const _getQualityColor = (quality: number) => {
-    if (quality >= 95) return tc.success
-    if (quality >= 85) return tc.warning
-    return tc.destructive
-  }
+    if (quality >= 95) return tc.success;
+    if (quality >= 85) return tc.warning;
+    return tc.destructive;
+  };
 
   return (
     <div className="h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
@@ -246,9 +246,9 @@ export function DataIntegrationPage() {
       {/* Tabs */}
       <div className="px-6 pb-4">
         <div className="flex items-center gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-          {tabs.map((tab) => {
-            const Icon = tab.icon
-            const isActive = activeTab === tab.id
+          {tabs.map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
@@ -264,7 +264,7 @@ export function DataIntegrationPage() {
                 <Icon className="w-3 h-3" />
                 {tab.label}
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -858,5 +858,5 @@ export function DataIntegrationPage() {
         </NeonCard>
       </div>
     </div>
-  )
+  );
 }

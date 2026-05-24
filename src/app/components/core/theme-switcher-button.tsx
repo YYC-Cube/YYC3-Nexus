@@ -3,14 +3,14 @@
  * Displays current theme label and animated icon; switches between
  * cyberpunk and liquid glass modes on click.
  */
-import { Droplets, Palette } from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
+import { Droplets, Palette } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 
-import { useThemeSwitcher } from '../context/theme-switcher-context'
+import { useThemeSwitcher } from '../context/theme-switcher-context';
 
 export function ThemeSwitcherButton() {
-  const { theme, toggleTheme } = useThemeSwitcher()
-  const isCyberpunk = theme === 'cyberpunk'
+  const { theme, toggleTheme } = useThemeSwitcher();
+  const isCyberpunk = theme === 'cyberpunk';
 
   return (
     <motion.button
@@ -85,7 +85,7 @@ export function ThemeSwitcherButton() {
         }}
       />
     </motion.button>
-  )
+  );
 }
 
 /**
@@ -93,8 +93,8 @@ export function ThemeSwitcherButton() {
  * Shows a minimal icon-only toggle with tooltip.
  */
 export function ThemeSwitcherButtonCompact() {
-  const { theme, toggleTheme } = useThemeSwitcher()
-  const isCyberpunk = theme === 'cyberpunk'
+  const { theme, toggleTheme } = useThemeSwitcher();
+  const isCyberpunk = theme === 'cyberpunk';
 
   return (
     <motion.button
@@ -141,5 +141,5 @@ export function ThemeSwitcherButtonCompact() {
         )}
       </AnimatePresence>
     </motion.button>
-  )
+  );
 }

@@ -9,78 +9,78 @@
  */
 
 /** Instance type classification */
-export type InstanceType = 'main' | 'secondary' | 'popup' | 'preview'
+export type InstanceType = 'main' | 'secondary' | 'popup' | 'preview';
 
 /** Window type classification */
-export type WindowType = 'main' | 'editor' | 'preview' | 'terminal' | 'ai-chat' | 'settings'
+export type WindowType = 'main' | 'editor' | 'preview' | 'terminal' | 'ai-chat' | 'settings';
 
 /** Workspace type classification */
-export type WorkspaceType = 'project' | 'ai-session' | 'debug' | 'custom'
+export type WorkspaceType = 'project' | 'ai-session' | 'debug' | 'custom';
 
 /** Session type classification */
-export type SessionType = 'ai-chat' | 'code-edit' | 'debug' | 'preview' | 'terminal'
+export type SessionType = 'ai-chat' | 'code-edit' | 'debug' | 'preview' | 'terminal';
 
 /** Application instance */
 export interface AppInstance {
-  id: string
-  type: InstanceType
-  windowId: string
-  windowType: WindowType
-  title: string
-  createdAt: number
-  lastActiveAt: number
-  isMain: boolean
-  isVisible: boolean
-  isMinimized: boolean
-  position: { x: number; y: number }
-  size: { width: number; height: number }
-  workspaceId?: string
-  sessionIds: string[]
-  state: Record<string, any>
+  id: string;
+  type: InstanceType;
+  windowId: string;
+  windowType: WindowType;
+  title: string;
+  createdAt: number;
+  lastActiveAt: number;
+  isMain: boolean;
+  isVisible: boolean;
+  isMinimized: boolean;
+  position: { x: number; y: number };
+  size: { width: number; height: number };
+  workspaceId?: string;
+  sessionIds: string[];
+  state: Record<string, unknown>;
 }
 
 /** Workspace */
 export interface Workspace {
-  id: string
-  name: string
-  type: WorkspaceType
-  icon?: string
-  createdAt: number
-  updatedAt: number
-  projectPath?: string
-  config: WorkspaceConfig
-  sessions: Session[]
-  windowIds: string[]
-  isActive: boolean
+  id: string;
+  name: string;
+  type: WorkspaceType;
+  icon?: string;
+  createdAt: number;
+  updatedAt: number;
+  projectPath?: string;
+  config: WorkspaceConfig;
+  sessions: Session[];
+  windowIds: string[];
+  isActive: boolean;
 }
 
 /** Workspace configuration */
 export interface WorkspaceConfig {
-  editor?: { fontSize?: number; tabSize?: number; wordWrap?: boolean }
-  ai?: { provider?: string; model?: string; temperature?: number }
-  theme?: string
+  editor?: { fontSize?: number; tabSize?: number; wordWrap?: boolean };
+  ai?: { provider?: string; model?: string; temperature?: number };
+  theme?: string;
 }
 
 /** Session */
 export interface Session {
-  id: string
-  type: SessionType
-  name: string
-  createdAt: number
-  updatedAt: number
-  status: 'active' | 'idle' | 'suspended' | 'closed'
-  data: SessionData
-  workspaceId: string
-  windowId: string
+  id: string;
+  type: SessionType;
+  name: string;
+  createdAt: number;
+  updatedAt: number;
+  status: 'active' | 'idle' | 'suspended' | 'closed';
+  data: SessionData;
+  workspaceId: string;
+  windowId: string;
 }
 
 /** Session data */
 export interface SessionData {
-  aiMessages?: Array<{ role: string; content: string }>
-  editedFiles?: Array<{ path: string; content: string }>
-  terminalHistory?: Array<{ command: string; output: string }>
-  debugState?: any
-  previewUrl?: string
+  aiMessages?: Array<{ role: string; content: string }>;
+  editedFiles?: Array<{ path: string; content: string }>;
+  terminalHistory?: Array<{ command: string; output: string }>;
+  debugState?: Record<string, unknown>;
+  previewUrl?: string;
 }
 
 /** IPC message types */
@@ -95,24 +95,24 @@ export type IPCMessageType =
   | 'session-closed'
   | 'state-sync'
   | 'resource-share'
-  | 'clipboard-share'
+  | 'clipboard-share';
 
 /** IPC message */
 export interface IPCMessage {
-  id: string
-  type: IPCMessageType
-  senderId: string
-  receiverId?: string
-  data: any
-  timestamp: number
+  id: string;
+  type: IPCMessageType;
+  senderId: string;
+  receiverId?: string;
+  data: unknown;
+  timestamp: number;
 }
 
 /** Window creation config */
 export interface WindowConfig {
-  title?: string
-  size?: { width: number; height: number }
-  position?: { x: number; y: number }
-  resizable?: boolean
-  alwaysOnTop?: boolean
-  workspaceId?: string
+  title?: string;
+  size?: { width: number; height: number };
+  position?: { x: number; y: number };
+  resizable?: boolean;
+  alwaysOnTop?: boolean;
+  workspaceId?: string;
 }

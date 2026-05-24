@@ -7,8 +7,8 @@ import {
   Lightbulb,
   Sparkles,
   TrendingUp,
-} from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+} from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Area,
   AreaChart,
@@ -27,12 +27,12 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts'
+} from 'recharts';
 
-import { useI18n } from '../../context/i18n-context'
-import { CyberTooltip } from '../../core/cyber-tooltip'
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { useI18n } from '../../context/i18n-context';
+import { CyberTooltip } from '../../core/cyber-tooltip';
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 数据洞察增强 — Enhanced Data Insights
@@ -43,10 +43,10 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
  * Enhanced Data Insights page with AI-driven analysis panels.
  */
 export function InsightsEnhancedPage() {
-  const { t } = useI18n()
-  const tc = useThemeColors()
-  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('7d')
-  const [aiInsightsExpanded, setAiInsightsExpanded] = useState(true)
+  const { t } = useI18n();
+  const tc = useThemeColors();
+  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('7d');
+  const [aiInsightsExpanded, setAiInsightsExpanded] = useState(true);
 
   const insightMetrics = [
     {
@@ -77,7 +77,7 @@ export function InsightsEnhancedPage() {
       color: tc.secondary,
       positive: true,
     },
-  ]
+  ];
 
   // Weekly trend data
   const weeklyTrend = useMemo(
@@ -91,7 +91,7 @@ export function InsightsEnhancedPage() {
       { day: t('week.sun'), customers: 52, calls: 42, aiTasks: 167, conversion: 40.6 },
     ],
     [t],
-  )
+  );
 
   // Conversion funnel
   const funnelData = [
@@ -100,7 +100,7 @@ export function InsightsEnhancedPage() {
     { stage: '注册', value: 3400, color: tc.accent },
     { stage: '转化', value: 1560, color: tc.success },
     { stage: '成交', value: 890, color: tc.warning },
-  ]
+  ];
 
   // AI Capability Radar
   const radarData = [
@@ -110,7 +110,7 @@ export function InsightsEnhancedPage() {
     { subject: '转化预测', score: 85, fullMark: 100 },
     { subject: '异常检测', score: 91, fullMark: 100 },
     { subject: '知识推理', score: 87, fullMark: 100 },
-  ]
+  ];
 
   // Channel performance
   const channelData = [
@@ -119,7 +119,7 @@ export function InsightsEnhancedPage() {
     { name: '社交媒体', value: 15, color: tc.accent },
     { name: '合作伙伴', value: 10, color: tc.success },
     { name: '客户推荐', value: 5, color: tc.warning },
-  ]
+  ];
 
   // Hourly heatmap
   const hourlyData = useMemo(
@@ -130,7 +130,7 @@ export function InsightsEnhancedPage() {
         ai: Math.floor(Math.random() * 50) + (i >= 8 && i <= 22 ? 30 : 5),
       })),
     [],
-  )
+  );
 
   // AI Insights
   const aiInsights = [
@@ -171,7 +171,7 @@ export function InsightsEnhancedPage() {
       confidence: 90,
       impact: '中',
     },
-  ]
+  ];
 
   return (
     <div
@@ -194,8 +194,9 @@ export function InsightsEnhancedPage() {
         </div>
         <div className="flex items-center gap-2">
           {/* Time range selector */}
-          {(['7d', '30d', '90d'] as const).map((range) => (
+          {(['7d', '30d', '90d'] as const).map(range => (
             <button
+              type="button"
               key={range}
               onClick={() => setTimeRange(range)}
               className="px-3 py-1.5 rounded-xl text-[10px] transition-all duration-300"
@@ -214,8 +215,8 @@ export function InsightsEnhancedPage() {
 
       {/* KPI Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-6">
-        {insightMetrics.map((m, i) => (
-          <NeonCard key={i} color={m.color}>
+        {insightMetrics.map(m => (
+          <NeonCard key={m.label} color={m.color}>
             <p className="text-[10px] text-white/30 uppercase tracking-wider mb-2">{m.label}</p>
             <p
               className="text-2xl mb-1"
@@ -249,6 +250,7 @@ export function InsightsEnhancedPage() {
             AI 智能洞察 · AI-Driven Insights
           </h3>
           <button
+            type="button"
             onClick={() => setAiInsightsExpanded(!aiInsightsExpanded)}
             className="text-[10px] px-2 py-1 rounded-lg transition-all"
             style={{
@@ -262,24 +264,25 @@ export function InsightsEnhancedPage() {
         </div>
         {aiInsightsExpanded && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {aiInsights.map((insight, i) => {
-              const Icon = insight.icon
+            {aiInsights.map((insight, index) => {
+              const Icon = insight.icon;
               return (
-                <div
-                  key={i}
-                  className="rounded-xl p-4 border transition-all duration-300 hover:-translate-y-0.5 cursor-pointer group"
+                <button
+                  type="button"
+                  key={insight.title}
+                  className="w-full text-left rounded-xl p-4 border transition-all duration-300 hover:-translate-y-0.5 cursor-pointer group"
                   style={{
                     background: `${insight.color}05`,
                     borderColor: `${insight.color}15`,
-                    animation: `spring-in 0.3s var(--spring-easing) ${i * 0.05}s both`,
+                    animation: `spring-in 0.3s var(--spring-easing) ${index * 0.05}s both`,
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = `${insight.color}35`
-                    e.currentTarget.style.boxShadow = `0 0 15px ${insight.color}10`
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = `${insight.color}35`;
+                    e.currentTarget.style.boxShadow = `0 0 15px ${insight.color}10`;
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = `${insight.color}15`
-                    e.currentTarget.style.boxShadow = 'none'
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = `${insight.color}15`;
+                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
                   <div className="flex items-start gap-3">
@@ -332,8 +335,8 @@ export function InsightsEnhancedPage() {
                       </div>
                     </div>
                   </div>
-                </div>
-              )
+                </button>
+              );
             })}
           </div>
         )}
@@ -414,14 +417,16 @@ export function InsightsEnhancedPage() {
             转化漏斗 · Conversion Funnel
           </h3>
           <div className="space-y-3">
-            {funnelData.map((stage, i) => {
-              const widthPct = Math.max(20, (stage.value / funnelData[0].value) * 100)
+            {funnelData.map((stage, index) => {
+              const widthPct = Math.max(20, (stage.value / funnelData[0].value) * 100);
               const dropRate =
-                i > 0 ? ((1 - stage.value / funnelData[i - 1].value) * 100).toFixed(1) : null
+                index > 0
+                  ? ((1 - stage.value / funnelData[index - 1].value) * 100).toFixed(1)
+                  : null;
               return (
                 <div
-                  key={i}
-                  style={{ animation: `spring-in 0.3s var(--spring-easing) ${i * 0.08}s both` }}
+                  key={stage.stage}
+                  style={{ animation: `spring-in 0.3s var(--spring-easing) ${index * 0.08}s both` }}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[10px] text-white/40">{stage.stage}</span>
@@ -447,7 +452,7 @@ export function InsightsEnhancedPage() {
                     />
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
           <div className="mt-4 pt-3 border-t" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
@@ -520,8 +525,8 @@ export function InsightsEnhancedPage() {
                   dataKey="value"
                   stroke="none"
                 >
-                  {channelData.map((entry, i) => (
-                    <Cell key={i} fill={entry.color} fillOpacity={0.7} />
+                  {channelData.map(entry => (
+                    <Cell key={entry.name} fill={entry.color} fillOpacity={0.7} />
                   ))}
                 </Pie>
                 <Tooltip content={<CyberTooltip />} />
@@ -529,8 +534,8 @@ export function InsightsEnhancedPage() {
             </ResponsiveContainer>
           </div>
           <div className="flex flex-wrap gap-2 justify-center mt-2">
-            {channelData.map((ch, i) => (
-              <span key={i} className="text-[9px] flex items-center gap-1 text-white/30">
+            {channelData.map(ch => (
+              <span key={ch.name} className="text-[9px] flex items-center gap-1 text-white/30">
                 <div className="w-2 h-2 rounded-full" style={{ background: ch.color }} />
                 {ch.name} {ch.value}%
               </span>
@@ -590,64 +595,64 @@ export function InsightsEnhancedPage() {
       {/* Form submission analytics — pass through to existing component */}
       <FormInsightsAnalytics />
     </div>
-  )
+  );
 }
 
 // ==========================================
 // Form Analytics Sub-section (inline)
 // ==========================================
 function FormInsightsAnalytics() {
-  const tc = useThemeColors()
+  const tc = useThemeColors();
   const [stats, setStats] = useState({
     total: 0,
     byTemplate: [] as { name: string; value: number; color: string }[],
     dailyTrend: [] as { day: string; count: number }[],
-  })
+  });
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem('yyc3_form_submissions')
+      const raw = localStorage.getItem('yyc3_form_submissions');
       interface StoredSubmission {
-        templateTitle: string
-        submittedAt?: string
+        templateTitle: string;
+        submittedAt?: string;
       }
-      const data: StoredSubmission[] = raw ? JSON.parse(raw) : []
-      if (!data.length) return
+      const data: StoredSubmission[] = raw ? JSON.parse(raw) : [];
+      if (!data.length) return;
 
-      const tplMap: Record<string, number> = {}
-      data.forEach((s) => {
-        tplMap[s.templateTitle] = (tplMap[s.templateTitle] || 0) + 1
-      })
+      const tplMap: Record<string, number> = {};
+      data.forEach(s => {
+        tplMap[s.templateTitle] = (tplMap[s.templateTitle] || 0) + 1;
+      });
       const colorMap: Record<string, string> = {
         客户录入表: '#00d4ff',
         呼叫报告: '#00ffcc',
         满意度调研: '#00f0ff',
         'AI 任务配置': '#00ffc8',
-      }
+      };
       const byTemplate = Object.entries(tplMap).map(([name, value]) => ({
         name,
         value,
         color: colorMap[name] || '#41ffdd',
-      }))
+      }));
 
-      const now = Date.now()
-      const dayLabels = ['日', '一', '二', '三', '四', '五', '六']
-      const dailyTrend: { day: string; count: number }[] = []
+      const now = Date.now();
+      const dayLabels = ['日', '一', '二', '三', '四', '五', '六'];
+      const dailyTrend: { day: string; count: number }[] = [];
       for (let i = 6; i >= 0; i--) {
-        const d = new Date(now - i * 86400000)
-        const dayStr = d.toISOString().slice(0, 10)
-        const count = data.filter((s) => s.submittedAt?.startsWith(dayStr)).length
-        const mockExtra = Math.floor(Math.random() * 5) + 1
-        dailyTrend.push({ day: `周${dayLabels[d.getDay()]}`, count: count + mockExtra })
+        const d = new Date(now - i * 86400000);
+        const dayStr = d.toISOString().slice(0, 10);
+        const count = data.filter(s => s.submittedAt?.startsWith(dayStr)).length;
+        const mockExtra = Math.floor(Math.random() * 5) + 1;
+        dailyTrend.push({ day: `周${dayLabels[d.getDay()]}`, count: count + mockExtra });
       }
 
-      setStats({ total: data.length, byTemplate, dailyTrend })
+      setStats({ total: data.length, byTemplate, dailyTrend });
     } catch {
       /* */
     }
-  }, [])
+  }, []);
 
-  if (stats.total === 0) return null
+  if (stats.total === 0) return null;
 
   return (
     <NeonCard color={tc.muted} hoverable={false}>
@@ -728,5 +733,5 @@ function FormInsightsAnalytics() {
         </div>
       )}
     </NeonCard>
-  )
+  );
 }

@@ -11,57 +11,52 @@
  * @tags P1,frontend,panels,export
  */
 
-// Types
-export type {
-  PanelType,
-  AIProviderType,
-  AIProviderConfig,
-  FileNode,
-  SearchResult,
-  AIChatMessage,
-  AISuggestion,
-  QuickAccessItem,
-  GitStatus,
-  GitCommitItem,
-} from './panel-types'
-
-// Store
-export { usePanelStore } from './panel-store'
-export type { PanelStoreState, PanelStoreActions } from './panel-store'
-
+export { AIAssistantPanel } from './ai-assistant-panel';
+export type { QuickAction } from './editor-quick-actions';
+export {
+  buildActionPrompt,
+  EditorQuickActions,
+  getMockResponse,
+  QUICK_ACTIONS,
+} from './editor-quick-actions';
+// Panel Components
+export { FileExplorerPanel } from './file-explorer-panel';
+export { GitIntegrationPanel } from './git-integration-panel';
+export { GlobalSearchPanel } from './global-search-panel';
 // Helpers
 export {
-  getFileIcon,
-  getGitStatusStyle,
-  formatFileSize,
-  timeAgo,
   AI_PROVIDER_MODELS,
-  MOCK_FILE_TREE,
-  MOCK_GIT_STATUS,
-  MOCK_GIT_LOG,
-  MOCK_SEARCH_RESULTS,
   AI_RESPONSES,
   AI_SUGGESTIONS_POOL,
-} from './panel-helpers'
-
-// Panel Components
-export { FileExplorerPanel } from './file-explorer-panel'
-export { TaskManagerPanel } from './task-manager-panel'
-export { AIAssistantPanel } from './ai-assistant-panel'
-export { GlobalSearchPanel } from './global-search-panel'
-export { QuickAccessPanel } from './quick-access-panel'
-export { GitIntegrationPanel } from './git-integration-panel'
-
-// New panels
-export { WorkspaceSettingsPanel } from './workspace-settings-panel'
-export {
-  EditorQuickActions,
-  QUICK_ACTIONS,
-  buildActionPrompt,
-  getMockResponse,
-} from './editor-quick-actions'
-export type { QuickAction } from './editor-quick-actions'
-
+  formatFileSize,
+  getFileIcon,
+  getGitStatusStyle,
+  MOCK_FILE_TREE,
+  MOCK_GIT_LOG,
+  MOCK_GIT_STATUS,
+  MOCK_SEARCH_RESULTS,
+  timeAgo,
+} from './panel-helpers';
+export type { PanelStoreActions, PanelStoreState } from './panel-store';
+// Store
+export { usePanelStore } from './panel-store';
+// Types
+export type {
+  AIChatMessage,
+  AIProviderConfig,
+  AIProviderType,
+  AISuggestion,
+  FileNode,
+  GitCommitItem,
+  GitStatus,
+  PanelType,
+  QuickAccessItem,
+  SearchResult,
+} from './panel-types';
+export { QuickAccessPanel } from './quick-access-panel';
+export { TaskManagerPanel } from './task-manager-panel';
 // Multi-Instance UI
-export { WindowBar } from './window-bar'
-export { WorkspaceSelector } from './workspace-selector'
+export { WindowBar } from './window-bar';
+export { WorkspaceSelector } from './workspace-selector';
+// New panels
+export { WorkspaceSettingsPanel } from './workspace-settings-panel';

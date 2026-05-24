@@ -1,6 +1,6 @@
-import { type CSSProperties, memo, useCallback, useEffect, useRef, useState } from 'react'
+import { type CSSProperties, memo, useCallback, useEffect, useRef, useState } from 'react';
 
-import { useApp } from '../context/app-context'
+import { useApp } from '../context/app-context';
 
 // ==========================================
 // YYC³ Glitch 文字动效组件 — Phase 5
@@ -9,21 +9,21 @@ import { useApp } from '../context/app-context'
 // ==========================================
 
 interface GlitchTextProps {
-  children: string
+  children: string;
   /** Primary neon color */
-  color?: string
+  color?: string;
   /** Additional CSS class */
-  className?: string
+  className?: string;
   /** Inline style overrides */
-  style?: CSSProperties
+  style?: CSSProperties;
   /** Whether to display as inline */
-  inline?: boolean
+  inline?: boolean;
   /** Random glitch interval range [min, max] in ms. Set null to disable periodic glitch */
-  interval?: [number, number] | null
+  interval?: [number, number] | null;
   /** Intensity multiplier (0-2, default 1) */
-  intensity?: number
+  intensity?: number;
   /** HTML tag to use */
-  as?: 'span' | 'div' | 'h1' | 'h2' | 'h3' | 'p'
+  as?: 'span' | 'div' | 'h1' | 'h2' | 'h3' | 'p';
 }
 
 /**
@@ -40,46 +40,46 @@ export const GlitchText = memo(function GlitchText({
   intensity = 1,
   as: Tag = 'span',
 }: GlitchTextProps) {
-  const { theme } = useApp()
-  const [isGlitching, setIsGlitching] = useState(false)
-  const [isHovering, setIsHovering] = useState(false)
-  const timerRef = useRef<ReturnType<typeof setTimeout>>()
+  const { theme } = useApp();
+  const [isGlitching, setIsGlitching] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Random periodic glitch trigger
   useEffect(() => {
-    if (!theme.glitchEnabled || !interval) return
+    if (!theme.glitchEnabled || !interval) return;
 
     const scheduleGlitch = () => {
-      const [min, max] = interval
-      const delay = min + Math.random() * (max - min)
+      const [min, max] = interval;
+      const delay = min + Math.random() * (max - min);
       timerRef.current = setTimeout(() => {
-        setIsGlitching(true)
+        setIsGlitching(true);
         // Glitch lasts 150-400ms
         setTimeout(
           () => {
-            setIsGlitching(false)
-            scheduleGlitch()
+            setIsGlitching(false);
+            scheduleGlitch();
           },
           150 + Math.random() * 250,
-        )
-      }, delay)
-    }
+        );
+      }, delay);
+    };
 
-    scheduleGlitch()
-    return () => clearTimeout(timerRef.current)
-  }, [theme.glitchEnabled, interval])
+    scheduleGlitch();
+    return () => clearTimeout(timerRef.current);
+  }, [theme.glitchEnabled, interval]);
 
   const handleMouseEnter = useCallback(() => {
-    if (theme.glitchEnabled) setIsHovering(true)
-  }, [theme.glitchEnabled])
+    if (theme.glitchEnabled) setIsHovering(true);
+  }, [theme.glitchEnabled]);
 
   const handleMouseLeave = useCallback(() => {
-    setIsHovering(false)
-  }, [])
+    setIsHovering(false);
+  }, []);
 
-  const active = theme.glitchEnabled && (isGlitching || isHovering)
-  const hoverActive = theme.glitchEnabled && isHovering
-  const px = Math.round(3 * intensity)
+  const active = theme.glitchEnabled && (isGlitching || isHovering);
+  const hoverActive = theme.glitchEnabled && isHovering;
+  const px = Math.round(3 * intensity);
 
   return (
     <Tag
@@ -142,5 +142,5 @@ export const GlitchText = memo(function GlitchText({
         </span>
       )}
     </Tag>
-  )
-})
+  );
+});

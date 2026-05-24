@@ -1,12 +1,7 @@
-import {
-  Activity,
-  DollarSign,
-  Target,
-  Users,
-} from 'lucide-react'
+import { Activity, DollarSign, Target, Users } from 'lucide-react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 应用总览看板 - Application Overview Dashboard
@@ -14,21 +9,21 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 export function AppOverviewPage() {
-  const tc = useThemeColors()
+  const tc = useThemeColors();
 
   const coreMetrics = [
     { label: '总营收', value: '¥2.48M', change: '+28.5%', icon: DollarSign, color: tc.success },
     { label: '总用户', value: '125.8K', change: '+18.3%', icon: Users, color: tc.primary },
     { label: '转化率', value: '24.6%', change: '+5.2%', icon: Target, color: tc.secondary },
     { label: '活跃度', value: '68.9%', change: '+3.8%', icon: Activity, color: tc.accent },
-  ]
+  ];
 
   const channelData = [
     { channel: '微信', revenue: 890000, users: 45000, conversion: 28.5, color: tc.success },
     { channel: '抖音', revenue: 720000, users: 38000, conversion: 25.2, color: tc.primary },
     { channel: '小红书', revenue: 480000, users: 25000, conversion: 22.8, color: tc.secondary },
     { channel: '百度', revenue: 390000, users: 17800, conversion: 18.9, color: tc.accent },
-  ]
+  ];
 
   const recentActivities = [
     {
@@ -53,13 +48,13 @@ export function AppOverviewPage() {
       time: '2小时前',
       status: 'success',
     },
-  ]
+  ];
 
   const topPerformers = [
     { name: '产品A - 618促销', revenue: 520000, conversion: 32.5, roi: 4.8 },
     { name: '品牌故事传播', revenue: 385000, conversion: 28.2, roi: 4.2 },
     { name: '会员专属福利', revenue: 298000, conversion: 25.8, roi: 3.9 },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -87,8 +82,8 @@ export function AppOverviewPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {coreMetrics.map((metric) => {
-          const Icon = metric.icon
+        {coreMetrics.map(metric => {
+          const Icon = metric.icon;
           return (
             <NeonCard key={metric.label} className="p-6">
               <div className="flex items-start justify-between mb-4">
@@ -107,7 +102,7 @@ export function AppOverviewPage() {
                 {metric.value}
               </p>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
@@ -117,9 +112,9 @@ export function AppOverviewPage() {
             渠道营收占比
           </h2>
           <div className="space-y-4">
-            {channelData.map((channel) => {
-              const total = channelData.reduce((sum, c) => sum + c.revenue, 0)
-              const percentage = ((channel.revenue / total) * 100).toFixed(1)
+            {channelData.map(channel => {
+              const total = channelData.reduce((sum, c) => sum + c.revenue, 0);
+              const percentage = ((channel.revenue / total) * 100).toFixed(1);
               return (
                 <div key={channel.channel}>
                   <div className="flex items-center justify-between mb-2">
@@ -144,7 +139,7 @@ export function AppOverviewPage() {
                     />
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </NeonCard>
@@ -154,7 +149,7 @@ export function AppOverviewPage() {
             最近动态
           </h2>
           <div className="space-y-3">
-            {recentActivities.map((activity) => (
+            {recentActivities.map(activity => (
               <div
                 key={activity.id}
                 className="flex items-start gap-3 p-3 rounded-lg"
@@ -220,12 +215,12 @@ export function AppOverviewPage() {
               </tr>
             </thead>
             <tbody>
-              {topPerformers.map((project, idx) => (
+              {topPerformers.map((project, index) => (
                 <tr
-                  key={idx}
+                  key={project.name}
                   style={{
                     borderBottom:
-                      idx < topPerformers.length - 1 ? `1px solid ${tc.borderSubtle}` : 'none',
+                      index < topPerformers.length - 1 ? `1px solid ${tc.borderSubtle}` : 'none',
                   }}
                 >
                   <td className="py-4 px-4">
@@ -238,7 +233,7 @@ export function AppOverviewPage() {
                           fontWeight: 'bold',
                         }}
                       >
-                        {idx + 1}
+                        {index + 1}
                       </div>
                       <span className="font-medium" style={{ color: tc.textPrimary }}>
                         {project.name}
@@ -266,5 +261,5 @@ export function AppOverviewPage() {
         </div>
       </NeonCard>
     </div>
-  )
+  );
 }

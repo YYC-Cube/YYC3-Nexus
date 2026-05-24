@@ -11,14 +11,14 @@
  * @tags settings,models,ai
  */
 
-import { Cpu } from 'lucide-react'
+import { Cpu } from 'lucide-react';
 
-import { useSettingsStore } from '../../stores/useSettingsStore'
-import { useThemeColors } from '../hooks/use-theme-colors'
+import { useSettingsStore } from '../../stores/useSettingsStore';
+import { useThemeColors } from '../hooks/use-theme-colors';
 
 export function ModelsSettingsPanel() {
-  const tc = useThemeColors()
-  const { settings } = useSettingsStore()
+  const tc = useThemeColors();
+  const { settings } = useSettingsStore();
 
   return (
     <div className="space-y-6">
@@ -36,5 +36,5 @@ export function ModelsSettingsPanel() {
         <p style={{ color: tc.textMuted }}>模型配置面板</p>
       </div>
     </div>
-  )
+  );
 }

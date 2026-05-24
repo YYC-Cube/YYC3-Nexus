@@ -1,4 +1,4 @@
-import type { AgentConfig, UserProfile } from '../types/settings'
+import type { AgentConfig, UserProfile } from '../types/settings';
 
 export const accountService = {
   updateProfile: async (profile: Partial<UserProfile>): Promise<UserProfile> => {
@@ -8,12 +8,12 @@ export const accountService = {
       username: 'yyc3user',
       role: 'admin',
       ...profile,
-    }
+    };
   },
   uploadAvatar: async (file: File): Promise<string> => {
-    return URL.createObjectURL(file)
+    return URL.createObjectURL(file);
   },
-}
+};
 
 export const agentService = {
   getAgents: async (): Promise<AgentConfig[]> => [],
@@ -30,11 +30,11 @@ export const agentService = {
     id: Date.now().toString(),
     name: `${agent.name} (copy)`,
   }),
-}
+};
 
 export const searchSettings = (
   _query: string,
   _categories: string[],
 ): Array<{ id: string; label: string; category: string }> => {
-  return []
-}
+  return [];
+};

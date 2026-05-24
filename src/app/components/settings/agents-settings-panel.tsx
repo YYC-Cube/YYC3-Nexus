@@ -11,20 +11,21 @@
  * @tags settings,agents,ai
  */
 
-import { Bot, Copy, Edit, Plus, Trash2 } from 'lucide-react'
-import { motion } from 'motion/react'
-import { useState } from 'react'
+import { Bot, Copy, Edit, Plus, Trash2 } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useState } from 'react';
 
-import { agentService } from '../../services/settings-services'
-import { useSettingsStore } from '../../stores/useSettingsStore'
-import { useThemeColors } from '../hooks/use-theme-colors'
+import { agentService } from '../../services/settings-services';
+import { useSettingsStore } from '../../stores/useSettingsStore';
+import type { AgentConfig } from '../../types/settings';
+import { useThemeColors } from '../hooks/use-theme-colors';
 
 export function AgentsSettingsPanel() {
-  const tc = useThemeColors()
-  const { settings } = useSettingsStore()
-  const { agents } = settings
+  const tc = useThemeColors();
+  const { settings } = useSettingsStore();
+  const { agents } = settings;
 
-  const [_isCreating, _setIsCreating] = useState(false)
+  const [_isCreating, _setIsCreating] = useState(false);
 
   const handleCreateAgent = async () => {
     await agentService.createAgent({
@@ -37,8 +38,8 @@ export function AgentsSettingsPanel() {
       isBuiltIn: false,
       isCustom: true,
       enabled: true,
-    })
-  }
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -84,24 +85,32 @@ export function AgentsSettingsPanel() {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 // 智能体卡片组件
-function AgentCard({ agent, index, tc }: any) {
+function AgentCard({
+  agent,
+  index,
+  tc,
+}: {
+  agent: AgentConfig;
+  index: number;
+  tc: ReturnType<typeof useThemeColors>;
+}) {
   const handleEdit = () => {
     // TODO: 打开编辑对话框
-  }
+  };
 
   const handleDelete = async () => {
     if (confirm(`确定删除智能体 "${agent.name}" 吗？`)) {
-      await agentService.deleteAgent(agent.id)
+      await agentService.deleteAgent(agent.id);
     }
-  }
+  };
 
   const handleDuplicate = async () => {
-    await agentService.duplicateAgent(agent.id)
-  }
+    await agentService.duplicateAgent(agent);
+  };
 
   return (
     <motion.div
@@ -184,5 +193,5 @@ function AgentCard({ agent, index, tc }: any) {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }

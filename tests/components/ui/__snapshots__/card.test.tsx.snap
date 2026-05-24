@@ -1,0 +1,85 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Card Components > Snapshots > should match snapshot for basic card 1`] = `
+<div>
+  <div
+    class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border"
+    data-slot="card"
+  >
+    <div
+      class="px-6 [&:last-child]:pb-6"
+      data-slot="card-content"
+    >
+      Basic Card
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Card Components > Snapshots > should match snapshot for full composition > card-full-composition 1`] = `
+<div>
+  <div
+    class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border"
+    data-slot="card"
+  >
+    <div
+      class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 pt-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6"
+      data-slot="card-header"
+    >
+      <h4
+        class="leading-none"
+        data-slot="card-title"
+      >
+        Full Card
+      </h4>
+      <p
+        class="text-muted-foreground"
+        data-slot="card-description"
+      >
+        Description
+      </p>
+    </div>
+    <div
+      class="px-6 [&:last-child]:pb-6"
+      data-slot="card-content"
+    >
+      Content
+    </div>
+    <div
+      class="flex items-center px-6 pb-6 [.border-t]:pt-6"
+      data-slot="card-footer"
+    >
+      Footer
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Card Components > Snapshots > should match snapshot with action button > card-with-action 1`] = `
+<div>
+  <div
+    class="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border"
+    data-slot="card"
+  >
+    <div
+      class="@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 pt-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6"
+      data-slot="card-header"
+    >
+      <h4
+        class="leading-none"
+        data-slot="card-title"
+      >
+        With Action
+      </h4>
+      <div
+        class="col-start-2 row-span-2 row-start-1 self-start justify-self-end"
+        data-slot="card-action"
+      >
+        <button>
+          Action
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

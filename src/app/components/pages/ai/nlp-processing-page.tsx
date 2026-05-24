@@ -1,16 +1,8 @@
-import {
-  Brain,
-  Heart,
-  MessageSquare,
-  Sparkles,
-  Tag,
-  ThumbsDown,
-  ThumbsUp,
-} from 'lucide-react'
-import { useState } from 'react'
+import { Brain, Heart, MessageSquare, Sparkles, Tag, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { useState } from 'react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 自然语言处理 - Natural Language Processing
@@ -18,21 +10,21 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 interface TextAnalysis {
-  id: string
-  text: string
-  sentiment: 'positive' | 'neutral' | 'negative'
-  score: number
-  keywords: string[]
-  category: string
-  source: string
-  timestamp: string
+  id: string;
+  text: string;
+  sentiment: 'positive' | 'neutral' | 'negative';
+  score: number;
+  keywords: string[];
+  category: string;
+  source: string;
+  timestamp: string;
 }
 
 export function NLPProcessingPage() {
-  const tc = useThemeColors()
+  const tc = useThemeColors();
   const [selectedSentiment, setSelectedSentiment] = useState<'all' | TextAnalysis['sentiment']>(
     'all',
-  )
+  );
 
   const analyses: TextAnalysis[] = [
     {
@@ -75,11 +67,11 @@ export function NLPProcessingPage() {
       source: '微博评论',
       timestamp: '1小时前',
     },
-  ]
+  ];
 
   const filteredAnalyses = analyses.filter(
-    (a) => selectedSentiment === 'all' || a.sentiment === selectedSentiment,
-  )
+    a => selectedSentiment === 'all' || a.sentiment === selectedSentiment,
+  );
 
   const stats = [
     {
@@ -92,7 +84,7 @@ export function NLPProcessingPage() {
     { label: '积极情感', value: '78.2%', change: '+5.3%', icon: Heart, color: tc.success },
     { label: '分类准确率', value: '94.6%', change: '+2.1%', icon: Tag, color: tc.secondary },
     { label: '响应速度', value: '0.3s', change: '-18.5%', icon: Sparkles, color: tc.accent },
-  ]
+  ];
 
   const keywordCloud = [
     { word: '产品', count: 1250, sentiment: 'positive' },
@@ -103,14 +95,14 @@ export function NLPProcessingPage() {
     { word: '价格', count: 450, sentiment: 'neutral' },
     { word: '体验', count: 420, sentiment: 'positive' },
     { word: '速度', count: 380, sentiment: 'neutral' },
-  ]
+  ];
 
   const categories = [
     { name: '产品反馈', count: 3580, positive: 82, neutral: 15, negative: 3 },
     { name: '服务建议', count: 2150, positive: 68, neutral: 28, negative: 4 },
     { name: '投诉建议', count: 890, positive: 12, neutral: 25, negative: 63 },
     { name: '品牌认知', count: 1420, positive: 88, neutral: 10, negative: 2 },
-  ]
+  ];
 
   const getSentimentConfig = (sentiment: TextAnalysis['sentiment']) => {
     switch (sentiment) {
@@ -120,23 +112,23 @@ export function NLPProcessingPage() {
           color: tc.success,
           icon: ThumbsUp,
           bgColor: tc.alpha(tc.success, 0.1),
-        }
+        };
       case 'neutral':
         return {
           label: '中性',
           color: tc.textMuted,
           icon: MessageSquare,
           bgColor: tc.alpha(tc.textMuted, 0.1),
-        }
+        };
       case 'negative':
         return {
           label: '消极',
           color: tc.danger,
           icon: ThumbsDown,
           bgColor: tc.alpha(tc.danger, 0.1),
-        }
+        };
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -161,8 +153,8 @@ export function NLPProcessingPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon
+        {stats.map(stat => {
+          const Icon = stat.icon;
           return (
             <NeonCard key={stat.label} className="p-6">
               <div className="flex items-start justify-between mb-4">
@@ -192,7 +184,7 @@ export function NLPProcessingPage() {
                 {stat.value}
               </p>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
@@ -202,8 +194,8 @@ export function NLPProcessingPage() {
             热门关键词
           </h2>
           <div className="flex flex-wrap gap-3">
-            {keywordCloud.map((keyword) => {
-              const size = Math.min(Math.max(keyword.count / 50, 14), 28)
+            {keywordCloud.map(keyword => {
+              const size = Math.min(Math.max(keyword.count / 50, 14), 28);
               return (
                 <div
                   key={keyword.word}
@@ -224,7 +216,7 @@ export function NLPProcessingPage() {
                     {keyword.count}
                   </span>
                 </div>
-              )
+              );
             })}
           </div>
         </NeonCard>
@@ -234,7 +226,7 @@ export function NLPProcessingPage() {
             文本分类统计
           </h2>
           <div className="space-y-4">
-            {categories.map((category) => (
+            {categories.map(category => (
               <div key={category.name}>
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium" style={{ color: tc.textPrimary }}>
@@ -273,8 +265,9 @@ export function NLPProcessingPage() {
       </div>
 
       <div className="flex items-center gap-3">
-        {(['all', 'positive', 'neutral', 'negative'] as const).map((sentiment) => (
+        {(['all', 'positive', 'neutral', 'negative'] as const).map(sentiment => (
           <button
+            type="button"
             key={sentiment}
             onClick={() => setSelectedSentiment(sentiment)}
             className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
@@ -297,9 +290,9 @@ export function NLPProcessingPage() {
           文本分析结果
         </h2>
         <div className="space-y-4">
-          {filteredAnalyses.map((analysis) => {
-            const sentimentConfig = getSentimentConfig(analysis.sentiment)
-            const SentimentIcon = sentimentConfig.icon
+          {filteredAnalyses.map(analysis => {
+            const sentimentConfig = getSentimentConfig(analysis.sentiment);
+            const SentimentIcon = sentimentConfig.icon;
 
             return (
               <div
@@ -356,7 +349,7 @@ export function NLPProcessingPage() {
                 </p>
 
                 <div className="flex flex-wrap gap-2">
-                  {analysis.keywords.map((keyword) => (
+                  {analysis.keywords.map(keyword => (
                     <span
                       key={keyword}
                       className="px-3 py-1 rounded-full text-xs font-medium"
@@ -371,10 +364,10 @@ export function NLPProcessingPage() {
                   ))}
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </NeonCard>
     </div>
-  )
+  );
 }

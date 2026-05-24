@@ -1,19 +1,19 @@
-import { Download, Smartphone, WifiOff, X } from 'lucide-react'
-import { memo, useCallback, useEffect, useState } from 'react'
+import { Download, Smartphone, WifiOff, X } from 'lucide-react';
+import { memo, useCallback, useEffect, useState } from 'react';
 
-import { useI18n } from '../context/i18n-context'
+import { useI18n } from '../context/i18n-context';
 
 // ==========================================
 // YYC³ PWA 安装提示 + 离线状态指示器
 // Phase 6: Service Worker 生命周期管理
 // ==========================================
 
-const PWA_DISMISSED_KEY = 'yyc3_pwa_dismissed'
-const PWA_DISMISS_DURATION = 7 * 24 * 60 * 60 * 1000 // 7 days
+const PWA_DISMISSED_KEY = 'yyc3_pwa_dismissed';
+const PWA_DISMISS_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
 /**
@@ -23,77 +23,77 @@ interface BeforeInstallPromptEvent extends Event {
  * Memoized with `React.memo`.
  */
 export const PWAInstallPrompt = memo(function PWAInstallPrompt() {
-  const { t } = useI18n()
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
-  const [showBanner, setShowBanner] = useState(false)
-  const [installed, setInstalled] = useState(false)
-  const [isOnline, setIsOnline] = useState(navigator.onLine)
+  const { t } = useI18n();
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [showBanner, setShowBanner] = useState(false);
+  const [installed, setInstalled] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   // Listen for beforeinstallprompt
   useEffect(() => {
     // Check if dismissed recently
     try {
-      const dismissed = localStorage.getItem(PWA_DISMISSED_KEY)
-      if (dismissed && Date.now() - Number(dismissed) < PWA_DISMISS_DURATION) return
+      const dismissed = localStorage.getItem(PWA_DISMISSED_KEY);
+      if (dismissed && Date.now() - Number(dismissed) < PWA_DISMISS_DURATION) return;
     } catch {
       /* ignore */
     }
 
     const handler = (e: Event) => {
-      e.preventDefault()
-      setDeferredPrompt(e as BeforeInstallPromptEvent)
+      e.preventDefault();
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
       // Show banner after 3 seconds
-      setTimeout(() => setShowBanner(true), 3000)
-    }
+      setTimeout(() => setShowBanner(true), 3000);
+    };
 
-    window.addEventListener('beforeinstallprompt', handler)
-    return () => window.removeEventListener('beforeinstallprompt', handler)
-  }, [])
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
 
   // Online/offline status
   useEffect(() => {
-    const onOnline = () => setIsOnline(true)
-    const onOffline = () => setIsOnline(false)
-    window.addEventListener('online', onOnline)
-    window.addEventListener('offline', onOffline)
+    const onOnline = () => setIsOnline(true);
+    const onOffline = () => setIsOnline(false);
+    window.addEventListener('online', onOnline);
+    window.addEventListener('offline', onOffline);
     return () => {
-      window.removeEventListener('online', onOnline)
-      window.removeEventListener('offline', onOffline)
-    }
-  }, [])
+      window.removeEventListener('online', onOnline);
+      window.removeEventListener('offline', onOffline);
+    };
+  }, []);
 
   // Detect if already installed
   useEffect(() => {
     if (window.matchMedia('(display-mode: standalone)').matches) {
-      setInstalled(true)
+      setInstalled(true);
     }
     const handler = () => {
-      setInstalled(true)
-      setShowBanner(false)
-    }
-    window.addEventListener('appinstalled', handler)
-    return () => window.removeEventListener('appinstalled', handler)
-  }, [])
+      setInstalled(true);
+      setShowBanner(false);
+    };
+    window.addEventListener('appinstalled', handler);
+    return () => window.removeEventListener('appinstalled', handler);
+  }, []);
 
   const handleInstall = useCallback(async () => {
-    if (!deferredPrompt) return
-    await deferredPrompt.prompt()
-    const { outcome } = await deferredPrompt.userChoice
+    if (!deferredPrompt) return;
+    await deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
-      setInstalled(true)
+      setInstalled(true);
     }
-    setDeferredPrompt(null)
-    setShowBanner(false)
-  }, [deferredPrompt])
+    setDeferredPrompt(null);
+    setShowBanner(false);
+  }, [deferredPrompt]);
 
   const handleDismiss = useCallback(() => {
-    setShowBanner(false)
+    setShowBanner(false);
     try {
-      localStorage.setItem(PWA_DISMISSED_KEY, String(Date.now()))
+      localStorage.setItem(PWA_DISMISSED_KEY, String(Date.now()));
     } catch {
       /* ignore */
     }
-  }, [])
+  }, []);
 
   // Offline indicator (always visible when offline)
   const offlineIndicator = !isOnline && (
@@ -113,10 +113,10 @@ export const PWAInstallPrompt = memo(function PWAInstallPrompt() {
       />
       <span className="text-xs text-[#005f73]">Offline</span>
     </div>
-  )
+  );
 
   // Install banner
-  if (!showBanner || installed) return <>{offlineIndicator}</>
+  if (!showBanner || installed) return <>{offlineIndicator}</>;
 
   return (
     <>
@@ -189,5 +189,5 @@ export const PWAInstallPrompt = memo(function PWAInstallPrompt() {
         </div>
       </div>
     </>
-  )
-})
+  );
+});

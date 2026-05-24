@@ -9,11 +9,11 @@ import {
   Sparkles,
   X,
   Zap,
-} from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
+} from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 
-import { useApp } from '../context/app-context'
-import { useI18n } from '../context/i18n-context'
+import { useApp } from '../context/app-context';
+import { useI18n } from '../context/i18n-context';
 
 // ==========================================
 // YYC³ 新手引导教程 — Onboarding Tutorial
@@ -21,13 +21,13 @@ import { useI18n } from '../context/i18n-context'
 // ==========================================
 
 interface TutorialStep {
-  id: string
-  titleKey: string
-  descKey: string
-  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
-  color: string
-  highlight: 'sidebar' | 'header' | 'dashboard' | 'search' | 'notification' | 'settings' | 'center'
-  tipKey?: string
+  id: string;
+  titleKey: string;
+  descKey: string;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  color: string;
+  highlight: 'sidebar' | 'header' | 'dashboard' | 'search' | 'notification' | 'settings' | 'center';
+  tipKey?: string;
 }
 
 const tutorialSteps: TutorialStep[] = [
@@ -85,7 +85,7 @@ const tutorialSteps: TutorialStep[] = [
     highlight: 'settings',
     tipKey: 'onboard.settingsTip',
   },
-]
+];
 
 /**
  * Multi-step onboarding tutorial overlay.
@@ -93,61 +93,61 @@ const tutorialSteps: TutorialStep[] = [
  * controls, and skip functionality. Persists completion status via `AppContext`.
  */
 export function OnboardingTutorial() {
-  const { onboardingDone, setOnboardingDone } = useApp()
-  const { t } = useI18n()
-  const [currentStep, setCurrentStep] = useState(0)
-  const [isVisible, setIsVisible] = useState(false)
-  const [isExiting, setIsExiting] = useState(false)
+  const { onboardingDone, setOnboardingDone } = useApp();
+  const { t } = useI18n();
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     if (!onboardingDone) {
-      const timer = setTimeout(() => setIsVisible(true), 800)
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => setIsVisible(true), 800);
+      return () => clearTimeout(timer);
     }
-  }, [onboardingDone])
+  }, [onboardingDone]);
 
   const handleComplete = useCallback(() => {
-    setIsExiting(true)
+    setIsExiting(true);
     setTimeout(() => {
-      setOnboardingDone(true)
-      setIsVisible(false)
-      setIsExiting(false)
-    }, 400)
-  }, [setOnboardingDone])
+      setOnboardingDone(true);
+      setIsVisible(false);
+      setIsExiting(false);
+    }, 400);
+  }, [setOnboardingDone]);
 
   const handleNext = useCallback(() => {
     if (currentStep < tutorialSteps.length - 1) {
-      setCurrentStep((prev) => prev + 1)
+      setCurrentStep(prev => prev + 1);
     } else {
-      handleComplete()
+      handleComplete();
     }
-  }, [currentStep, handleComplete])
+  }, [currentStep, handleComplete]);
 
   const handlePrev = useCallback(() => {
-    if (currentStep > 0) setCurrentStep((prev) => prev - 1)
-  }, [currentStep])
+    if (currentStep > 0) setCurrentStep(prev => prev - 1);
+  }, [currentStep]);
 
   const handleSkip = useCallback(() => {
-    handleComplete()
-  }, [handleComplete])
+    handleComplete();
+  }, [handleComplete]);
 
   // Keyboard navigation
   useEffect(() => {
-    if (!isVisible || onboardingDone) return
+    if (!isVisible || onboardingDone) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight' || e.key === 'Enter') handleNext()
-      else if (e.key === 'ArrowLeft') handlePrev()
-      else if (e.key === 'Escape') handleSkip()
-    }
-    window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
-  }, [isVisible, onboardingDone, handleNext, handlePrev, handleSkip])
+      if (e.key === 'ArrowRight' || e.key === 'Enter') handleNext();
+      else if (e.key === 'ArrowLeft') handlePrev();
+      else if (e.key === 'Escape') handleSkip();
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [isVisible, onboardingDone, handleNext, handlePrev, handleSkip]);
 
-  if (onboardingDone || !isVisible) return null
+  if (onboardingDone || !isVisible) return null;
 
-  const step = tutorialSteps[currentStep]
-  const Icon = step.icon
-  const progress = ((currentStep + 1) / tutorialSteps.length) * 100
+  const step = tutorialSteps[currentStep];
+  const Icon = step.icon;
+  const progress = ((currentStep + 1) / tutorialSteps.length) * 100;
 
   return (
     <div
@@ -204,7 +204,7 @@ export function OnboardingTutorial() {
           backdropFilter: 'blur(20px)',
           animation: isExiting ? 'none' : 'spring-in 0.5s var(--spring-easing) 0.1s both',
         }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         {/* Top bar progress */}
         <div className="h-1 relative" style={{ background: 'rgba(255,255,255,0.03)' }}>
@@ -367,5 +367,5 @@ export function OnboardingTutorial() {
         />
       </div>
     </div>
-  )
+  );
 }

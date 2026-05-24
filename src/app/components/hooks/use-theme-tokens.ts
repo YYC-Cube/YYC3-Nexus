@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo } from 'react';
 
 // ==========================================
 // YYC³ 赛博朋克主题 Token Hook
@@ -11,27 +11,27 @@ import { useMemo } from 'react'
  */
 export interface ThemeTokens {
   // Overlay & Modal
-  overlayBg: string
-  modalBg: string
-  modalBorder: string
-  modalShadow: string
+  overlayBg: string;
+  modalBg: string;
+  modalBorder: string;
+  modalShadow: string;
   // Text hierarchy
-  textPrimary: string
-  textSecondary: string
-  textTertiary: string
-  textMuted: string
+  textPrimary: string;
+  textSecondary: string;
+  textTertiary: string;
+  textMuted: string;
   // Accent
-  accent: string
-  accentBg: string
-  accentBorder: string
+  accent: string;
+  accentBg: string;
+  accentBorder: string;
   // Surfaces
-  surfaceInset: string
-  sectionBorder: string
+  surfaceInset: string;
+  sectionBorder: string;
   // Interactive
-  hoverBg: string
-  activeBg: string
-  activeTabText: string
-  badgeBg: string
+  hoverBg: string;
+  activeBg: string;
+  activeTabText: string;
+  badgeBg: string;
 }
 
 /**
@@ -66,5 +66,5 @@ export function useThemeTokens(): ThemeTokens {
       badgeBg: 'bg-white/[0.04]',
     }),
     [],
-  )
+  );
 }

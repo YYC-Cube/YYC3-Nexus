@@ -20,22 +20,21 @@ import {
   Trash2,
   X,
   Zap,
-} from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+} from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { type AIModel, useAIModel } from './context/ai-model-context'
-import { useI18n } from './context/i18n-context'
-import { SmartDiagnosticsPanel } from './diagnostics-panel'
-import { useThemeTokens } from './hooks/use-theme-tokens'
-import { CopyButton, ProviderCard } from './provider-card'
-
+import { type AIModel, useAIModel } from './context/ai-model-context';
+import { useI18n } from './context/i18n-context';
+import { SmartDiagnosticsPanel } from './diagnostics-panel';
+import { useThemeTokens } from './hooks/use-theme-tokens';
 import type {
   DiagnosticResult,
   MCPServerConfig,
   ModelDef,
   OllamaDetectedModel,
   ProviderDef,
-} from './model-settings-types'
+} from './model-settings-types';
+import { CopyButton, ProviderCard } from './provider-card';
 
 /* ================================================================
    Storage Helpers
@@ -223,7 +222,7 @@ const PROVIDERS: ProviderDef[] = [
       { id: 'deepseek-coder:6.7b', name: 'DeepSeek Coder 6.7B', description: 'ms.mdl.dsCoder' },
     ],
   },
-]
+];
 
 const DEFAULT_MCP_SERVERS: MCPServerConfig[] = [
   {
@@ -253,7 +252,7 @@ const DEFAULT_MCP_SERVERS: MCPServerConfig[] = [
     env: { DATABASE_URL: 'postgresql://user:pwd@localhost:5432/yanyucloud' },
     enabled: false,
   },
-]
+];
 
 const SIMULATED_OLLAMA_MODELS: OllamaDetectedModel[] = [
   { name: 'llama3.1:8b', size: '4.7 GB', status: 'online', quantization: 'Q4_K_M' },
@@ -262,7 +261,7 @@ const SIMULATED_OLLAMA_MODELS: OllamaDetectedModel[] = [
   { name: 'deepseek-coder:6.7b', size: '3.8 GB', status: 'offline', quantization: 'Q5_K_M' },
   { name: 'mistral:7b', size: '4.1 GB', status: 'online', quantization: 'Q4_0' },
   { name: 'glm4:9b', size: '5.5 GB', status: 'online', quantization: 'Q4_K_M' },
-]
+];
 
 /* ================================================================
    Local Storage Helpers
@@ -274,19 +273,19 @@ const STORAGE_KEYS = {
   mcpServers: 'yyc3-mcp-servers',
   customProviders: 'yyc3-custom-providers',
   ollamaCache: 'yanyucloud_ollama_cache_',
-}
+};
 
 function loadJSON<T>(key: string, fallback: T): T {
   try {
-    const raw = localStorage.getItem(key)
-    return raw ? JSON.parse(raw) : fallback
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
   } catch {
-    return fallback
+    return fallback;
   }
 }
 function saveJSON(key: string, value: unknown) {
   try {
-    localStorage.setItem(key, JSON.stringify(value))
+    localStorage.setItem(key, JSON.stringify(value));
   } catch {
     /* storage unavailable */
   }
@@ -297,93 +296,94 @@ function saveJSON(key: string, value: unknown) {
    ================================================================ */
 
 function MCPConfigPanel() {
-  const { t: i } = useI18n()
+  const { t: i } = useI18n();
   const [servers, setServers] = useState<MCPServerConfig[]>(() =>
     loadJSON(STORAGE_KEYS.mcpServers, DEFAULT_MCP_SERVERS),
-  )
-  const [addingServer, setAddingServer] = useState(false)
+  );
+  const [addingServer, setAddingServer] = useState(false);
   const [newServer, setNewServer] = useState({
     name: '',
     command: '',
     args: '',
     env: '',
     description: '',
-  })
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [jsonMode, setJsonMode] = useState(false)
-  const [jsonDraft, setJsonDraft] = useState('')
-  const [jsonError, setJsonError] = useState('')
+  });
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [jsonMode, setJsonMode] = useState(false);
+  const [jsonDraft, setJsonDraft] = useState('');
+  const [jsonError, setJsonError] = useState('');
 
   useEffect(() => {
-    saveJSON(STORAGE_KEYS.mcpServers, servers)
-  }, [servers])
+    saveJSON(STORAGE_KEYS.mcpServers, servers);
+  }, [servers]);
 
   const handleToggle = (id: string) => {
-    setServers((prev) => prev.map((s) => (s.id === id ? { ...s, enabled: !s.enabled } : s)))
-  }
+    setServers(prev => prev.map(s => (s.id === id ? { ...s, enabled: !s.enabled } : s)));
+  };
   const handleRemove = (id: string) => {
-    setServers((prev) => prev.filter((s) => s.id !== id))
-  }
+    setServers(prev => prev.filter(s => s.id !== id));
+  };
   const handleAdd = () => {
-    if (!newServer.name || !newServer.command) return
-    let envObj: Record<string, string> = {}
+    if (!newServer.name || !newServer.command) return;
+    let envObj: Record<string, string> = {};
     try {
-      if (newServer.env) envObj = JSON.parse(newServer.env)
+      if (newServer.env) envObj = JSON.parse(newServer.env);
     } catch {
       /* invalid JSON */
     }
     const server: MCPServerConfig = {
-      id: 'mcp-' + Date.now(),
+      id: `mcp-${Date.now()}`,
       name: newServer.name,
       description: newServer.description || newServer.name,
       command: newServer.command,
       args: newServer.args ? newServer.args.split(/\s+/) : [],
       env: envObj,
       enabled: true,
-    }
-    setServers((prev) => [...prev, server])
-    setNewServer({ name: '', command: '', args: '', env: '', description: '' })
-    setAddingServer(false)
-  }
+    };
+    setServers(prev => [...prev, server]);
+    setNewServer({ name: '', command: '', args: '', env: '', description: '' });
+    setAddingServer(false);
+  };
 
   const handleExportJson = () => {
-    const mcpConfig: Record<string, any> = { mcpServers: {} }
+    const mcpConfig: Record<string, Record<string, unknown>> = { mcpServers: {} };
     servers
-      .filter((s) => s.enabled)
-      .forEach((s) => {
+      .filter(s => s.enabled)
+      .forEach(s => {
         mcpConfig.mcpServers[s.name.toLowerCase()] = {
           command: s.command,
           args: s.args,
           ...(Object.keys(s.env).length > 0 ? { env: s.env } : {}),
-        }
-      })
-    setJsonDraft(JSON.stringify(mcpConfig, null, 2))
-    setJsonMode(true)
-    setJsonError('')
-  }
+        };
+      });
+    setJsonDraft(JSON.stringify(mcpConfig, null, 2));
+    setJsonMode(true);
+    setJsonError('');
+  };
 
   const handleImportJson = () => {
     try {
-      const parsed = JSON.parse(jsonDraft)
-      const mcpServers = parsed.mcpServers || parsed
-      const imported: MCPServerConfig[] = Object.entries(mcpServers).map(
-        ([name, conf]: [string, any]) => ({
-          id: 'mcp-' + Date.now() + '-' + name,
+      const parsed = JSON.parse(jsonDraft);
+      const mcpServers = parsed.mcpServers || parsed;
+      const imported: MCPServerConfig[] = Object.entries(mcpServers).map(([name, conf]) => {
+        const config = conf as Record<string, unknown>;
+        return {
+          id: `mcp-${Date.now()}-${name}`,
           name,
-          description: conf.description || name,
-          command: conf.command || '',
-          args: conf.args || [],
-          env: conf.env || {},
+          description: (config.description as string) || name,
+          command: (config.command as string) || '',
+          args: (config.args as string[]) || [],
+          env: (config.env as Record<string, string>) || {},
           enabled: true,
-        }),
-      )
-      setServers(imported)
-      setJsonMode(false)
-      setJsonError('')
+        };
+      });
+      setServers(imported);
+      setJsonMode(false);
+      setJsonError('');
     } catch (e: unknown) {
-      setJsonError(i('ms.jsonParseFail', { msg: e instanceof Error ? e.message : String(e) }))
+      setJsonError(i('ms.jsonParseFail', { msg: e instanceof Error ? e.message : String(e) }));
     }
-  }
+  };
 
   return (
     <div className="space-y-4">
@@ -394,7 +394,7 @@ function MCPConfigPanel() {
           <span className="text-[12px] text-white/70">{i('ms.mcpTitle')}</span>
           <span className="text-[9px] text-white/20 bg-white/[0.03] px-1.5 py-0.5 rounded">
             {i('ms.mcpEnabled', {
-              enabled: servers.filter((s) => s.enabled).length,
+              enabled: servers.filter(s => s.enabled).length,
               total: servers.length,
             })}
           </span>
@@ -414,9 +414,9 @@ function MCPConfigPanel() {
         <div className="space-y-2">
           <textarea
             value={jsonDraft}
-            onChange={(e) => {
-              setJsonDraft(e.target.value)
-              setJsonError('')
+            onChange={e => {
+              setJsonDraft(e.target.value);
+              setJsonError('');
             }}
             rows={12}
             className="w-full bg-black/20 border border-white/[0.06] rounded-lg px-3 py-2 text-[10px] text-white/60 font-mono focus:outline-none focus:border-violet-500/40 resize-none"
@@ -450,7 +450,7 @@ function MCPConfigPanel() {
       {/* Server list */}
       {!jsonMode && (
         <div className="space-y-2">
-          {servers.map((server) => (
+          {servers.map(server => (
             <div
               key={server.id}
               className={`rounded-xl border p-3 space-y-2 transition-all ${
@@ -460,7 +460,11 @@ function MCPConfigPanel() {
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <button onClick={() => handleToggle(server.id)} className="shrink-0" aria-label={i('ms.toggle')}>
+                <button
+                  onClick={() => handleToggle(server.id)}
+                  className="shrink-0"
+                  aria-label={i('ms.toggle')}
+                >
                   <div
                     className={`w-8 h-4 rounded-full transition-all ${server.enabled ? 'bg-violet-500/30' : 'bg-white/[0.06]'}`}
                   >
@@ -523,26 +527,26 @@ function MCPConfigPanel() {
               <div className="grid grid-cols-2 gap-2">
                 <input
                   value={newServer.name}
-                  onChange={(e) => setNewServer({ ...newServer, name: e.target.value })}
+                  onChange={e => setNewServer({ ...newServer, name: e.target.value })}
                   placeholder={i('ms.mcpNamePlaceholder')}
                   className="bg-white/[0.04] border border-white/[0.06] rounded-lg px-3 py-1.5 text-[10px] text-white/70 font-mono focus:outline-none focus:border-violet-500/40 placeholder:text-white/10"
                 />
                 <input
                   value={newServer.command}
-                  onChange={(e) => setNewServer({ ...newServer, command: e.target.value })}
+                  onChange={e => setNewServer({ ...newServer, command: e.target.value })}
                   placeholder={i('ms.mcpCommandPlaceholder')}
                   className="bg-white/[0.04] border border-white/[0.06] rounded-lg px-3 py-1.5 text-[10px] text-white/70 font-mono focus:outline-none focus:border-violet-500/40 placeholder:text-white/10"
                 />
               </div>
               <input
                 value={newServer.args}
-                onChange={(e) => setNewServer({ ...newServer, args: e.target.value })}
+                onChange={e => setNewServer({ ...newServer, args: e.target.value })}
                 placeholder={i('ms.mcpArgsPlaceholder')}
                 className="w-full bg-white/[0.04] border border-white/[0.06] rounded-lg px-3 py-1.5 text-[10px] text-white/70 font-mono focus:outline-none focus:border-violet-500/40 placeholder:text-white/10"
               />
               <input
                 value={newServer.env}
-                onChange={(e) => setNewServer({ ...newServer, env: e.target.value })}
+                onChange={e => setNewServer({ ...newServer, env: e.target.value })}
                 placeholder={i('ms.mcpEnvPlaceholder')}
                 className="w-full bg-white/[0.04] border border-white/[0.06] rounded-lg px-3 py-1.5 text-[10px] text-white/70 font-mono focus:outline-none focus:border-violet-500/40 placeholder:text-white/10"
               />
@@ -573,14 +577,14 @@ function MCPConfigPanel() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 /* ================================================================
    Main Component: ModelSettings
    ================================================================ */
 
-type TabKey = 'providers' | 'ollama' | 'mcp' | 'diagnostics'
+type TabKey = 'providers' | 'ollama' | 'mcp' | 'diagnostics';
 
 /**
  * AI Model Settings modal.
@@ -599,127 +603,127 @@ export function ModelSettings() {
     updateAIModel,
     activateAIModel,
     activeModelId,
-  } = useAIModel()
-  const t = useThemeTokens()
-  const { t: i } = useI18n()
+  } = useAIModel();
+  const t = useThemeTokens();
+  const { t: i } = useI18n();
 
-  const [activeTab, setActiveTab] = useState<TabKey>('providers')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [expandedProvider, setExpandedProvider] = useState<string | null>('zhipu')
+  const [activeTab, setActiveTab] = useState<TabKey>('providers');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [expandedProvider, setExpandedProvider] = useState<string | null>('zhipu');
 
   // Provider API keys & URLs (persisted)
   const [apiKeys, setApiKeys] = useState<Record<string, string>>(() =>
     loadJSON(STORAGE_KEYS.providerKeys, {}),
-  )
+  );
   const [customUrls, setCustomUrls] = useState<Record<string, string>>(() =>
     loadJSON(STORAGE_KEYS.providerUrls, {}),
-  )
+  );
 
   // Custom providers (user-added)
   const [customProviders, setCustomProviders] = useState<ProviderDef[]>(() =>
     loadJSON(STORAGE_KEYS.customProviders, []),
-  )
-  const [addingProvider, setAddingProvider] = useState(false)
-  const [newProvider, setNewProvider] = useState({ name: '', baseURL: '', apiKeyUrl: '' })
+  );
+  const [addingProvider, setAddingProvider] = useState(false);
+  const [newProvider, setNewProvider] = useState({ name: '', baseURL: '', apiKeyUrl: '' });
 
   // Diagnostics
-  const [diagnostics, setDiagnostics] = useState<Record<string, DiagnosticResult>>({})
+  const [diagnostics, setDiagnostics] = useState<Record<string, DiagnosticResult>>({});
 
   // Pending activation
-  const pendingActivationRef = useRef<string | null>(null)
-  const [selectionToast, setSelectionToast] = useState<string | null>(null)
+  const pendingActivationRef = useRef<string | null>(null);
+  const [selectionToast, setSelectionToast] = useState<string | null>(null);
 
   // Ollama
-  const [ollamaHost, setOllamaHost] = useState('http://localhost:11434')
-  const [ollamaScanning, setOllamaScanning] = useState(false)
-  const [ollamaModels, setOllamaModels] = useState<OllamaDetectedModel[]>([])
-  const [ollamaConnected, setOllamaConnected] = useState(false)
+  const [ollamaHost, setOllamaHost] = useState('http://localhost:11434');
+  const [ollamaScanning, setOllamaScanning] = useState(false);
+  const [ollamaModels, setOllamaModels] = useState<OllamaDetectedModel[]>([]);
+  const [ollamaConnected, setOllamaConnected] = useState(false);
 
   // Auto-activate newly added model if pending
   useEffect(() => {
-    const pendingName = pendingActivationRef.current
-    if (!pendingName) return
-    const found = aiModels.find((m) => m.name === pendingName && !m.isActive)
+    const pendingName = pendingActivationRef.current;
+    if (!pendingName) return;
+    const found = aiModels.find(m => m.name === pendingName && !m.isActive);
     if (found) {
-      pendingActivationRef.current = null
-      activateAIModel(found.id)
+      pendingActivationRef.current = null;
+      activateAIModel(found.id);
     }
-  }, [aiModels, activateAIModel])
+  }, [aiModels, activateAIModel]);
 
   // Persist keys & urls
   useEffect(() => {
-    saveJSON(STORAGE_KEYS.providerKeys, apiKeys)
-  }, [apiKeys])
+    saveJSON(STORAGE_KEYS.providerKeys, apiKeys);
+  }, [apiKeys]);
   useEffect(() => {
-    saveJSON(STORAGE_KEYS.providerUrls, customUrls)
-  }, [customUrls])
+    saveJSON(STORAGE_KEYS.providerUrls, customUrls);
+  }, [customUrls]);
   useEffect(() => {
-    saveJSON(STORAGE_KEYS.customProviders, customProviders)
-  }, [customProviders])
+    saveJSON(STORAGE_KEYS.customProviders, customProviders);
+  }, [customProviders]);
 
   // Sync API keys from provider config to store models
   useEffect(() => {
     for (const provider of [...PROVIDERS, ...customProviders]) {
-      const key = apiKeys[provider.id]
-      if (!key) continue
-      const url = customUrls[provider.id] || provider.baseURL
+      const key = apiKeys[provider.id];
+      if (!key) continue;
+      const url = customUrls[provider.id] || provider.baseURL;
       for (const storeModel of aiModels) {
         if (storeModel.endpoint === url && storeModel.apiKey !== key) {
           const isMatch = provider.models.some(
-            (m) => m.id === storeModel.name || m.name === storeModel.name,
-          )
+            m => m.id === storeModel.name || m.name === storeModel.name,
+          );
           if (isMatch) {
-            updateAIModel(storeModel.id, { apiKey: key })
+            updateAIModel(storeModel.id, { apiKey: key });
           }
         }
       }
     }
-  }, [apiKeys, customUrls, customProviders, aiModels, updateAIModel])
+  }, [apiKeys, customUrls, customProviders, aiModels, updateAIModel]);
 
   // All providers = built-in + custom
-  const allProviders = useMemo(() => [...PROVIDERS, ...customProviders], [customProviders])
+  const allProviders = useMemo(() => [...PROVIDERS, ...customProviders], [customProviders]);
 
   // Filtered providers
   const filteredProviders = useMemo(() => {
-    if (!searchQuery) return allProviders
-    const q = searchQuery.toLowerCase()
+    if (!searchQuery) return allProviders;
+    const q = searchQuery.toLowerCase();
     return allProviders.filter(
-      (p) =>
+      p =>
         p.name.toLowerCase().includes(q) ||
         p.shortName.toLowerCase().includes(q) ||
         p.description.toLowerCase().includes(q) ||
-        p.models.some((m) => m.name.toLowerCase().includes(q)),
-    )
-  }, [allProviders, searchQuery])
+        p.models.some(m => m.name.toLowerCase().includes(q)),
+    );
+  }, [allProviders, searchQuery]);
 
   // Provider-scoped model mutations
   const handleProviderAddModel = useCallback((providerId: string, model: ModelDef) => {
-    setCustomProviders((prev) =>
-      prev.map((p) => (p.id === providerId ? { ...p, models: [...p.models, model] } : p)),
-    )
-  }, [])
+    setCustomProviders(prev =>
+      prev.map(p => (p.id === providerId ? { ...p, models: [...p.models, model] } : p)),
+    );
+  }, []);
 
   const handleProviderRemoveModel = useCallback((providerId: string, modelId: string) => {
-    setCustomProviders((prev) =>
-      prev.map((p) =>
-        p.id === providerId ? { ...p, models: p.models.filter((m) => m.id !== modelId) } : p,
+    setCustomProviders(prev =>
+      prev.map(p =>
+        p.id === providerId ? { ...p, models: p.models.filter(m => m.id !== modelId) } : p,
       ),
-    )
-  }, [])
+    );
+  }, []);
 
   // Real diagnostic test — actual HTTP connectivity check
   const handleTestConnection = useCallback(
     (providerId: string, modelId: string) => {
-      const provider = allProviders.find((p) => p.id === providerId)
-      if (!provider) return
-      const model = provider.models.find((m) => m.id === modelId)
-      if (!model) return
-      const diagKey = providerId + ':' + modelId
-      const providerApiKey = apiKeys[providerId] || ''
-      const url = customUrls[providerId] || provider.baseURL
+      const provider = allProviders.find(p => p.id === providerId);
+      if (!provider) return;
+      const model = provider.models.find(m => m.id === modelId);
+      if (!model) return;
+      const diagKey = `${providerId}:${modelId}`;
+      const providerApiKey = apiKeys[providerId] || '';
+      const url = customUrls[providerId] || provider.baseURL;
 
       if (providerId !== 'ollama' && !providerApiKey) {
-        setDiagnostics((prev) => ({
+        setDiagnostics(prev => ({
           ...prev,
           [diagKey]: {
             providerId,
@@ -728,11 +732,11 @@ export function ModelSettings() {
             message: i('ms.testNoApiKey'),
             timestamp: Date.now(),
           },
-        }))
-        return
+        }));
+        return;
       }
       if (!url) {
-        setDiagnostics((prev) => ({
+        setDiagnostics(prev => ({
           ...prev,
           [diagKey]: {
             providerId,
@@ -741,11 +745,11 @@ export function ModelSettings() {
             message: i('ms.testNoUrl'),
             timestamp: Date.now(),
           },
-        }))
-        return
+        }));
+        return;
       }
 
-      setDiagnostics((prev) => ({
+      setDiagnostics(prev => ({
         ...prev,
         [diagKey]: {
           providerId,
@@ -754,30 +758,30 @@ export function ModelSettings() {
           message: i('ms.testSending'),
           timestamp: Date.now(),
         },
-      }))
+      }));
 
-      const start = performance.now()
-      const controller = new AbortController()
-      const timeoutMs = 20000
-      const timer = setTimeout(() => controller.abort(), timeoutMs)
+      const start = performance.now();
+      const controller = new AbortController();
+      const timeoutMs = 20000;
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
 
       const setResult = (
         result: Omit<DiagnosticResult, 'providerId' | 'modelName' | 'timestamp'>,
       ) => {
-        setDiagnostics((prev) => ({
+        setDiagnostics(prev => ({
           ...prev,
           [diagKey]: { providerId, modelName: model.name, timestamp: Date.now(), ...result },
-        }))
-      }
+        }));
+      };
 
-      ;(async () => {
+      (async () => {
         try {
-          let resp: Response
+          let resp: Response;
           if (providerId === 'ollama') {
-            const ollamaBase = url.replace(/\/+$/, '')
+            const ollamaBase = url.replace(/\/+$/, '');
             const chatUrl = ollamaBase.includes('/api/chat')
               ? ollamaBase
-              : ollamaBase.replace(/\/api\/.*$/, '') + '/api/chat'
+              : `${ollamaBase.replace(/\/api\/.*$/, '')}/api/chat`;
             resp = await fetch(chatUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -787,7 +791,7 @@ export function ModelSettings() {
                 stream: false,
               }),
               signal: controller.signal,
-            })
+            });
           } else if (providerId === 'claude') {
             resp = await fetch(url, {
               method: 'POST',
@@ -803,13 +807,13 @@ export function ModelSettings() {
                 messages: [{ role: 'user', content: 'Hi, respond with exactly: YANYUCLOUD_OK' }],
               }),
               signal: controller.signal,
-            })
+            });
           } else {
             resp = await fetch(url, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + providerApiKey,
+                Authorization: `Bearer ${providerApiKey}`,
               },
               body: JSON.stringify({
                 model: model.id,
@@ -819,22 +823,22 @@ export function ModelSettings() {
                 temperature: 0,
               }),
               signal: controller.signal,
-            })
+            });
           }
 
-          clearTimeout(timer)
-          const latency = Math.round(performance.now() - start)
+          clearTimeout(timer);
+          const latency = Math.round(performance.now() - start);
 
           if (!resp.ok) {
-            const errText = await resp.text().catch(() => '')
-            let detail = ''
+            const errText = await resp.text().catch(() => '');
+            let detail = '';
             try {
-              const j = JSON.parse(errText)
-              detail = j.error?.message || j.message || errText.slice(0, 200)
+              const j = JSON.parse(errText);
+              detail = j.error?.message || j.message || errText.slice(0, 200);
             } catch {
-              detail = errText.slice(0, 200)
+              detail = errText.slice(0, 200);
             }
-            const s = resp.status
+            const s = resp.status;
             const statusMsg =
               s === 401
                 ? i('ms.testError401')
@@ -846,119 +850,119 @@ export function ModelSettings() {
                       : i('ms.testError404')
                     : s === 429
                       ? i('ms.testError429')
-                      : 'HTTP ' + s
+                      : `HTTP ${s}`;
             setResult({
               status: 'error',
-              message: statusMsg + (detail ? '。' + detail : ''),
+              message: statusMsg + (detail ? `。${detail}` : ''),
               latency,
-            })
-            return
+            });
+            return;
           }
 
-          const data = await resp.json().catch(() => null)
-          let reply = ''
-          if (providerId === 'ollama') reply = data?.message?.content || ''
-          else if (providerId === 'claude') reply = data?.content?.[0]?.text || ''
-          else reply = data?.choices?.[0]?.message?.content || data?.result || ''
+          const data = await resp.json().catch(() => null);
+          let reply = '';
+          if (providerId === 'ollama') reply = data?.message?.content || '';
+          else if (providerId === 'claude') reply = data?.content?.[0]?.text || '';
+          else reply = data?.choices?.[0]?.message?.content || data?.result || '';
 
           setResult({
             status: 'success',
             message: i('ms.testSuccess'),
             latency,
             modelResponse: reply.slice(0, 100),
-          })
+          });
         } catch (err: unknown) {
-          clearTimeout(timer)
-          const latency = Math.round(performance.now() - start)
+          clearTimeout(timer);
+          const latency = Math.round(performance.now() - start);
           if (err instanceof DOMException && err.name === 'AbortError') {
             setResult({
               status: 'error',
               message: i('ms.testTimeout', { seconds: String(timeoutMs / 1000) }),
               latency,
-            })
-            return
+            });
+            return;
           }
-          const msg = err instanceof Error ? err.message : ''
+          const msg = err instanceof Error ? err.message : '';
           const networkMsg =
             msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('fetch')
               ? i('ms.testNetworkFail')
-              : i('ms.testException', { msg: msg.slice(0, 200) })
-          setResult({ status: 'error', message: networkMsg, latency })
+              : i('ms.testException', { msg: msg.slice(0, 200) });
+          setResult({ status: 'error', message: networkMsg, latency });
         }
-      })()
+      })();
     },
     [allProviders, apiKeys, customUrls, i],
-  )
+  );
 
   // Select model — add to store if needed + activate
   const handleSelectModel = useCallback(
     (providerId: string, modelId: string) => {
-      const provider = allProviders.find((p) => p.id === providerId)
-      if (!provider) return
-      const model = provider.models.find((m) => m.id === modelId)
-      if (!model) return
-      const url = customUrls[providerId] || provider.baseURL
-      const key = apiKeys[providerId] || ''
+      const provider = allProviders.find(p => p.id === providerId);
+      if (!provider) return;
+      const model = provider.models.find(m => m.id === modelId);
+      if (!model) return;
+      const url = customUrls[providerId] || provider.baseURL;
+      const key = apiKeys[providerId] || '';
       const providerType: AIModel['provider'] =
-        providerId === 'openai' ? 'openai' : providerId === 'ollama' ? 'ollama' : 'custom'
+        providerId === 'openai' ? 'openai' : providerId === 'ollama' ? 'ollama' : 'custom';
 
-      const storeModelName = model.id
+      const storeModelName = model.id;
 
       const existing = aiModels.find(
-        (m) => (m.name === storeModelName || m.name === model.name) && m.endpoint === url,
-      )
+        m => (m.name === storeModelName || m.name === model.name) && m.endpoint === url,
+      );
 
       if (existing) {
-        updateAIModel(existing.id, { apiKey: key, name: storeModelName })
-        activateAIModel(existing.id)
+        updateAIModel(existing.id, { apiKey: key, name: storeModelName });
+        activateAIModel(existing.id);
       } else {
-        pendingActivationRef.current = storeModelName
+        pendingActivationRef.current = storeModelName;
         addAIModel({
           name: storeModelName,
           provider: providerType,
           endpoint: url,
           apiKey: key,
           isActive: false,
-        })
+        });
       }
-      setSelectionToast(model.name)
-      setTimeout(() => setSelectionToast(null), 2500)
+      setSelectionToast(model.name);
+      setTimeout(() => setSelectionToast(null), 2500);
     },
     [allProviders, customUrls, apiKeys, aiModels, activateAIModel, addAIModel, updateAIModel],
-  )
+  );
 
   // Compute the "active model key" (providerId:modelId)
   const activeModelKey = useMemo(() => {
-    if (!activeModelId) return null
-    const activeModel = aiModels.find((m) => m.id === activeModelId)
-    if (!activeModel) return null
+    if (!activeModelId) return null;
+    const activeModel = aiModels.find(m => m.id === activeModelId);
+    if (!activeModel) return null;
 
     for (const provider of allProviders) {
-      const url = customUrls[provider.id] || provider.baseURL
+      const url = customUrls[provider.id] || provider.baseURL;
       for (const model of provider.models) {
         if (
           (activeModel.name === model.id || activeModel.name === model.name) &&
           activeModel.endpoint === url
         ) {
-          return provider.id + ':' + model.id
+          return `${provider.id}:${model.id}`;
         }
       }
     }
     for (const provider of allProviders) {
       for (const model of provider.models) {
-        const n = activeModel.name.toLowerCase()
+        const n = activeModel.name.toLowerCase();
         if (n === model.name.toLowerCase() || n === model.id.toLowerCase()) {
-          return provider.id + ':' + model.id
+          return `${provider.id}:${model.id}`;
         }
       }
     }
-    return null
-  }, [activeModelId, aiModels, allProviders, customUrls])
+    return null;
+  }, [activeModelId, aiModels, allProviders, customUrls]);
 
   // Add custom provider
   const handleAddProvider = useCallback(() => {
-    if (!newProvider.name || !newProvider.baseURL) return
-    const id = 'custom-' + Date.now()
+    if (!newProvider.name || !newProvider.baseURL) return;
+    const id = `custom-${Date.now()}`;
     const provider: ProviderDef = {
       id,
       name: newProvider.name,
@@ -974,77 +978,77 @@ export function ModelSettings() {
       openaiCompatible: true,
       docsUrl: '',
       models: [],
-    }
-    setCustomProviders((prev) => [...prev, provider])
-    setNewProvider({ name: '', baseURL: '', apiKeyUrl: '' })
-    setAddingProvider(false)
-    setExpandedProvider(id)
-  }, [newProvider, i])
+    };
+    setCustomProviders(prev => [...prev, provider]);
+    setNewProvider({ name: '', baseURL: '', apiKeyUrl: '' });
+    setAddingProvider(false);
+    setExpandedProvider(id);
+  }, [newProvider, i]);
 
   const handleRemoveProvider = useCallback((id: string) => {
-    setCustomProviders((prev) => prev.filter((p) => p.id !== id))
-  }, [])
+    setCustomProviders(prev => prev.filter(p => p.id !== id));
+  }, []);
 
   // Ollama scan
   const handleScanOllama = useCallback(() => {
-    setOllamaScanning(true)
-    setOllamaModels([])
-    setOllamaConnected(false)
-    const url = ollamaHost.replace(/\/+$/, '') + '/api/tags'
+    setOllamaScanning(true);
+    setOllamaModels([]);
+    setOllamaConnected(false);
+    const url = `${ollamaHost.replace(/\/+$/, '')}/api/tags`;
     fetch(url)
-      .then((r) => {
-        if (!r.ok) throw new Error('HTTP ' + r.status)
-        return r.json()
+      .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
       })
-      .then((data) => {
+      .then(data => {
         /** Ollama API model entry shape */
         interface OllamaApiModel {
-          name?: string
-          model?: string
-          size?: number
-          details?: { quantization_level?: string; family?: string }
+          name?: string;
+          model?: string;
+          size?: number;
+          details?: { quantization_level?: string; family?: string };
         }
         const models: OllamaDetectedModel[] = (data.models || []).map((m: OllamaApiModel) => ({
           name: (m.name || m.model) as string,
-          size: m.size ? (m.size / 1e9).toFixed(1) + ' GB' : 'N/A',
+          size: m.size ? `${(m.size / 1e9).toFixed(1)} GB` : 'N/A',
           status: 'online' as const,
           quantization: m.details?.quantization_level || m.details?.family || 'N/A',
-        }))
-        setOllamaModels(models)
-        setOllamaConnected(true)
-        setOllamaScanning(false)
+        }));
+        setOllamaModels(models);
+        setOllamaConnected(true);
+        setOllamaScanning(false);
       })
       .catch(() => {
-        let idx = 0
+        let idx = 0;
         const interval = setInterval(() => {
           if (idx < SIMULATED_OLLAMA_MODELS.length) {
-            const m = SIMULATED_OLLAMA_MODELS[idx]
-            if (m) setOllamaModels((prev) => [...prev, m])
-            idx++
+            const m = SIMULATED_OLLAMA_MODELS[idx];
+            if (m) setOllamaModels(prev => [...prev, m]);
+            idx++;
           } else {
-            clearInterval(interval)
-            setOllamaScanning(false)
-            setOllamaConnected(false)
+            clearInterval(interval);
+            setOllamaScanning(false);
+            setOllamaConnected(false);
           }
-        }, 350)
-      })
-  }, [ollamaHost])
+        }, 350);
+      });
+  }, [ollamaHost]);
 
   const handleImportOllama = useCallback(
     (model: OllamaDetectedModel) => {
       addAIModel({
         name: model.name,
         provider: 'ollama',
-        endpoint: ollamaHost.replace(/\/+$/, '') + '/api/chat',
+        endpoint: `${ollamaHost.replace(/\/+$/, '')}/api/chat`,
         apiKey: '',
         isActive: false,
         isDetected: true,
-      })
+      });
     },
     [addAIModel, ollamaHost],
-  )
+  );
 
-  if (!modelSettingsOpen) return null
+  if (!modelSettingsOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
@@ -1072,7 +1076,7 @@ export function ModelSettings() {
             <Search className="w-3.5 h-3.5 text-white/20" />
             <input
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               placeholder={i('ms.searchPlaceholder')}
               className="bg-transparent text-[11px] text-white/60 placeholder:text-white/15 focus:outline-none w-full"
             />
@@ -1117,10 +1121,10 @@ export function ModelSettings() {
               {/* Active model indicator */}
               {activeModelId &&
                 (() => {
-                  const activeModel = aiModels.find((m) => m.id === activeModelId)
+                  const activeModel = aiModels.find(m => m.id === activeModelId);
                   const matchedProvider = activeModelKey
-                    ? allProviders.find((p) => activeModelKey.startsWith(p.id + ':'))
-                    : null
+                    ? allProviders.find(p => activeModelKey.startsWith(`${p.id}:`))
+                    : null;
                   return (
                     <div
                       className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#00f0ff]/[0.06] border border-[#00f0ff]/15 mb-1"
@@ -1154,16 +1158,16 @@ export function ModelSettings() {
                         {i('ms.currentlyUsing')}
                       </span>
                     </div>
-                  )
+                  );
                 })()}
 
               {/* Provider cards */}
-              {filteredProviders.map((provider) => {
-                const providerDiags: Record<string, DiagnosticResult> = {}
-                provider.models.forEach((m) => {
-                  const d = diagnostics[provider.id + ':' + m.id]
-                  if (d) providerDiags[m.id] = d
-                })
+              {filteredProviders.map(provider => {
+                const providerDiags: Record<string, DiagnosticResult> = {};
+                provider.models.forEach(m => {
+                  const d = diagnostics[`${provider.id}:${m.id}`];
+                  if (d) providerDiags[m.id] = d;
+                });
 
                 return (
                   <ProviderCard
@@ -1171,30 +1175,26 @@ export function ModelSettings() {
                     provider={provider}
                     apiKey={apiKeys[provider.id] || ''}
                     customUrl={customUrls[provider.id] || ''}
-                    onApiKeyChange={(key) =>
-                      setApiKeys((prev) => ({ ...prev, [provider.id]: key }))
-                    }
-                    onUrlChange={(url) =>
-                      setCustomUrls((prev) => ({ ...prev, [provider.id]: url }))
-                    }
-                    onAddModel={(model) => handleProviderAddModel(provider.id, model)}
-                    onRemoveModel={(modelId) => handleProviderRemoveModel(provider.id, modelId)}
-                    onTestConnection={(modelId) => handleTestConnection(provider.id, modelId)}
-                    onSelectModel={(modelId) => handleSelectModel(provider.id, modelId)}
+                    onApiKeyChange={key => setApiKeys(prev => ({ ...prev, [provider.id]: key }))}
+                    onUrlChange={url => setCustomUrls(prev => ({ ...prev, [provider.id]: url }))}
+                    onAddModel={model => handleProviderAddModel(provider.id, model)}
+                    onRemoveModel={modelId => handleProviderRemoveModel(provider.id, modelId)}
+                    onTestConnection={modelId => handleTestConnection(provider.id, modelId)}
+                    onSelectModel={modelId => handleSelectModel(provider.id, modelId)}
                     activeModelKey={activeModelKey}
                     diagnostics={providerDiags}
                     expanded={expandedProvider === provider.id}
                     onToggle={() =>
-                      setExpandedProvider((prev) => (prev === provider.id ? null : provider.id))
+                      setExpandedProvider(prev => (prev === provider.id ? null : provider.id))
                     }
-                    isCustom={!PROVIDERS.find((p) => p.id === provider.id)}
+                    isCustom={!PROVIDERS.find(p => p.id === provider.id)}
                     onRemoveProvider={
-                      !PROVIDERS.find((p) => p.id === provider.id)
+                      !PROVIDERS.find(p => p.id === provider.id)
                         ? () => handleRemoveProvider(provider.id)
                         : undefined
                     }
                   />
-                )
+                );
               })}
 
               {/* Add custom provider */}
@@ -1210,7 +1210,7 @@ export function ModelSettings() {
                       </label>
                       <input
                         value={newProvider.name}
-                        onChange={(e) => setNewProvider((p) => ({ ...p, name: e.target.value }))}
+                        onChange={e => setNewProvider(p => ({ ...p, name: e.target.value }))}
                         placeholder={i('ms.providerNamePlaceholder')}
                         className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-[11px] text-white/70 placeholder:text-white/10 focus:outline-none focus:border-[#00d4ff]/40"
                       />
@@ -1221,9 +1221,7 @@ export function ModelSettings() {
                       </label>
                       <input
                         value={newProvider.apiKeyUrl}
-                        onChange={(e) =>
-                          setNewProvider((p) => ({ ...p, apiKeyUrl: e.target.value }))
-                        }
+                        onChange={e => setNewProvider(p => ({ ...p, apiKeyUrl: e.target.value }))}
                         placeholder="https://..."
                         className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-[11px] text-white/70 placeholder:text-white/10 focus:outline-none focus:border-[#00d4ff]/40 font-mono"
                       />
@@ -1235,7 +1233,7 @@ export function ModelSettings() {
                     </label>
                     <input
                       value={newProvider.baseURL}
-                      onChange={(e) => setNewProvider((p) => ({ ...p, baseURL: e.target.value }))}
+                      onChange={e => setNewProvider(p => ({ ...p, baseURL: e.target.value }))}
                       placeholder="https://api.example.com/v1/chat/completions"
                       className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-[11px] text-white/70 placeholder:text-white/10 focus:outline-none focus:border-[#00d4ff]/40 font-mono"
                     />
@@ -1298,7 +1296,7 @@ export function ModelSettings() {
                 <div className="flex gap-2">
                   <input
                     value={ollamaHost}
-                    onChange={(e) => setOllamaHost(e.target.value)}
+                    onChange={e => setOllamaHost(e.target.value)}
                     placeholder="http://localhost:11434"
                     aria-label="Ollama Host"
                     className="flex-1 bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-[12px] text-white/70 font-mono focus:outline-none focus:border-amber-500/40"
@@ -1325,10 +1323,10 @@ export function ModelSettings() {
                       <span className="text-[9px] text-amber-400/40">{i('ms.simulatedData')}</span>
                     )}
                   </div>
-                  {ollamaModels.map((model) => {
+                  {ollamaModels.map(model => {
                     const alreadyImported = aiModels.some(
-                      (m) => m.name === model.name && m.provider === 'ollama',
-                    )
+                      m => m.name === model.name && m.provider === 'ollama',
+                    );
                     return (
                       <div
                         key={model.name}
@@ -1366,7 +1364,7 @@ export function ModelSettings() {
                           </button>
                         )}
                       </div>
-                    )
+                    );
                   })}
                 </div>
               )}
@@ -1421,10 +1419,10 @@ export function ModelSettings() {
                 models: allProviders.reduce((sum, p) => sum + p.models.length, 0),
               })}
             </span>
-            {Object.values(diagnostics).filter((d) => d.status === 'success').length > 0 && (
+            {Object.values(diagnostics).filter(d => d.status === 'success').length > 0 && (
               <span className="text-[10px] text-emerald-400/40">
                 {i('ms.online', {
-                  count: Object.values(diagnostics).filter((d) => d.status === 'success').length,
+                  count: Object.values(diagnostics).filter(d => d.status === 'success').length,
                 })}
               </span>
             )}
@@ -1462,5 +1460,5 @@ export function ModelSettings() {
         }
       `}</style>
     </div>
-  )
+  );
 }

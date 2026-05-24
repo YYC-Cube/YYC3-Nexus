@@ -12,11 +12,11 @@ import {
   Settings,
   Shield,
   Zap,
-} from 'lucide-react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { useState } from 'react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 参数设置页面 - Parameter Settings
@@ -24,44 +24,44 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 interface SystemConfig {
-  siteName: string
-  siteUrl: string
-  adminEmail: string
-  timezone: string
-  language: string
-  currency: string
-  dateFormat: string
-  timeFormat: string
+  siteName: string;
+  siteUrl: string;
+  adminEmail: string;
+  timezone: string;
+  language: string;
+  currency: string;
+  dateFormat: string;
+  timeFormat: string;
 }
 
 interface EmailConfig {
-  smtpHost: string
-  smtpPort: string
-  smtpUser: string
-  smtpPassword: string
-  smtpEncryption: 'none' | 'ssl' | 'tls'
-  fromName: string
-  fromEmail: string
+  smtpHost: string;
+  smtpPort: string;
+  smtpUser: string;
+  smtpPassword: string;
+  smtpEncryption: 'none' | 'ssl' | 'tls';
+  fromName: string;
+  fromEmail: string;
 }
 
 interface SecurityConfig {
-  passwordMinLength: number
-  passwordRequireSpecial: boolean
-  passwordRequireNumber: boolean
-  passwordRequireUpper: boolean
-  sessionTimeout: number
-  maxLoginAttempts: number
-  twoFactorAuth: boolean
-  ipWhitelist: string
+  passwordMinLength: number;
+  passwordRequireSpecial: boolean;
+  passwordRequireNumber: boolean;
+  passwordRequireUpper: boolean;
+  sessionTimeout: number;
+  maxLoginAttempts: number;
+  twoFactorAuth: boolean;
+  ipWhitelist: string;
 }
 
-type ConfigSection = 'system' | 'platform' | 'email' | 'security'
+type ConfigSection = 'system' | 'platform' | 'email' | 'security';
 
 export function ParameterSettingsPage() {
-  const tc = useThemeColors()
-  const [activeSection, setActiveSection] = useState<ConfigSection>('system')
-  const [showPassword, setShowPassword] = useState(false)
-  const [modified, setModified] = useState(false)
+  const tc = useThemeColors();
+  const [activeSection, setActiveSection] = useState<ConfigSection>('system');
+  const [showPassword, setShowPassword] = useState(false);
+  const [modified, setModified] = useState(false);
 
   const [systemConfig, setSystemConfig] = useState<SystemConfig>({
     siteName: 'YYC³ CloudPivot Intelli-Matrix',
@@ -72,7 +72,7 @@ export function ParameterSettingsPage() {
     currency: 'CNY',
     dateFormat: 'YYYY-MM-DD',
     timeFormat: 'HH:mm:ss',
-  })
+  });
 
   const [emailConfig, setEmailConfig] = useState<EmailConfig>({
     smtpHost: 'smtp.example.com',
@@ -82,7 +82,7 @@ export function ParameterSettingsPage() {
     smtpEncryption: 'tls',
     fromName: 'YYC³ System',
     fromEmail: 'noreply@yyc3.ai',
-  })
+  });
 
   const [securityConfig, setSecurityConfig] = useState<SecurityConfig>({
     passwordMinLength: 8,
@@ -93,25 +93,24 @@ export function ParameterSettingsPage() {
     maxLoginAttempts: 5,
     twoFactorAuth: false,
     ipWhitelist: '',
-  })
+  });
 
   const handleSave = () => {
-    console.log('Saving configuration...', { systemConfig, emailConfig, securityConfig })
-    setModified(false)
+    setModified(false);
     // Simulate save success
-  }
+  };
 
   const handleReset = () => {
     // Reset to defaults
-    setModified(false)
-  }
+    setModified(false);
+  };
 
   const sections = [
     { id: 'system' as const, label: '系统基础配置', icon: Settings, color: tc.primary },
     { id: 'platform' as const, label: '平台连接参数', icon: Link, color: tc.secondary },
     { id: 'email' as const, label: '邮件服务配置', icon: Mail, color: tc.success },
     { id: 'security' as const, label: '安全策略配置', icon: Shield, color: tc.destructive },
-  ]
+  ];
 
   return (
     <div className="h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
@@ -236,9 +235,9 @@ export function ParameterSettingsPage() {
       {/* Section Tabs */}
       <div className="px-6 pb-4">
         <div className="flex items-center gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-          {sections.map((section) => {
-            const Icon = section.icon
-            const isActive = activeSection === section.id
+          {sections.map(section => {
+            const Icon = section.icon;
+            const isActive = activeSection === section.id;
             return (
               <button
                 key={section.id}
@@ -254,7 +253,7 @@ export function ParameterSettingsPage() {
                 <Icon className="w-3.5 h-3.5" />
                 {section.label}
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -276,9 +275,9 @@ export function ParameterSettingsPage() {
                   <input
                     type="text"
                     value={systemConfig.siteName}
-                    onChange={(e) => {
-                      setSystemConfig({ ...systemConfig, siteName: e.target.value })
-                      setModified(true)
+                    onChange={e => {
+                      setSystemConfig({ ...systemConfig, siteName: e.target.value });
+                      setModified(true);
                     }}
                     className="w-full px-3 py-2 rounded-lg text-[12px] transition-all"
                     style={{
@@ -294,9 +293,9 @@ export function ParameterSettingsPage() {
                   <input
                     type="url"
                     value={systemConfig.siteUrl}
-                    onChange={(e) => {
-                      setSystemConfig({ ...systemConfig, siteUrl: e.target.value })
-                      setModified(true)
+                    onChange={e => {
+                      setSystemConfig({ ...systemConfig, siteUrl: e.target.value });
+                      setModified(true);
                     }}
                     className="w-full px-3 py-2 rounded-lg text-[12px] transition-all"
                     style={{
@@ -312,9 +311,9 @@ export function ParameterSettingsPage() {
                   <input
                     type="email"
                     value={systemConfig.adminEmail}
-                    onChange={(e) => {
-                      setSystemConfig({ ...systemConfig, adminEmail: e.target.value })
-                      setModified(true)
+                    onChange={e => {
+                      setSystemConfig({ ...systemConfig, adminEmail: e.target.value });
+                      setModified(true);
                     }}
                     className="w-full px-3 py-2 rounded-lg text-[12px] transition-all"
                     style={{
@@ -332,9 +331,9 @@ export function ParameterSettingsPage() {
                   </label>
                   <select
                     value={systemConfig.timezone}
-                    onChange={(e) => {
-                      setSystemConfig({ ...systemConfig, timezone: e.target.value })
-                      setModified(true)
+                    onChange={e => {
+                      setSystemConfig({ ...systemConfig, timezone: e.target.value });
+                      setModified(true);
                     }}
                     className="w-full px-3 py-2 rounded-lg text-[12px] transition-all"
                     style={{
@@ -354,9 +353,9 @@ export function ParameterSettingsPage() {
                   <label className="block text-[10px] text-white/40 mb-1.5">语言设置</label>
                   <select
                     value={systemConfig.language}
-                    onChange={(e) => {
-                      setSystemConfig({ ...systemConfig, language: e.target.value })
-                      setModified(true)
+                    onChange={e => {
+                      setSystemConfig({ ...systemConfig, language: e.target.value });
+                      setModified(true);
                     }}
                     className="w-full px-3 py-2 rounded-lg text-[12px] transition-all"
                     style={{
@@ -375,9 +374,9 @@ export function ParameterSettingsPage() {
                   <label className="block text-[10px] text-white/40 mb-1.5">货币单位</label>
                   <select
                     value={systemConfig.currency}
-                    onChange={(e) => {
-                      setSystemConfig({ ...systemConfig, currency: e.target.value })
-                      setModified(true)
+                    onChange={e => {
+                      setSystemConfig({ ...systemConfig, currency: e.target.value });
+                      setModified(true);
                     }}
                     className="w-full px-3 py-2 rounded-lg text-[12px] transition-all"
                     style={{
@@ -476,9 +475,9 @@ export function ParameterSettingsPage() {
                   <input
                     type="text"
                     value={emailConfig.smtpHost}
-                    onChange={(e) => {
-                      setEmailConfig({ ...emailConfig, smtpHost: e.target.value })
-                      setModified(true)
+                    onChange={e => {
+                      setEmailConfig({ ...emailConfig, smtpHost: e.target.value });
+                      setModified(true);
                     }}
                     className="w-full px-3 py-2 rounded-lg text-[12px]"
                     style={{
@@ -494,9 +493,9 @@ export function ParameterSettingsPage() {
                   <input
                     type="text"
                     value={emailConfig.smtpPort}
-                    onChange={(e) => {
-                      setEmailConfig({ ...emailConfig, smtpPort: e.target.value })
-                      setModified(true)
+                    onChange={e => {
+                      setEmailConfig({ ...emailConfig, smtpPort: e.target.value });
+                      setModified(true);
                     }}
                     className="w-full px-3 py-2 rounded-lg text-[12px]"
                     style={{
@@ -512,9 +511,9 @@ export function ParameterSettingsPage() {
                   <input
                     type="text"
                     value={emailConfig.smtpUser}
-                    onChange={(e) => {
-                      setEmailConfig({ ...emailConfig, smtpUser: e.target.value })
-                      setModified(true)
+                    onChange={e => {
+                      setEmailConfig({ ...emailConfig, smtpUser: e.target.value });
+                      setModified(true);
                     }}
                     className="w-full px-3 py-2 rounded-lg text-[12px]"
                     style={{
@@ -531,9 +530,9 @@ export function ParameterSettingsPage() {
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={emailConfig.smtpPassword}
-                      onChange={(e) => {
-                        setEmailConfig({ ...emailConfig, smtpPassword: e.target.value })
-                        setModified(true)
+                      onChange={e => {
+                        setEmailConfig({ ...emailConfig, smtpPassword: e.target.value });
+                        setModified(true);
                       }}
                       className="w-full px-3 py-2 pr-10 rounded-lg text-[12px]"
                       style={{
@@ -557,12 +556,12 @@ export function ParameterSettingsPage() {
                   <label className="block text-[10px] text-white/40 mb-1.5">加密方式</label>
                   <select
                     value={emailConfig.smtpEncryption}
-                    onChange={(e) => {
+                    onChange={e => {
                       setEmailConfig({
                         ...emailConfig,
                         smtpEncryption: e.target.value as 'none' | 'ssl' | 'tls',
-                      })
-                      setModified(true)
+                      });
+                      setModified(true);
                     }}
                     className="w-full px-3 py-2 rounded-lg text-[12px]"
                     style={{
@@ -598,12 +597,12 @@ export function ParameterSettingsPage() {
                     min="6"
                     max="20"
                     value={securityConfig.passwordMinLength}
-                    onChange={(e) => {
+                    onChange={e => {
                       setSecurityConfig({
                         ...securityConfig,
-                        passwordMinLength: parseInt(e.target.value),
-                      })
-                      setModified(true)
+                        passwordMinLength: parseInt(e.target.value, 10),
+                      });
+                      setModified(true);
                     }}
                     className="w-full"
                   />
@@ -649,9 +648,9 @@ export function ParameterSettingsPage() {
                       <input
                         type="checkbox"
                         checked={item.value}
-                        onChange={(e) => {
-                          setSecurityConfig({ ...securityConfig, [item.key]: e.target.checked })
-                          setModified(true)
+                        onChange={e => {
+                          setSecurityConfig({ ...securityConfig, [item.key]: e.target.checked });
+                          setModified(true);
                         }}
                         className="w-4 h-4 rounded"
                         style={{ accentColor: tc.destructive }}
@@ -668,12 +667,12 @@ export function ParameterSettingsPage() {
                     <input
                       type="number"
                       value={securityConfig.sessionTimeout}
-                      onChange={(e) => {
+                      onChange={e => {
                         setSecurityConfig({
                           ...securityConfig,
-                          sessionTimeout: parseInt(e.target.value) || 0,
-                        })
-                        setModified(true)
+                          sessionTimeout: parseInt(e.target.value, 10) || 0,
+                        });
+                        setModified(true);
                       }}
                       className="w-full px-3 py-2 rounded-lg text-[12px]"
                       style={{
@@ -691,12 +690,12 @@ export function ParameterSettingsPage() {
                     <input
                       type="number"
                       value={securityConfig.maxLoginAttempts}
-                      onChange={(e) => {
+                      onChange={e => {
                         setSecurityConfig({
                           ...securityConfig,
-                          maxLoginAttempts: parseInt(e.target.value) || 0,
-                        })
-                        setModified(true)
+                          maxLoginAttempts: parseInt(e.target.value, 10) || 0,
+                        });
+                        setModified(true);
                       }}
                       className="w-full px-3 py-2 rounded-lg text-[12px]"
                       style={{
@@ -746,5 +745,5 @@ export function ParameterSettingsPage() {
         </NeonCard>
       </div>
     </div>
-  )
+  );
 }

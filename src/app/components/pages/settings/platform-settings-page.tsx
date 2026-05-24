@@ -9,8 +9,8 @@ import {
   Shield,
   TrendingUp,
   Zap,
-} from 'lucide-react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { useState } from 'react';
 import {
   Area,
   AreaChart,
@@ -20,10 +20,10 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts'
+} from 'recharts';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 平台设置页面 - Platform Settings
@@ -36,11 +36,11 @@ type SettingTab =
   | 'integration'
   | 'security'
   | 'performance'
-  | 'monitoring'
+  | 'monitoring';
 
 export function PlatformSettingsPage() {
-  const tc = useThemeColors()
-  const [activeTab, setActiveTab] = useState<SettingTab>('overview')
+  const tc = useThemeColors();
+  const [activeTab, setActiveTab] = useState<SettingTab>('overview');
 
   // Mock performance data
   const performanceData = Array.from({ length: 24 }, (_, i) => ({
@@ -48,7 +48,7 @@ export function PlatformSettingsPage() {
     cpu: 30 + Math.random() * 40,
     memory: 40 + Math.random() * 30,
     requests: 100 + Math.random() * 150,
-  }))
+  }));
 
   const tabs = [
     { id: 'overview' as const, label: '概览', icon: Server },
@@ -57,7 +57,7 @@ export function PlatformSettingsPage() {
     { id: 'security' as const, label: '安全设置', icon: Shield },
     { id: 'performance' as const, label: '性能配置', icon: Zap },
     { id: 'monitoring' as const, label: '监控设置', icon: Activity },
-  ]
+  ];
 
   return (
     <div className="h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
@@ -147,9 +147,9 @@ export function PlatformSettingsPage() {
       {/* Tabs */}
       <div className="px-6 pb-4">
         <div className="flex items-center gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-          {tabs.map((tab) => {
-            const Icon = tab.icon
-            const isActive = activeTab === tab.id
+          {tabs.map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
@@ -165,7 +165,7 @@ export function PlatformSettingsPage() {
                 <Icon className="w-3 h-3" />
                 {tab.label}
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -548,5 +548,5 @@ export function PlatformSettingsPage() {
         </NeonCard>
       </div>
     </div>
-  )
+  );
 }

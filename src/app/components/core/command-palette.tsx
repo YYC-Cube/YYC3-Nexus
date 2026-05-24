@@ -1,4 +1,4 @@
-import { Command } from 'cmdk'
+import { Command } from 'cmdk';
 import {
   Activity,
   ArrowRight,
@@ -34,7 +34,7 @@ import {
   Users,
   Wrench,
   Zap,
-} from 'lucide-react'
+} from 'lucide-react';
 import {
   type ComponentType,
   type CSSProperties,
@@ -42,10 +42,10 @@ import {
   useEffect,
   useRef,
   useState,
-} from 'react'
+} from 'react';
 
-import { type PageId, useApp } from '../context/app-context'
-import { useI18n } from '../context/i18n-context'
+import { type PageId, useApp } from '../context/app-context';
+import { useI18n } from '../context/i18n-context';
 
 // ==========================================
 // YYC³ 命令面板 — Ctrl+K Command Palette
@@ -53,19 +53,19 @@ import { useI18n } from '../context/i18n-context'
 // ==========================================
 
 interface CommandItem {
-  id: string
-  label: string
-  sublabel?: string
-  icon: ComponentType<{ className?: string; style?: CSSProperties }>
-  color: string
-  action: () => void
-  category: 'navigation' | 'customer' | 'action' | 'tool' | 'recent'
-  keywords?: string[]
+  id: string;
+  label: string;
+  sublabel?: string;
+  icon: ComponentType<{ className?: string; style?: CSSProperties }>;
+  color: string;
+  action: () => void;
+  category: 'navigation' | 'customer' | 'action' | 'tool' | 'recent';
+  keywords?: string[];
 }
 
 interface CommandPaletteProps {
-  open: boolean
-  onClose: () => void
+  open: boolean;
+  onClose: () => void;
 }
 
 /**
@@ -74,43 +74,43 @@ interface CommandPaletteProps {
  * quick operations, and AI tools. Renders as a centered modal with `cmdk`.
  */
 export function CommandPalette({ open, onClose }: CommandPaletteProps) {
-  const { setActivePage, addActivity } = useApp()
-  const { t } = useI18n()
-  const [search, setSearch] = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
+  const { setActivePage, addActivity } = useApp();
+  const { t } = useI18n();
+  const [search, setSearch] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Focus input when opened
   useEffect(() => {
     if (open) {
-      setSearch('')
-      setTimeout(() => inputRef.current?.focus(), 50)
+      setSearch('');
+      setTimeout(() => inputRef.current?.focus(), 50);
     }
-  }, [open])
+  }, [open]);
 
   // ESC to close
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && open) {
-        onClose()
+        onClose();
       }
-    }
-    window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
-  }, [open, onClose])
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [open, onClose]);
 
   const navigate = useCallback(
     (page: PageId) => {
-      setActivePage(page)
+      setActivePage(page);
       addActivity({
         action: t('cmd.quickNav'),
         target: t('cmd.jumpedTo', { page }),
         type: 'system',
         color: '#00f0ff',
-      })
-      onClose()
+      });
+      onClose();
     },
     [setActivePage, addActivity, onClose, t],
-  )
+  );
 
   const commands: CommandItem[] = [
     // Navigation
@@ -554,16 +554,16 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       action: () => navigate('tools'),
       keywords: ['性能', '优化'],
     },
-  ]
+  ];
 
   const categoryLabels: Record<string, { label: string; sublabel: string; color: string }> = {
     navigation: { label: t('cmd.pageNav'), sublabel: 'Navigation', color: '#00f0ff' },
     customer: { label: t('cmd.custSearch'), sublabel: 'Customers', color: '#00d4ff' },
     action: { label: t('cmd.quickActions'), sublabel: 'Actions', color: '#00ffcc' },
     tool: { label: t('cmd.aiTools'), sublabel: 'Tools', color: '#00ffc8' },
-  }
+  };
 
-  if (!open) return null
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-[15vh]">
@@ -575,6 +575,10 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
           backdropFilter: 'blur(8px)',
         }}
         onClick={onClose}
+        onKeyDown={(e) => e.key === 'Escape' && onClose()}
+        role="button"
+        tabIndex={-1}
+        aria-label="Close"
       />
 
       {/* Command Panel */}
@@ -602,13 +606,13 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         <Command
           className="relative z-10"
           filter={(value, search) => {
-            const item = commands.find((c) => c.id === value)
-            if (!item) return 0
-            const s = search.toLowerCase()
-            if (item.label.toLowerCase().includes(s)) return 1
-            if (item.sublabel?.toLowerCase().includes(s)) return 0.8
-            if (item.keywords?.some((k) => k.toLowerCase().includes(s))) return 0.6
-            return 0
+            const item = commands.find(c => c.id === value);
+            if (!item) return 0;
+            const s = search.toLowerCase();
+            if (item.label.toLowerCase().includes(s)) return 1;
+            if (item.sublabel?.toLowerCase().includes(s)) return 0.8;
+            if (item.keywords?.some(k => k.toLowerCase().includes(s))) return 0.6;
+            return 0;
           }}
         >
           {/* Search Input */}
@@ -652,10 +656,10 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
               </div>
             </Command.Empty>
 
-            {Object.keys(categoryLabels).map((cat) => {
-              const catInfo = categoryLabels[cat]
-              const catCommands = commands.filter((c) => c.category === cat)
-              if (catCommands.length === 0) return null
+            {Object.keys(categoryLabels).map(cat => {
+              const catInfo = categoryLabels[cat];
+              const catCommands = commands.filter(c => c.category === cat);
+              if (catCommands.length === 0) return null;
 
               return (
                 <Command.Group
@@ -679,8 +683,8 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                     </div>
                   }
                 >
-                  {catCommands.map((cmd) => {
-                    const Icon = cmd.icon
+                  {catCommands.map(cmd => {
+                    const Icon = cmd.icon;
                     return (
                       <Command.Item
                         key={cmd.id}
@@ -688,13 +692,13 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                         onSelect={() => cmd.action()}
                         className="flex items-center gap-3 px-3 py-2.5 rounded-xl mx-1 mb-0.5 cursor-pointer transition-all duration-200 group"
                         style={{ color: 'rgba(255,255,255,0.6)' }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = `${cmd.color}10`
-                          e.currentTarget.style.borderColor = `${cmd.color}25`
+                        onMouseEnter={e => {
+                          e.currentTarget.style.background = `${cmd.color}10`;
+                          e.currentTarget.style.borderColor = `${cmd.color}25`;
                         }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'transparent'
-                          e.currentTarget.style.borderColor = 'transparent'
+                        onMouseLeave={e => {
+                          e.currentTarget.style.background = 'transparent';
+                          e.currentTarget.style.borderColor = 'transparent';
                         }}
                       >
                         <div
@@ -719,10 +723,10 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                           style={{ color: cmd.color }}
                         />
                       </Command.Item>
-                    )
+                    );
                   })}
                 </Command.Group>
-              )
+              );
             })}
           </Command.List>
 
@@ -774,7 +778,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         </Command>
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -782,18 +786,18 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
  * Returns `{ open, setOpen }` for controlled rendering.
  */
 export function useCommandPalette() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault()
-        setOpen((prev) => !prev)
+        e.preventDefault();
+        setOpen(prev => !prev);
       }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
-  return { open, setOpen, onClose: () => setOpen(false) }
+  return { open, setOpen, onClose: () => setOpen(false) };
 }

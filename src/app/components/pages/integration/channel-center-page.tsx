@@ -10,8 +10,8 @@ import {
   Settings,
   TrendingUp,
   Users,
-} from 'lucide-react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -21,32 +21,32 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts'
+} from 'recharts';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 渠道中心页面 - Channel Center
 // 全渠道统一管理 · 多渠道集成 · 数据分析
 // ==========================================
 
-type ChannelTab = 'overview' | 'config' | 'sync' | 'analytics' | 'operations'
+type ChannelTab = 'overview' | 'config' | 'sync' | 'analytics' | 'operations';
 
 interface Channel {
-  id: string
-  name: string
-  type: string
-  status: 'connected' | 'disconnected' | 'warning'
-  users: number
-  orders: number
-  revenue: number
-  roi: number
+  id: string;
+  name: string;
+  type: string;
+  status: 'connected' | 'disconnected' | 'warning';
+  users: number;
+  orders: number;
+  revenue: number;
+  roi: number;
 }
 
 export function ChannelCenterPage() {
-  const tc = useThemeColors()
-  const [activeTab, setActiveTab] = useState<ChannelTab>('overview')
+  const tc = useThemeColors();
+  const [activeTab, setActiveTab] = useState<ChannelTab>('overview');
 
   const channels: Channel[] = [
     {
@@ -109,14 +109,14 @@ export function ChannelCenterPage() {
       revenue: 0,
       roi: 0,
     },
-  ]
+  ];
 
   const channelGrowthData = Array.from({ length: 7 }, (_, i) => ({
     day: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'][i],
     wechat: 1200 + Math.random() * 300,
     douyin: 800 + Math.random() * 200,
     xiaohongshu: 600 + Math.random() * 150,
-  }))
+  }));
 
   const tabs = [
     { id: 'overview' as const, label: '概览', icon: Radio },
@@ -124,33 +124,33 @@ export function ChannelCenterPage() {
     { id: 'sync' as const, label: '数据同步', icon: Activity },
     { id: 'analytics' as const, label: '数据分析', icon: BarChart3 },
     { id: 'operations' as const, label: '运营管理', icon: Megaphone },
-  ]
+  ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'connected':
-        return tc.success
+        return tc.success;
       case 'warning':
-        return tc.warning
+        return tc.warning;
       case 'disconnected':
-        return tc.muted
+        return tc.muted;
       default:
-        return tc.muted
+        return tc.muted;
     }
-  }
+  };
 
   const getStatusText = (status: string) => {
     switch (status) {
       case 'connected':
-        return '已连接'
+        return '已连接';
       case 'warning':
-        return '异常'
+        return '异常';
       case 'disconnected':
-        return '未连接'
+        return '未连接';
       default:
-        return '未知'
+        return '未知';
     }
-  }
+  };
 
   return (
     <div className="h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
@@ -240,9 +240,9 @@ export function ChannelCenterPage() {
       {/* Tabs */}
       <div className="px-6 pb-4">
         <div className="flex items-center gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-          {tabs.map((tab) => {
-            const Icon = tab.icon
-            const isActive = activeTab === tab.id
+          {tabs.map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
@@ -258,7 +258,7 @@ export function ChannelCenterPage() {
                 <Icon className="w-3 h-3" />
                 {tab.label}
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -519,7 +519,7 @@ export function ChannelCenterPage() {
               <h3 className="text-[12px] text-white/60 mb-3">渠道ROI对比</h3>
               <div className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={channels.filter((c) => c.status !== 'disconnected')}>
+                  <BarChart data={channels.filter(c => c.status !== 'disconnected')}>
                     <XAxis
                       dataKey="name"
                       stroke={tc.alpha(tc.foreground, 0.2)}
@@ -690,5 +690,5 @@ export function ChannelCenterPage() {
         </NeonCard>
       </div>
     </div>
-  )
+  );
 }

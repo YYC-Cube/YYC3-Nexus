@@ -11,11 +11,11 @@ import {
   Video,
   Wand2,
   Zap,
-} from 'lucide-react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { useState } from 'react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 智能创作工具 - Smart Creation Tools
@@ -23,18 +23,18 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 interface CreationTemplate {
-  id: string
-  name: string
-  type: 'text' | 'image' | 'video' | 'audio'
-  description: string
-  icon: typeof FileText
-  usage: number
-  rating: number
+  id: string;
+  name: string;
+  type: 'text' | 'image' | 'video' | 'audio';
+  description: string;
+  icon: typeof FileText;
+  usage: number;
+  rating: number;
 }
 
 export function SmartCreationPage() {
-  const tc = useThemeColors()
-  const [selectedType, setSelectedType] = useState<'all' | CreationTemplate['type']>('all')
+  const tc = useThemeColors();
+  const [selectedType, setSelectedType] = useState<'all' | CreationTemplate['type']>('all');
 
   const templates: CreationTemplate[] = [
     {
@@ -91,18 +91,18 @@ export function SmartCreationPage() {
       usage: 890,
       rating: 4.7,
     },
-  ]
+  ];
 
   const filteredTemplates = templates.filter(
-    (t) => selectedType === 'all' || t.type === selectedType,
-  )
+    t => selectedType === 'all' || t.type === selectedType,
+  );
 
   const stats = [
     { label: '创作总量', value: '12.5K', change: '+28.3%', icon: Wand2, color: tc.primary },
     { label: '用户满意度', value: '96.8%', change: '+4.2%', icon: Star, color: tc.success },
     { label: 'AI生成速度', value: '2.3s', change: '-15.8%', icon: Zap, color: tc.secondary },
     { label: '采纳率', value: '89.2%', change: '+6.5%', icon: TrendingUp, color: tc.accent },
-  ]
+  ];
 
   const recentCreations = [
     { id: 'C001', title: '618大促海报', type: 'image', status: 'completed', time: '5分钟前' },
@@ -114,7 +114,7 @@ export function SmartCreationPage() {
       time: '10分钟前',
     },
     { id: 'C003', title: '品牌故事文案', type: 'text', status: 'completed', time: '15分钟前' },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -128,6 +128,7 @@ export function SmartCreationPage() {
           </p>
         </div>
         <button
+          type="button"
           className="flex items-center gap-2 px-6 py-3 rounded-lg font-medium"
           style={{ background: tc.gradientButton, color: tc.textPrimary, boxShadow: tc.shadowMd }}
         >
@@ -137,8 +138,8 @@ export function SmartCreationPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon
+        {stats.map(stat => {
+          const Icon = stat.icon;
           return (
             <NeonCard key={stat.label} className="p-6">
               <div className="flex items-start justify-between mb-4">
@@ -168,7 +169,7 @@ export function SmartCreationPage() {
                 {stat.value}
               </p>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
@@ -177,7 +178,7 @@ export function SmartCreationPage() {
           最近创作
         </h2>
         <div className="space-y-3">
-          {recentCreations.map((item) => (
+          {recentCreations.map(item => (
             <div
               key={item.id}
               className="flex items-center justify-between p-4 rounded-lg"
@@ -219,8 +220,9 @@ export function SmartCreationPage() {
       </NeonCard>
 
       <div className="flex items-center gap-3">
-        {(['all', 'text', 'image', 'video', 'audio'] as const).map((type) => (
+        {(['all', 'text', 'image', 'video', 'audio'] as const).map(type => (
           <button
+            type="button"
             key={type}
             onClick={() => setSelectedType(type)}
             className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
@@ -245,8 +247,8 @@ export function SmartCreationPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {filteredTemplates.map((template) => {
-          const Icon = template.icon
+        {filteredTemplates.map(template => {
+          const Icon = template.icon;
           return (
             <NeonCard key={template.id} className="p-6 cursor-pointer group">
               <div className="flex items-start justify-between mb-4">
@@ -282,6 +284,7 @@ export function SmartCreationPage() {
               </div>
 
               <button
+                type="button"
                 className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all opacity-0 group-hover:opacity-100"
                 style={{
                   background: tc.alpha(tc.primary, 0.1),
@@ -293,9 +296,9 @@ export function SmartCreationPage() {
                 立即使用
               </button>
             </NeonCard>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

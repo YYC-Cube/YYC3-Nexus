@@ -11,10 +11,10 @@ import {
   TrendingUp,
   Users,
   Zap,
-} from 'lucide-react'
+} from 'lucide-react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 智能决策支持 - Intelligent Decision Support
@@ -22,17 +22,17 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 interface Decision {
-  id: string
-  title: string
-  category: 'budget' | 'channel' | 'timing' | 'audience'
-  priority: 'high' | 'medium' | 'low'
-  impact: string
-  confidence: number
-  recommendation: string
+  id: string;
+  title: string;
+  category: 'budget' | 'channel' | 'timing' | 'audience';
+  priority: 'high' | 'medium' | 'low';
+  impact: string;
+  confidence: number;
+  recommendation: string;
 }
 
 export function DecisionSupportPage() {
-  const tc = useThemeColors()
+  const tc = useThemeColors();
 
   const decisions: Decision[] = [
     {
@@ -71,7 +71,7 @@ export function DecisionSupportPage() {
       confidence: 85,
       recommendation: '某渠道ROI仅1.2x，建议暂停并将预算转移至高效渠道',
     },
-  ]
+  ];
 
   const predictions = [
     {
@@ -106,7 +106,7 @@ export function DecisionSupportPage() {
       icon: TrendingUp,
       color: tc.accent,
     },
-  ]
+  ];
 
   const riskAlerts = [
     {
@@ -130,31 +130,31 @@ export function DecisionSupportPage() {
       message: '预测下周流量将下降15%，建议调整投放节奏',
       action: '查看详情',
     },
-  ]
+  ];
 
   const getPriorityConfig = (priority: Decision['priority']) => {
     switch (priority) {
       case 'high':
-        return { label: '高优先级', color: tc.danger, icon: AlertTriangle }
+        return { label: '高优先级', color: tc.danger, icon: AlertTriangle };
       case 'medium':
-        return { label: '中优先级', color: tc.warning, icon: Activity }
+        return { label: '中优先级', color: tc.warning, icon: Activity };
       case 'low':
-        return { label: '低优先级', color: tc.textMuted, icon: CheckCircle2 }
+        return { label: '低优先级', color: tc.textMuted, icon: CheckCircle2 };
     }
-  }
+  };
 
   const getCategoryLabel = (category: Decision['category']) => {
     switch (category) {
       case 'budget':
-        return '预算优化'
+        return '预算优化';
       case 'channel':
-        return '渠道选择'
+        return '渠道选择';
       case 'timing':
-        return '时段优化'
+        return '时段优化';
       case 'audience':
-        return '受众定向'
+        return '受众定向';
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -179,8 +179,8 @@ export function DecisionSupportPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {predictions.map((pred) => {
-          const Icon = pred.icon
+        {predictions.map(pred => {
+          const Icon = pred.icon;
           return (
             <NeonCard key={pred.metric} className="p-6">
               <div className="flex items-start justify-between mb-4">
@@ -203,7 +203,7 @@ export function DecisionSupportPage() {
                 {pred.change}
               </p>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
@@ -215,7 +215,7 @@ export function DecisionSupportPage() {
           </h2>
         </div>
         <div className="space-y-3">
-          {riskAlerts.map((alert) => (
+          {riskAlerts.map(alert => (
             <div
               key={alert.id}
               className="p-4 rounded-lg"
@@ -294,9 +294,9 @@ export function DecisionSupportPage() {
           </h2>
         </div>
         <div className="space-y-4">
-          {decisions.map((decision) => {
-            const priorityConfig = getPriorityConfig(decision.priority)
-            const PriorityIcon = priorityConfig.icon
+          {decisions.map(decision => {
+            const priorityConfig = getPriorityConfig(decision.priority);
+            const PriorityIcon = priorityConfig.icon;
 
             return (
               <div
@@ -392,10 +392,10 @@ export function DecisionSupportPage() {
                   </button>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </NeonCard>
     </div>
-  )
+  );
 }

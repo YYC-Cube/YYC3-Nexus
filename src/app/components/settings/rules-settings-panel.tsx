@@ -11,14 +11,14 @@
  * @tags settings,rules,custom
  */
 
-import { FileCode } from 'lucide-react'
+import { FileCode } from 'lucide-react';
 
-import { useSettingsStore } from '../../stores/useSettingsStore'
-import { useThemeColors } from '../hooks/use-theme-colors'
+import { useSettingsStore } from '../../stores/useSettingsStore';
+import { useThemeColors } from '../hooks/use-theme-colors';
 
 export function RulesSettingsPanel() {
-  const tc = useThemeColors()
-  const { settings } = useSettingsStore()
+  const tc = useThemeColors();
+  const { settings } = useSettingsStore();
 
   return (
     <div className="space-y-6">
@@ -36,5 +36,5 @@ export function RulesSettingsPanel() {
         <p style={{ color: tc.textMuted }}>规则管理面板</p>
       </div>
     </div>
-  )
+  );
 }

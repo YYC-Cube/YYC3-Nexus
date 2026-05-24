@@ -1,50 +1,50 @@
 import {
-    Activity,
-    AlertCircle,
-    ArrowRight,
-    Check,
-    CheckCircle2,
-    ChevronDown,
-    ChevronRight,
-    Copy,
-    Edit3,
-    ExternalLink,
-    Eye,
-    EyeOff,
-    FileCode2,
-    Loader2,
-    MinusCircle,
-    PlusCircle,
-    Trash2,
-    X,
-    XCircle,
-    Zap,
-} from 'lucide-react'
-import { memo, useState } from 'react'
+  Activity,
+  AlertCircle,
+  ArrowRight,
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
+  Copy,
+  Edit3,
+  ExternalLink,
+  Eye,
+  EyeOff,
+  FileCode2,
+  Loader2,
+  MinusCircle,
+  PlusCircle,
+  Trash2,
+  X,
+  XCircle,
+  Zap,
+} from 'lucide-react';
+import { memo, useState } from 'react';
 
-import { useI18n } from './context/i18n-context'
+import { useI18n } from './context/i18n-context';
 
-import type { DiagnosticResult, ModelDef, ProviderDef } from './model-settings-types'
+import type { DiagnosticResult, ModelDef, ProviderDef } from './model-settings-types';
 
 export const CopyButton = memo(function CopyButton({ text }: { text: string }) {
-  const { t: i } = useI18n()
-  const [copied, setCopied] = useState(false)
+  const { t: i } = useI18n();
+  const [copied, setCopied] = useState(false);
   return (
     <button
       onClick={() => {
         navigator.clipboard.writeText(text).catch(() => {
           /* clipboard denied */
-        })
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
+        });
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
       }}
       className="p-1 rounded text-white/20 hover:text-white/50 hover:bg-white/[0.04] transition-all"
       title={i('ms.copy')}
     >
       {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
     </button>
-  )
-})
+  );
+});
 
 export function ProviderCard({
   provider,
@@ -63,37 +63,37 @@ export function ProviderCard({
   onRemoveProvider,
   isCustom,
 }: {
-  provider: ProviderDef
-  apiKey: string
-  customUrl: string
-  onApiKeyChange: (key: string) => void
-  onUrlChange: (url: string) => void
-  onAddModel: (model: ModelDef) => void
-  onRemoveModel: (modelId: string) => void
-  onTestConnection: (modelId: string) => void
-  onSelectModel: (modelId: string) => void
-  activeModelKey: string | null
-  diagnostics: Record<string, DiagnosticResult>
-  expanded: boolean
-  onToggle: () => void
-  onRemoveProvider?: () => void
-  isCustom?: boolean
+  provider: ProviderDef;
+  apiKey: string;
+  customUrl: string;
+  onApiKeyChange: (key: string) => void;
+  onUrlChange: (url: string) => void;
+  onAddModel: (model: ModelDef) => void;
+  onRemoveModel: (modelId: string) => void;
+  onTestConnection: (modelId: string) => void;
+  onSelectModel: (modelId: string) => void;
+  activeModelKey: string | null;
+  diagnostics: Record<string, DiagnosticResult>;
+  expanded: boolean;
+  onToggle: () => void;
+  onRemoveProvider?: () => void;
+  isCustom?: boolean;
 }) {
-  const [showKey, setShowKey] = useState(false)
-  const [addingModel, setAddingModel] = useState(false)
-  const [newModelName, setNewModelName] = useState('')
-  const [newModelId, setNewModelId] = useState('')
-  const [editingUrl, setEditingUrl] = useState(false)
-  const [urlDraft, setUrlDraft] = useState(customUrl || provider.baseURL)
-  const { t: i } = useI18n()
-  const Icon = provider.icon
+  const [showKey, setShowKey] = useState(false);
+  const [addingModel, setAddingModel] = useState(false);
+  const [newModelName, setNewModelName] = useState('');
+  const [newModelId, setNewModelId] = useState('');
+  const [editingUrl, setEditingUrl] = useState(false);
+  const [urlDraft, setUrlDraft] = useState(customUrl || provider.baseURL);
+  const { t: i } = useI18n();
+  const Icon = provider.icon;
 
-  const activeUrl = customUrl || provider.baseURL
+  const activeUrl = customUrl || provider.baseURL;
 
-  const hasAnyOnline = Object.values(diagnostics).some((d) => d.status === 'success')
-  const hasAnyError = Object.values(diagnostics).some((d) => d.status === 'error')
-  const isTesting = Object.values(diagnostics).some((d) => d.status === 'testing')
-  const hasActiveModel = activeModelKey ? activeModelKey.startsWith(provider.id + ':') : false
+  const hasAnyOnline = Object.values(diagnostics).some(d => d.status === 'success');
+  const hasAnyError = Object.values(diagnostics).some(d => d.status === 'error');
+  const isTesting = Object.values(diagnostics).some(d => d.status === 'testing');
+  const hasActiveModel = activeModelKey ? activeModelKey.startsWith(`${provider.id}:`) : false;
 
   return (
     <div
@@ -169,8 +169,8 @@ export function ProviderCard({
                 {!editingUrl ? (
                   <button
                     onClick={() => {
-                      setEditingUrl(true)
-                      setUrlDraft(activeUrl)
+                      setEditingUrl(true);
+                      setUrlDraft(activeUrl);
                     }}
                     className="text-[9px] text-white/20 hover:text-white/50 px-1.5 py-0.5 rounded hover:bg-white/[0.04] transition-all"
                   >
@@ -181,8 +181,8 @@ export function ProviderCard({
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => {
-                        onUrlChange(urlDraft)
-                        setEditingUrl(false)
+                        onUrlChange(urlDraft);
+                        setEditingUrl(false);
                       }}
                       className="text-[9px] text-emerald-400/70 hover:text-emerald-400 px-1.5 py-0.5 rounded hover:bg-emerald-500/10 transition-all"
                     >
@@ -203,7 +203,7 @@ export function ProviderCard({
             {editingUrl ? (
               <input
                 value={urlDraft}
-                onChange={(e) => setUrlDraft(e.target.value)}
+                onChange={e => setUrlDraft(e.target.value)}
                 placeholder={i('ms.url')}
                 aria-label={i('ms.url')}
                 className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 text-[11px] text-white/70 font-mono focus:outline-none focus:border-[#00f0ff]/40"
@@ -241,12 +241,12 @@ export function ProviderCard({
                   <input
                     type={showKey ? 'text' : 'password'}
                     value={apiKey}
-                    onChange={(e) => onApiKeyChange(e.target.value)}
+                    onChange={e => onApiKeyChange(e.target.value)}
                     placeholder={i(provider.apiKeyPlaceholder)}
                     className="w-full bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-2 pr-8 text-[11px] text-white/70 font-mono focus:outline-none focus:border-[#00f0ff]/40 placeholder:text-white/10"
                   />
                   <button
-                    onClick={() => setShowKey((p) => !p)}
+                    onClick={() => setShowKey(p => !p)}
                     className="absolute right-2 top-1/2 -translate-y-1/2 text-white/15 hover:text-white/40 transition-all"
                   >
                     {showKey ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
@@ -276,10 +276,10 @@ export function ProviderCard({
               </button>
             </div>
             <div className="space-y-1">
-              {provider.models.map((model) => {
-                const diag = diagnostics[model.id]
-                const modelKey = provider.id + ':' + model.id
-                const isActive = activeModelKey === modelKey
+              {provider.models.map(model => {
+                const diag = diagnostics[model.id];
+                const modelKey = `${provider.id}:${model.id}`;
+                const isActive = activeModelKey === modelKey;
                 return (
                   <div
                     key={model.id}
@@ -362,7 +362,7 @@ export function ProviderCard({
                       </button>
                     </div>
                   </div>
-                )
+                );
               })}
             </div>
 
@@ -371,13 +371,13 @@ export function ProviderCard({
               <div className="flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed border-[#00f0ff]/20 bg-[#00f0ff]/[0.03]">
                 <input
                   value={newModelId}
-                  onChange={(e) => setNewModelId(e.target.value)}
+                  onChange={e => setNewModelId(e.target.value)}
                   placeholder={i('ms.modelIdPlaceholder')}
                   className="flex-1 bg-transparent text-[11px] text-white/70 font-mono placeholder:text-white/15 focus:outline-none"
                 />
                 <input
                   value={newModelName}
-                  onChange={(e) => setNewModelName(e.target.value)}
+                  onChange={e => setNewModelName(e.target.value)}
                   placeholder={i('ms.displayNamePlaceholder')}
                   className="flex-1 bg-transparent text-[11px] text-white/70 placeholder:text-white/15 focus:outline-none"
                 />
@@ -389,10 +389,10 @@ export function ProviderCard({
                         id: newModelId,
                         name: newModelName,
                         description: i('ms.customModel'),
-                      })
-                      setNewModelId('')
-                      setNewModelName('')
-                      setAddingModel(false)
+                      });
+                      setNewModelId('');
+                      setNewModelName('');
+                      setAddingModel(false);
                     }
                   }}
                   disabled={!newModelId || !newModelName}
@@ -403,9 +403,9 @@ export function ProviderCard({
                 <button
                   aria-label={i('ms.cancel')}
                   onClick={() => {
-                    setAddingModel(false)
-                    setNewModelId('')
-                    setNewModelName('')
+                    setAddingModel(false);
+                    setNewModelId('');
+                    setNewModelName('');
                   }}
                   className="p-1 text-white/20 hover:text-white/50 transition-all"
                 >
@@ -418,7 +418,7 @@ export function ProviderCard({
           {/* Test all + diagnostics summary */}
           <div className="flex items-center gap-2 pt-1">
             <button
-              onClick={() => provider.models.forEach((m) => onTestConnection(m.id))}
+              onClick={() => provider.models.forEach(m => onTestConnection(m.id))}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] transition-all border ${provider.colorBg} ${provider.colorBorder} ${provider.color}`}
             >
               <Activity className="w-3 h-3" /> {i('ms.testAll')}
@@ -481,5 +481,5 @@ export function ProviderCard({
         </div>
       )}
     </div>
-  )
+  );
 }

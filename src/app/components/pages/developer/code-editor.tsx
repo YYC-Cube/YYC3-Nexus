@@ -10,13 +10,11 @@
  * @tags P1,frontend,editor,monaco,intellisense
  */
 
-import Editor, { type Monaco, type OnMount } from '@monaco-editor/react'
-import { Copy, Loader2, Minus, Plus, Save, Type, WrapText } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
-
-import { useThemeColors } from '../../hooks/use-theme-colors'
-
-import type { editor } from 'monaco-editor'
+import Editor, { type Monaco, type OnMount } from '@monaco-editor/react';
+import { Copy, Loader2, Minus, Plus, Save, Type, WrapText } from 'lucide-react';
+import type { editor } from 'monaco-editor';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // Types
@@ -24,19 +22,19 @@ import type { editor } from 'monaco-editor'
 
 export interface CodeEditorProps {
   /** File path — used for display and automatic language detection */
-  filePath: string
+  filePath: string;
   /** Initial file content */
-  initialContent?: string
+  initialContent?: string;
   /** Read-only mode */
-  readOnly?: boolean
+  readOnly?: boolean;
   /** Callback when content changes */
-  onChange?: (content: string) => void
+  onChange?: (content: string) => void;
   /** Callback when user saves (Ctrl+S) */
-  onSave?: (content: string) => void
+  onSave?: (content: string) => void;
   /** Callback to retrieve current content (exposed for AI context) */
-  onEditorReady?: (getter: () => string) => void
+  onEditorReady?: (getter: () => string) => void;
   /** Callback to expose insert-at-cursor function */
-  onInsertReady?: (inserter: (text: string) => void) => void
+  onInsertReady?: (inserter: (text: string) => void) => void;
 }
 
 // ==========================================
@@ -69,15 +67,15 @@ const EXT_LANG_MAP: Record<string, string> = {
   toml: 'ini',
   env: 'ini',
   dockerfile: 'dockerfile',
-}
+};
 
 function detectLanguage(filePath: string): string {
-  const ext = filePath.split('.').pop()?.toLowerCase() ?? ''
-  const name = filePath.split('/').pop()?.toLowerCase() ?? ''
-  if (name === 'dockerfile') return 'dockerfile'
-  if (name === 'makefile') return 'makefile'
-  if (name.endsWith('.d.ts')) return 'typescript'
-  return EXT_LANG_MAP[ext] ?? 'plaintext'
+  const ext = filePath.split('.').pop()?.toLowerCase() ?? '';
+  const name = filePath.split('/').pop()?.toLowerCase() ?? '';
+  if (name === 'dockerfile') return 'dockerfile';
+  if (name === 'makefile') return 'makefile';
+  if (name.endsWith('.d.ts')) return 'typescript';
+  return EXT_LANG_MAP[ext] ?? 'plaintext';
 }
 
 // ==========================================
@@ -148,7 +146,7 @@ function defineYYC3Theme(monaco: Monaco) {
       'dropdown.background': '#111a17',
       'dropdown.border': '#00ff8720',
     },
-  })
+  });
 }
 
 // ==========================================
@@ -164,90 +162,90 @@ export function CodeEditor({
   onEditorReady,
   onInsertReady,
 }: CodeEditorProps) {
-  const tc = useThemeColors()
-  const language = detectLanguage(filePath)
-  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null)
+  const tc = useThemeColors();
+  const language = detectLanguage(filePath);
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
 
-  const [modified, setModified] = useState(false)
-  const [cursorLine, setCursorLine] = useState(1)
-  const [cursorCol, setCursorCol] = useState(1)
-  const [lineCount, setLineCount] = useState(0)
-  const [fontSize, setFontSize] = useState(13)
-  const [wordWrap, setWordWrap] = useState<'off' | 'on'>('off')
-  const [showMinimap, setShowMinimap] = useState(true)
+  const [modified, setModified] = useState(false);
+  const [cursorLine, setCursorLine] = useState(1);
+  const [cursorCol, setCursorCol] = useState(1);
+  const [lineCount, setLineCount] = useState(0);
+  const [fontSize, setFontSize] = useState(13);
+  const [wordWrap, setWordWrap] = useState<'off' | 'on'>('off');
+  const [showMinimap, setShowMinimap] = useState(true);
 
   const defaultContent =
     initialContent ??
-    `/**\n * @file ${filePath.split('/').pop()}\n * @description YYC³ Component\n * @author YanYuCloudCube Team <admin@0379.email>\n * @version v1.0.0\n */\n\nimport { useState, useCallback } from "react";\nimport { useThemeColors } from "./hooks/use-theme-colors";\nimport { motion } from "motion/react";\n\n/** Component props */\ninterface Props {\n  title?: string;\n  className?: string;\n}\n\n/** Main component */\nexport function Component({ title = "YYC³", className }: Props) {\n  const tc = useThemeColors();\n  const [count, setCount] = useState(0);\n\n  const handleClick = useCallback(() => {\n    setCount((prev) => prev + 1);\n  }, []);\n\n  return (\n    <motion.div\n      initial={{ opacity: 0, y: 20 }}\n      animate={{ opacity: 1, y: 0 }}\n      className={className}\n      style={{ background: tc.bgBase, color: tc.textPrimary }}\n    >\n      <h1>{title}</h1>\n      <p>Count: {count}</p>\n      <button onClick={handleClick}>Increment</button>\n    </motion.div>\n  );\n}\n`
+    `/**\n * @file ${filePath.split('/').pop()}\n * @description YYC³ Component\n * @author YanYuCloudCube Team <admin@0379.email>\n * @version v1.0.0\n */\n\nimport { useState, useCallback } from "react";\nimport { useThemeColors } from "./hooks/use-theme-colors";\nimport { motion } from "motion/react";\n\n/** Component props */\ninterface Props {\n  title?: string;\n  className?: string;\n}\n\n/** Main component */\nexport function Component({ title = "YYC³", className }: Props) {\n  const tc = useThemeColors();\n  const [count, setCount] = useState(0);\n\n  const handleClick = useCallback(() => {\n    setCount((prev) => prev + 1);\n  }, []);\n\n  return (\n    <motion.div\n      initial={{ opacity: 0, y: 20 }}\n      animate={{ opacity: 1, y: 0 }}\n      className={className}\n      style={{ background: tc.bgBase, color: tc.textPrimary }}\n    >\n      <h1>{title}</h1>\n      <p>Count: {count}</p>\n      <button onClick={handleClick}>Increment</button>\n    </motion.div>\n  );\n}\n`;
 
   /** Called once Monaco is mounted */
   const handleEditorMount: OnMount = useCallback(
     (editor, monaco) => {
-      editorRef.current = editor
+      editorRef.current = editor;
 
       // Define + apply the YYC³ dark theme
-      defineYYC3Theme(monaco)
-      monaco.editor.setTheme('yyc3-dark')
+      defineYYC3Theme(monaco);
+      monaco.editor.setTheme('yyc3-dark');
 
       // Register Ctrl+S as a save action
       editor.addAction({
         id: 'yyc3-save',
         label: 'Save File',
         keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS],
-        run: (ed) => {
-          const content = ed.getValue()
-          onSave?.(content)
-          setModified(false)
+        run: ed => {
+          const content = ed.getValue();
+          onSave?.(content);
+          setModified(false);
         },
-      })
+      });
 
       // Track cursor position
-      editor.onDidChangeCursorPosition((e) => {
-        setCursorLine(e.position.lineNumber)
-        setCursorCol(e.position.column)
-      })
+      editor.onDidChangeCursorPosition(e => {
+        setCursorLine(e.position.lineNumber);
+        setCursorCol(e.position.column);
+      });
 
       // Track line count
-      const model = editor.getModel()
+      const model = editor.getModel();
       if (model) {
-        setLineCount(model.getLineCount())
+        setLineCount(model.getLineCount());
         model.onDidChangeContent(() => {
-          setLineCount(model.getLineCount())
-        })
+          setLineCount(model.getLineCount());
+        });
       }
 
       // Expose content getter for AI context injection
-      onEditorReady?.(() => editor.getValue())
+      onEditorReady?.(() => editor.getValue());
 
       // Expose insert-at-cursor function
-      onInsertReady?.((text) => {
-        const selection = editor.getSelection()
+      onInsertReady?.(text => {
+        const selection = editor.getSelection();
         if (selection) {
           editor.executeEdits('insert', [
             {
               range: selection,
               text,
             },
-          ])
+          ]);
         }
-      })
+      });
 
       // Focus the editor
-      editor.focus()
+      editor.focus();
     },
     [onSave, onEditorReady, onInsertReady],
-  )
+  );
 
   /** Content change handler */
   const handleChange = useCallback(
     (value: string | undefined) => {
       if (value !== undefined) {
-        setModified(true)
-        onChange?.(value)
+        setModified(true);
+        onChange?.(value);
       }
     },
     [onChange],
-  )
+  );
 
   /** Update editor options when controls change */
   useEffect(() => {
@@ -255,21 +253,21 @@ export function CodeEditor({
       fontSize,
       wordWrap,
       minimap: { enabled: showMinimap },
-    })
-  }, [fontSize, wordWrap, showMinimap])
+    });
+  }, [fontSize, wordWrap, showMinimap]);
 
   /** Copy all content */
   const handleCopy = useCallback(() => {
-    const content = editorRef.current?.getValue() ?? ''
-    navigator.clipboard?.writeText(content)
-  }, [])
+    const content = editorRef.current?.getValue() ?? '';
+    navigator.clipboard?.writeText(content);
+  }, []);
 
   /** Manual save trigger */
   const handleSaveClick = useCallback(() => {
-    const content = editorRef.current?.getValue() ?? ''
-    onSave?.(content)
-    setModified(false)
-  }, [onSave])
+    const content = editorRef.current?.getValue() ?? '';
+    onSave?.(content);
+    setModified(false);
+  }, [onSave]);
 
   return (
     <div
@@ -310,7 +308,7 @@ export function CodeEditor({
         </div>
         <div className="flex items-center gap-0.5">
           <button
-            onClick={() => setFontSize((s) => Math.max(10, s - 1))}
+            onClick={() => setFontSize(s => Math.max(10, s - 1))}
             className="w-5 h-5 flex items-center justify-center rounded hover:bg-white/5"
             title="Decrease font size"
           >
@@ -320,14 +318,14 @@ export function CodeEditor({
             {fontSize}
           </span>
           <button
-            onClick={() => setFontSize((s) => Math.min(24, s + 1))}
+            onClick={() => setFontSize(s => Math.min(24, s + 1))}
             className="w-5 h-5 flex items-center justify-center rounded hover:bg-white/5"
             title="Increase font size"
           >
             <Plus className="w-3 h-3" style={{ color: tc.textMuted }} />
           </button>
           <button
-            onClick={() => setWordWrap((w) => (w === 'off' ? 'on' : 'off'))}
+            onClick={() => setWordWrap(w => (w === 'off' ? 'on' : 'off'))}
             className="w-5 h-5 flex items-center justify-center rounded hover:bg-white/5"
             title="Toggle word wrap"
             style={{ background: wordWrap === 'on' ? 'rgba(0,255,135,0.1)' : 'transparent' }}
@@ -338,7 +336,7 @@ export function CodeEditor({
             />
           </button>
           <button
-            onClick={() => setShowMinimap((m) => !m)}
+            onClick={() => setShowMinimap(m => !m)}
             className="w-5 h-5 flex items-center justify-center rounded hover:bg-white/5"
             title="Toggle minimap"
             style={{ background: showMinimap ? 'rgba(0,255,135,0.1)' : 'transparent' }}
@@ -465,5 +463,5 @@ export function CodeEditor({
         </div>
       </div>
     </div>
-  )
+  );
 }

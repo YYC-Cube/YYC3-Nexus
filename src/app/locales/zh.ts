@@ -843,7 +843,7 @@ export const zhMessages: Record<string, string> = {
 
   // ---- Customer Care Center ----
   'care.title': '客户关怀中心',
-  'care.subtitle': 'Customer Care Center — AI 智能营销自动化终端',
+  'care.subtitle': 'Customer Care Center — AI 智能营销智能中枢',
 
   // Dashboard Overview
   'care.totalCustomers': '客户总数',
@@ -1082,4 +1082,4 @@ export const zhMessages: Record<string, string> = {
   'care.reset': '重置',
   'care.refresh': '刷新',
   'care.more': '更多',
-}
+};

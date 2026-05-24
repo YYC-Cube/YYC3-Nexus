@@ -11,14 +11,14 @@
  * @tags settings,context,indexing
  */
 
-import { FolderTree } from 'lucide-react'
+import { FolderTree } from 'lucide-react';
 
-import { useSettingsStore } from '../../stores/useSettingsStore'
-import { useThemeColors } from '../hooks/use-theme-colors'
+import { useSettingsStore } from '../../stores/useSettingsStore';
+import { useThemeColors } from '../hooks/use-theme-colors';
 
 export function ContextSettingsPanel() {
-  const tc = useThemeColors()
-  const { settings: _settings } = useSettingsStore()
+  const tc = useThemeColors();
+  const { settings: _settings } = useSettingsStore();
 
   return (
     <div className="space-y-6">
@@ -36,5 +36,5 @@ export function ContextSettingsPanel() {
         <p style={{ color: tc.textMuted }}>上下文管理面板</p>
       </div>
     </div>
-  )
+  );
 }

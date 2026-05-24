@@ -1,0 +1,114 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DropdownMenu Component > Snapshots > should match snapshot for full composition > dropdown-open-full 1`] = `
+<body
+  data-scroll-locked="1"
+  style="pointer-events: none;"
+>
+  <span
+    aria-hidden="true"
+    data-aria-hidden="true"
+    data-radix-focus-guard=""
+    style="outline: none; opacity: 0; position: fixed; pointer-events: none;"
+    tabindex="0"
+  />
+  <div
+    aria-hidden="true"
+    data-aria-hidden="true"
+  >
+    <button
+      aria-controls="radix-:r2q:"
+      aria-expanded="true"
+      aria-haspopup="menu"
+      data-slot="dropdown-menu-trigger"
+      data-state="open"
+      id="radix-:r2p:"
+      type="button"
+    >
+      Full Snapshot
+    </button>
+  </div>
+  <div
+    data-radix-popper-content-wrapper=""
+    dir="ltr"
+    style="position: fixed; left: 0px; top: 0px; transform: translate(0px, 4px); min-width: max-content; --radix-popper-available-width: 0px; --radix-popper-available-height: -4px; --radix-popper-anchor-width: 0px; --radix-popper-anchor-height: 0px; --radix-popper-transform-origin: 50% 0px;"
+  >
+    <div
+      aria-labelledby="radix-:r2p:"
+      aria-orientation="vertical"
+      class="bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 max-h-(--radix-dropdown-menu-content-available-height) min-w-[8rem] origin-(--radix-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-md border p-1 shadow-md"
+      data-align="center"
+      data-orientation="vertical"
+      data-radix-menu-content=""
+      data-side="bottom"
+      data-slot="dropdown-menu-content"
+      data-state="open"
+      dir="ltr"
+      id="radix-:r2q:"
+      role="menu"
+      style="outline: none; --radix-dropdown-menu-content-transform-origin: var(--radix-popper-transform-origin); --radix-dropdown-menu-content-available-width: var(--radix-popper-available-width); --radix-dropdown-menu-content-available-height: var(--radix-popper-available-height); --radix-dropdown-menu-trigger-width: var(--radix-popper-anchor-width); --radix-dropdown-menu-trigger-height: var(--radix-popper-anchor-height); pointer-events: auto;"
+      tabindex="-1"
+    >
+      <div
+        class="px-2 py-1.5 text-sm font-medium data-[inset]:pl-8"
+        data-slot="dropdown-menu-label"
+      >
+        Actions
+      </div>
+      <div
+        aria-orientation="horizontal"
+        class="bg-border -mx-1 my-1 h-px"
+        data-slot="dropdown-menu-separator"
+        role="separator"
+      />
+      <div
+        data-slot="dropdown-menu-group"
+        role="group"
+      >
+        <div
+          class="focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+          data-orientation="vertical"
+          data-radix-collection-item=""
+          data-slot="dropdown-menu-item"
+          data-variant="default"
+          role="menuitem"
+          tabindex="-1"
+        >
+          Edit
+        </div>
+        <div
+          class="focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+          data-orientation="vertical"
+          data-radix-collection-item=""
+          data-slot="dropdown-menu-item"
+          data-variant="destructive"
+          role="menuitem"
+          tabindex="-1"
+        >
+          Delete
+        </div>
+      </div>
+    </div>
+  </div>
+  <span
+    aria-hidden="true"
+    data-aria-hidden="true"
+    data-radix-focus-guard=""
+    style="outline: none; opacity: 0; position: fixed; pointer-events: none;"
+    tabindex="0"
+  />
+</body>
+`;
+
+exports[`DropdownMenu Component > Snapshots > should match snapshot when closed > dropdown-closed 1`] = `
+<button
+  aria-expanded="false"
+  aria-haspopup="menu"
+  data-slot="dropdown-menu-trigger"
+  data-state="closed"
+  id="radix-:r2n:"
+  type="button"
+>
+  Snapshot Closed
+</button>
+`;

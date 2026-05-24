@@ -3,27 +3,31 @@
  * Renders with Cyberpunk neon or Liquid Glass styling
  * depending on the active UI theme.
  */
-import { memo } from 'react'
+import { memo } from 'react';
 
-import { useThemeColors } from '../hooks/use-theme-colors'
+import { useThemeColors } from '../hooks/use-theme-colors';
 
 /** Recharts tooltip payload entry */
 export interface CyberTooltipPayload {
-  name: string
-  value: number | string
-  color: string
+  name: string;
+  value: number | string;
+  color: string;
 }
 
 interface CyberTooltipProps {
-  active?: boolean
-  payload?: CyberTooltipPayload[]
-  label?: string
+  active?: boolean;
+  payload?: CyberTooltipPayload[];
+  label?: string;
 }
 
-export const CyberTooltip = memo(function CyberTooltip({ active, payload, label }: CyberTooltipProps) {
-  const tc = useThemeColors()
+export const CyberTooltip = memo(function CyberTooltip({
+  active,
+  payload,
+  label,
+}: CyberTooltipProps) {
+  const tc = useThemeColors();
 
-  if (!active || !payload?.length) return null
+  if (!active || !payload?.length) return null;
 
   return (
     <div
@@ -38,11 +42,11 @@ export const CyberTooltip = memo(function CyberTooltip({ active, payload, label 
       }}
     >
       <p className="text-[10px] text-white/40 mb-1">{label}</p>
-      {payload.map((p: CyberTooltipPayload, i: number) => (
-        <p key={i} className="text-xs" style={{ color: p.color }}>
+      {payload.map((p: CyberTooltipPayload) => (
+        <p key={p.name} className="text-xs" style={{ color: p.color }}>
           {p.name}: {p.value}
         </p>
       ))}
     </div>
-  )
-})
+  );
+});

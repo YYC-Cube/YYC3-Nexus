@@ -11,12 +11,12 @@
  * @tags settings,conversation,dialog
  */
 
-import { MessageSquare } from 'lucide-react'
+import { MessageSquare } from 'lucide-react';
 
-import { useThemeColors } from '../hooks/use-theme-colors'
+import { useThemeColors } from '../hooks/use-theme-colors';
 
 export function ConversationSettingsPanel() {
-  const tc = useThemeColors()
+  const tc = useThemeColors();
 
   return (
     <div className="space-y-6">
@@ -34,5 +34,5 @@ export function ConversationSettingsPanel() {
         <p style={{ color: tc.textMuted }}>对话流设置面板</p>
       </div>
     </div>
-  )
+  );
 }

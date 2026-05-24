@@ -1,6 +1,7 @@
-import React, { memo, useEffect, useRef, useState } from 'react'
+import type React from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 
-import { useThemeSwitcher } from '../context/theme-switcher-context'
+import { useThemeSwitcher } from '../context/theme-switcher-context';
 
 // ==========================================
 // YYC³ NeonCard — Phase 5 Upgrade
@@ -10,16 +11,16 @@ import { useThemeSwitcher } from '../context/theme-switcher-context'
 // ==========================================
 
 interface NeonCardProps {
-  children?: React.ReactNode
-  color?: string
-  className?: string
-  style?: React.CSSProperties
-  hoverable?: boolean
-  onClick?: () => void
-  noReveal?: boolean
-  ariaLabel?: string
-  role?: React.AriaRole
-  'aria-label'?: string
+  children?: React.ReactNode;
+  color?: string;
+  className?: string;
+  style?: React.CSSProperties;
+  hoverable?: boolean;
+  onClick?: () => void;
+  noReveal?: boolean;
+  ariaLabel?: string;
+  role?: React.AriaRole;
+  'aria-label'?: string;
 }
 
 /**
@@ -43,10 +44,10 @@ export const NeonCard = memo(function NeonCard({
   'aria-label': ariaLabelAlt,
   role: roleProp,
 }: NeonCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null)
-  const [revealed, setRevealed] = useState(noReveal)
-  const { theme } = useThemeSwitcher()
-  const isLiquid = theme === 'liquidGlass'
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [revealed, setRevealed] = useState(noReveal);
+  const { theme } = useThemeSwitcher();
+  const isLiquid = theme === 'liquidGlass';
 
   // Remap colors for liquid glass theme
   const liquidColorMap: Record<string, string> = {
@@ -56,30 +57,30 @@ export const NeonCard = memo(function NeonCard({
     '#00ffc8': '#00ffaa',
     '#41ffdd': '#34d399',
     '#008b9d': '#0891b2',
-  }
-  const effectiveColor = isLiquid ? liquidColorMap[color] || color : color
+  };
+  const effectiveColor = isLiquid ? liquidColorMap[color] || color : color;
 
   // IntersectionObserver for scroll reveal
   useEffect(() => {
-    if (noReveal || revealed) return
-    const el = cardRef.current
-    if (!el) return
+    if (noReveal || revealed) return;
+    const el = cardRef.current;
+    if (!el) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setRevealed(true)
-          observer.disconnect()
+          setRevealed(true);
+          observer.disconnect();
         }
       },
       { threshold: 0.1, rootMargin: '0px 0px -40px 0px' },
-    )
+    );
 
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [noReveal, revealed])
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [noReveal, revealed]);
 
-  const resolvedRole = roleProp ?? (onClick ? 'button' : undefined) as React.AriaRole | undefined
+  const resolvedRole = roleProp ?? ((onClick ? 'button' : undefined) as React.AriaRole | undefined);
 
   return (
     <div
@@ -87,14 +88,14 @@ export const NeonCard = memo(function NeonCard({
       onClick={onClick}
       role={resolvedRole}
       tabIndex={onClick ? 0 : undefined}
-      aria-label={ariaLabelAlt || ariaLabel}
+      aria-label={resolvedRole ? (ariaLabelAlt || ariaLabel) : undefined}
       data-neon-card=""
       onKeyDown={
         onClick
-          ? (e) => {
+          ? e => {
               if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                onClick()
+                e.preventDefault();
+                onClick();
               }
             }
           : undefined
@@ -133,25 +134,25 @@ export const NeonCard = memo(function NeonCard({
               transform: revealed ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.96)',
             }
       }
-      onMouseEnter={(e) => {
+      onMouseEnter={e => {
         if (hoverable) {
           if (isLiquid) {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.10)'
-            e.currentTarget.style.boxShadow = `0 16px 40px rgba(0,0,0,0.12), 0 0 30px rgba(0,255,135,0.1), inset 0 1px 0 rgba(255,255,255,0.12)`
+            e.currentTarget.style.background = 'rgba(255,255,255,0.10)';
+            e.currentTarget.style.boxShadow = `0 16px 40px rgba(0,0,0,0.12), 0 0 30px rgba(0,255,135,0.1), inset 0 1px 0 rgba(255,255,255,0.12)`;
           } else {
-            e.currentTarget.style.borderColor = `${effectiveColor}80`
-            e.currentTarget.style.boxShadow = `0 0 20px ${effectiveColor}66, 0 0 40px ${effectiveColor}33, inset 0 0 20px ${effectiveColor}1a`
+            e.currentTarget.style.borderColor = `${effectiveColor}80`;
+            e.currentTarget.style.boxShadow = `0 0 20px ${effectiveColor}66, 0 0 40px ${effectiveColor}33, inset 0 0 20px ${effectiveColor}1a`;
           }
         }
       }}
-      onMouseLeave={(e) => {
+      onMouseLeave={e => {
         if (hoverable) {
           if (isLiquid) {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
-            e.currentTarget.style.boxShadow = `0 8px 32px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.08)`
+            e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
+            e.currentTarget.style.boxShadow = `0 8px 32px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.08)`;
           } else {
-            e.currentTarget.style.borderColor = `${effectiveColor}33`
-            e.currentTarget.style.boxShadow = `0 0 10px ${effectiveColor}33, inset 0 0 15px ${effectiveColor}0d`
+            e.currentTarget.style.borderColor = `${effectiveColor}33`;
+            e.currentTarget.style.boxShadow = `0 0 10px ${effectiveColor}33, inset 0 0 15px ${effectiveColor}0d`;
           }
         }
       }}
@@ -178,5 +179,5 @@ export const NeonCard = memo(function NeonCard({
       )}
       <div className="relative z-10">{children}</div>
     </div>
-  )
-})
+  );
+});

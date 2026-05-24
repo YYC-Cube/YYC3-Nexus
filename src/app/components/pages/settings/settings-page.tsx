@@ -12,49 +12,48 @@
  */
 
 import {
-    Bot,
-    ChevronRight,
-    Cpu,
-    Download,
-    FileCode,
-    FolderTree,
-    MessageSquare,
-    Plug,
-    RotateCcw,
-    Search,
-    Settings as SettingsIcon,
-    Upload,
-    User,
-    Zap,
-} from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
-import { useMemo, useState } from 'react'
+  Bot,
+  ChevronRight,
+  Cpu,
+  Download,
+  FileCode,
+  FolderTree,
+  MessageSquare,
+  Plug,
+  RotateCcw,
+  Search,
+  Settings as SettingsIcon,
+  Upload,
+  User,
+  Zap,
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useMemo, useState } from 'react';
 
-import { searchSettings } from '../../../services/settings-search'
-import { useSettingsStore } from '../../../stores/useSettingsStore'
-import { useI18n } from '../../context/i18n-context'
-import { useThemeColors } from '../../hooks/use-theme-colors'
-import { AccountSettingsPanel } from '../../settings/account-settings-panel'
-import { AgentsSettingsPanel } from '../../settings/agents-settings-panel'
-import { ContextSettingsPanel } from '../../settings/context-settings-panel'
-import { ConversationSettingsPanel } from '../../settings/conversation-settings-panel'
-import { GeneralSettingsPanel } from '../../settings/general-settings-panel'
-import { ImportExportPanel } from '../../settings/import-export-panel'
-import { MCPSettingsPanel } from '../../settings/mcp-settings-panel'
-import { ModelsSettingsPanel } from '../../settings/models-settings-panel'
-import { RulesSettingsPanel } from '../../settings/rules-settings-panel'
-import { SkillsSettingsPanel } from '../../settings/skills-settings-panel'
-
-import type { SettingsCategory } from '../../../types/settings'
+import { searchSettings } from '../../../services/settings-search';
+import { useSettingsStore } from '../../../stores/useSettingsStore';
+import type { SettingsCategory } from '../../../types/settings';
+import { useI18n } from '../../context/i18n-context';
+import { useThemeColors } from '../../hooks/use-theme-colors';
+import { AccountSettingsPanel } from '../../settings/account-settings-panel';
+import { AgentsSettingsPanel } from '../../settings/agents-settings-panel';
+import { ContextSettingsPanel } from '../../settings/context-settings-panel';
+import { ConversationSettingsPanel } from '../../settings/conversation-settings-panel';
+import { GeneralSettingsPanel } from '../../settings/general-settings-panel';
+import { ImportExportPanel } from '../../settings/import-export-panel';
+import { MCPSettingsPanel } from '../../settings/mcp-settings-panel';
+import { ModelsSettingsPanel } from '../../settings/models-settings-panel';
+import { RulesSettingsPanel } from '../../settings/rules-settings-panel';
+import { SkillsSettingsPanel } from '../../settings/skills-settings-panel';
 
 /**
  * 设置分类配置
  */
 const SETTINGS_CATEGORIES: Array<{
-  id: SettingsCategory
-  label: string
-  icon: React.ElementType
-  description: string
+  id: SettingsCategory;
+  label: string;
+  icon: React.ElementType;
+  description: string;
 }> = [
   {
     id: 'account',
@@ -116,103 +115,109 @@ const SETTINGS_CATEGORIES: Array<{
     icon: Download,
     description: '备份和迁移设置',
   },
-]
+];
 
 /**
  * 设置页面主组件
  */
 export function SettingsPage() {
-  const tc = useThemeColors()
-  const { t: _t } = useI18n()
-  const { settings: _settings, searchQuery, setSearchQuery, exportConfig, importConfig, resetSettings } =
-    useSettingsStore()
+  const tc = useThemeColors();
+  const { t: _t } = useI18n();
+  const {
+    settings: _settings,
+    searchQuery,
+    setSearchQuery,
+    exportConfig,
+    importConfig,
+    resetSettings,
+  } = useSettingsStore();
 
-  const [activeCategory, setActiveCategory] = useState<SettingsCategory>('account')
-  const [showSearchResults, setShowSearchResults] = useState(false)
+  const [activeCategory, setActiveCategory] = useState<SettingsCategory>('account');
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   // 执行搜索
   const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return []
-    return searchSettings(searchQuery)
-  }, [searchQuery])
+    if (!searchQuery.trim()) return [];
+    return searchSettings(searchQuery);
+  }, [searchQuery]);
 
   // 处理搜索输入
   const handleSearchChange = (value: string) => {
-    setSearchQuery(value)
-    setShowSearchResults(value.trim().length > 0)
-  }
+    setSearchQuery(value);
+    setShowSearchResults(value.trim().length > 0);
+  };
 
   // 处理导出配置
   const handleExport = () => {
-    const config = exportConfig()
-    const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `yyc3-settings-${new Date().toISOString().split('T')[0]}.json`
-    a.click()
-    URL.revokeObjectURL(url)
-  }
+    const config = exportConfig();
+    const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `yyc3-settings-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   // 处理导入配置
   const handleImport = () => {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = 'application/json'
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0]
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.onchange = e => {
+      const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
-        const reader = new FileReader()
-        reader.onload = (event) => {
+        const reader = new FileReader();
+        reader.onload = event => {
           try {
-            const config = JSON.parse(event.target?.result as string)
-            importConfig(config)
-            alert('配置导入成功！')
-          } catch (error) {
-            alert('配置文件格式错误')
+            const config = JSON.parse(event.target?.result as string);
+            importConfig(config);
+            alert('配置导入成功！');
+          } catch (_error) {
+            alert('配置文件格式错误');
           }
-        }
-        reader.readAsText(file)
+        };
+        reader.readAsText(file);
       }
-    }
-    input.click()
-  }
+    };
+    input.click();
+  };
 
   // 处理重置
   const handleReset = () => {
     if (confirm('确定要重置所有设置吗？此操作不可撤销。')) {
-      resetSettings()
-      alert('设置已重置')
+      resetSettings();
+      alert('设置已重置');
     }
-  }
+  };
 
   // 渲染当前分类的设置面板
   const renderSettingsPanel = () => {
     switch (activeCategory) {
       case 'account':
-        return <AccountSettingsPanel />
+        return <AccountSettingsPanel />;
       case 'general':
-        return <GeneralSettingsPanel />
+        return <GeneralSettingsPanel />;
       case 'agents':
-        return <AgentsSettingsPanel />
+        return <AgentsSettingsPanel />;
       case 'mcp':
-        return <MCPSettingsPanel />
+        return <MCPSettingsPanel />;
       case 'models':
-        return <ModelsSettingsPanel />
+        return <ModelsSettingsPanel />;
       case 'context':
-        return <ContextSettingsPanel />
+        return <ContextSettingsPanel />;
       case 'conversation':
-        return <ConversationSettingsPanel />
+        return <ConversationSettingsPanel />;
       case 'rules':
-        return <RulesSettingsPanel />
+        return <RulesSettingsPanel />;
       case 'skills':
-        return <SkillsSettingsPanel />
+        return <SkillsSettingsPanel />;
       case 'import-export':
-        return <ImportExportPanel />
+        return <ImportExportPanel />;
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   return (
     <div
@@ -226,6 +231,7 @@ export function SettingsPage() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         transition={{ duration: 0.6, ease: tc.springEasing as any }}
         className="mb-8"
       >
@@ -261,7 +267,7 @@ export function SettingsPage() {
             type="text"
             placeholder="搜索设置..."
             value={searchQuery}
-            onChange={(e) => handleSearchChange(e.target.value)}
+            onChange={e => handleSearchChange(e.target.value)}
             className="w-full py-3 pl-12 pr-4 bg-transparent outline-none"
             style={{ color: tc.textPrimary }}
           />
@@ -296,8 +302,8 @@ export function SettingsPage() {
                     borderBottom: `1px solid ${tc.borderSubtle}`,
                   }}
                   onClick={() => {
-                    setShowSearchResults(false)
-                    setSearchQuery('')
+                    setShowSearchResults(false);
+                    setSearchQuery('');
                   }}
                 >
                   <div className="flex items-center justify-between">
@@ -347,8 +353,8 @@ export function SettingsPage() {
           >
             <div className="space-y-1">
               {SETTINGS_CATEGORIES.map((category, index) => {
-                const Icon = category.icon
-                const isActive = activeCategory === category.id
+                const Icon = category.icon;
+                const isActive = activeCategory === category.id;
 
                 return (
                   <motion.button
@@ -371,7 +377,7 @@ export function SettingsPage() {
                     <span className="flex-1 text-sm font-medium">{category.label}</span>
                     {isActive && <ChevronRight size={16} />}
                   </motion.button>
-                )
+                );
               })}
             </div>
 
@@ -441,5 +447,5 @@ export function SettingsPage() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

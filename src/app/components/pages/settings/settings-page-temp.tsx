@@ -24,18 +24,18 @@ import {
   Settings as SettingsIcon,
   User,
   Zap,
-} from 'lucide-react'
-import { motion } from 'motion/react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { motion } from 'motion/react';
+import { useState } from 'react';
 
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 /**
  * 临时设置页面 - 快速修复版本
  */
 export function SettingsPage() {
-  const tc = useThemeColors()
-  const [activeCategory, setActiveCategory] = useState('account')
+  const tc = useThemeColors();
+  const [activeCategory, setActiveCategory] = useState('account');
 
   const categories = [
     { id: 'account', label: '账号信息', icon: User },
@@ -48,7 +48,7 @@ export function SettingsPage() {
     { id: 'rules', label: '规则管理', icon: FileCode },
     { id: 'skills', label: '技能管理', icon: Zap },
     { id: 'import-export', label: '导入/导出', icon: Download },
-  ]
+  ];
 
   return (
     <div
@@ -105,9 +105,9 @@ export function SettingsPage() {
             }}
           >
             <div className="space-y-1">
-              {categories.map((category) => {
-                const Icon = category.icon
-                const isActive = activeCategory === category.id
+              {categories.map(category => {
+                const Icon = category.icon;
+                const isActive = activeCategory === category.id;
 
                 return (
                   <button
@@ -126,7 +126,7 @@ export function SettingsPage() {
                     <span className="flex-1 text-sm font-medium">{category.label}</span>
                     {isActive && <ChevronRight size={16} />}
                   </button>
-                )
+                );
               })}
             </div>
           </div>
@@ -158,7 +158,7 @@ export function SettingsPage() {
                 设置系统已就绪
               </h2>
               <p className="text-lg mb-4" style={{ color: tc.textSecondary }}>
-                当前选择: {categories.find((c) => c.id === activeCategory)?.label}
+                当前选择: {categories.find(c => c.id === activeCategory)?.label}
               </p>
               <div
                 className="inline-block px-6 py-3 rounded-lg"
@@ -177,5 +177,5 @@ export function SettingsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

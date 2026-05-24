@@ -4,122 +4,122 @@
  * for seamless switching between Cyberpunk and Liquid Glass themes.
  */
 
-import { useMemo } from 'react'
+import { useMemo } from 'react';
 
-import { type ThemeMode, useThemeSwitcher } from '../context/theme-switcher-context'
+import { type ThemeMode, useThemeSwitcher } from '../context/theme-switcher-context';
 
 /** Complete set of semantic color tokens for a theme. */
 export interface ThemeColors {
   /** Current theme mode identifier */
-  mode: ThemeMode
+  mode: ThemeMode;
   /** Whether the current theme is cyberpunk */
-  isCyberpunk: boolean
+  isCyberpunk: boolean;
   /** Whether the current theme is liquid glass */
-  isLiquidGlass: boolean
+  isLiquidGlass: boolean;
 
   // === Primary palette ===
-  primary: string
-  primaryRgb: string
-  primaryGlow: string
-  secondary: string
-  secondaryRgb: string
-  accent: string
-  accentRgb: string
-  success: string
-  highlight: string
-  muted: string
-  danger: string
-  warning: string
-  destructive: string
+  primary: string;
+  primaryRgb: string;
+  primaryGlow: string;
+  secondary: string;
+  secondaryRgb: string;
+  accent: string;
+  accentRgb: string;
+  success: string;
+  highlight: string;
+  muted: string;
+  danger: string;
+  warning: string;
+  destructive: string;
 
-  card: string
-  foreground: string
-  mutedForeground: string
-  border: string
+  card: string;
+  foreground: string;
+  mutedForeground: string;
+  border: string;
 
   // === Background system ===
-  bgBase: string
-  bgCard: string
-  bgCardHover: string
-  bgElevated: string
-  bgOverlay: string
-  bgInput: string
-  bgInputFocus: string
-  input: string
+  bgBase: string;
+  bgCard: string;
+  bgCardHover: string;
+  bgElevated: string;
+  bgOverlay: string;
+  bgInput: string;
+  bgInputFocus: string;
+  input: string;
 
   // === Text system ===
-  textPrimary: string
-  textSecondary: string
-  textMuted: string
-  textAccent: string
-  textInverse: string
+  textPrimary: string;
+  textSecondary: string;
+  textMuted: string;
+  textAccent: string;
+  textInverse: string;
 
   // === Border system ===
-  borderDefault: string
-  borderHover: string
-  borderActive: string
-  borderSubtle: string
-  borderGlow: string
+  borderDefault: string;
+  borderHover: string;
+  borderActive: string;
+  borderSubtle: string;
+  borderGlow: string;
 
   // === Shadow system ===
-  shadowSm: string
-  shadowMd: string
-  shadowLg: string
-  shadowGlow: string
-  shadowCardHover: string
+  shadowSm: string;
+  shadowMd: string;
+  shadowLg: string;
+  shadowGlow: string;
+  shadowCardHover: string;
 
   // === Header/Footer specific ===
-  headerBg: string
-  headerBorder: string
-  headerGlow: string
-  footerBg: string
-  footerBorder: string
+  headerBg: string;
+  headerBorder: string;
+  headerGlow: string;
+  footerBg: string;
+  footerBorder: string;
 
   // === Sidebar specific ===
-  sidebarBg: string
-  sidebarBorder: string
-  sidebarBorderExpanded: string
+  sidebarBg: string;
+  sidebarBorder: string;
+  sidebarBorderExpanded: string;
 
   // === Gradients ===
-  gradientPrimary: string
-  gradientCard: string
-  gradientButton: string
-  gradientButtonHover: string
+  gradientPrimary: string;
+  gradientCard: string;
+  gradientButton: string;
+  gradientButtonHover: string;
 
   // === Navigation ===
-  navActiveBg: (color: string) => string
-  navActiveGlow: (color: string) => string
-  navActiveBorder: (color: string) => string
-  navInactiveText: string
-  navBadgeShadow: (color: string) => string
+  navActiveBg: (color: string) => string;
+  navActiveGlow: (color: string) => string;
+  navActiveBorder: (color: string) => string;
+  navInactiveText: string;
+  navBadgeShadow: (color: string) => string;
 
   // === Status colors (common) ===
-  statusOnline: string
-  statusOnlineGlow: string
+  statusOnline: string;
+  statusOnlineGlow: string;
 
   // === Effects ===
-  blur: string
-  backdropFilter: string
-  springEasing: string
-  transitionAll: string
-  hoverTransform: string
-  cardHoverTransform: string
+  blur: string;
+  backdropFilter: string;
+  springEasing: string;
+  transitionAll: string;
+  hoverTransform: string;
+  cardHoverTransform: string;
 
   // === Utility helpers ===
   /** Generate alpha color: `alpha('#00f0ff', 0.2)` */
-  alpha: (color: string, opacity: number) => string
+  alpha: (color: string, opacity: number) => string;
   /** Generate neon glow box-shadow */
-  neonGlow: (color: string, intensity?: number) => string
+  neonGlow: (color: string, intensity?: number) => string;
   /** Get color for a nav item with active state */
   navItemStyle: (
     color: string,
     active: boolean,
   ) => {
-    background: string
-    color: string
-    boxShadow: string
-    border: string
-  }
+    background: string;
+    color: string;
+    boxShadow: string;
+    border: string;
+  };
 }
 
 /** Cyberpunk theme palette - monochromatic cyan neon on dark */
@@ -208,7 +208,7 @@ const cyberpunkColors: Omit<
   transitionAll: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
   hoverTransform: 'translateY(-2px)',
   cardHoverTransform: 'translateY(-8px) scale(1.02)',
-}
+};
 
 /** Liquid Glass theme palette - glassmorphism with green-cyan gradients */
 const liquidGlassColors: Omit<
@@ -296,7 +296,7 @@ const liquidGlassColors: Omit<
   transitionAll: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
   hoverTransform: 'translateY(-2px)',
   cardHoverTransform: 'translateY(-8px) scale(1.02)',
-}
+};
 
 /**
  * Hook providing the complete theme color palette based on the active theme.
@@ -306,46 +306,46 @@ const liquidGlassColors: Omit<
  * @returns ThemeColors object with the full dual-theme color system.
  */
 export function useThemeColors(): ThemeColors {
-  const { theme } = useThemeSwitcher()
+  const { theme } = useThemeSwitcher();
 
   return useMemo(() => {
-    const isCyberpunk = theme === 'cyberpunk'
-    const base = isCyberpunk ? cyberpunkColors : liquidGlassColors
+    const isCyberpunk = theme === 'cyberpunk';
+    const base = isCyberpunk ? cyberpunkColors : liquidGlassColors;
 
     const alpha = (color: string, opacity: number): string => {
       // Handle hex colors
       if (color.startsWith('#')) {
-        const r = parseInt(color.slice(1, 3), 16)
-        const g = parseInt(color.slice(3, 5), 16)
-        const b = parseInt(color.slice(5, 7), 16)
-        return `rgba(${r},${g},${b},${opacity})`
+        const r = parseInt(color.slice(1, 3), 16);
+        const g = parseInt(color.slice(3, 5), 16);
+        const b = parseInt(color.slice(5, 7), 16);
+        return `rgba(${r},${g},${b},${opacity})`;
       }
-      return color
-    }
+      return color;
+    };
 
     const neonGlow = (color: string, intensity: number = 1): string => {
       if (isCyberpunk) {
-        return `0 0 ${10 * intensity}px ${alpha(color, 0.4 * intensity)}, 0 0 ${20 * intensity}px ${alpha(color, 0.2 * intensity)}`
+        return `0 0 ${10 * intensity}px ${alpha(color, 0.4 * intensity)}, 0 0 ${20 * intensity}px ${alpha(color, 0.2 * intensity)}`;
       }
-      return `0 0 ${15 * intensity}px ${alpha(color, 0.2 * intensity)}, 0 4px 12px rgba(0,0,0,0.1)`
-    }
+      return `0 0 ${15 * intensity}px ${alpha(color, 0.2 * intensity)}, 0 4px 12px rgba(0,0,0,0.1)`;
+    };
 
-    const navActiveBg = (color: string) => (isCyberpunk ? `${color}15` : alpha(color, 0.1))
+    const navActiveBg = (color: string) => (isCyberpunk ? `${color}15` : alpha(color, 0.1));
     const navActiveGlow = (color: string) =>
       isCyberpunk
         ? `0 0 12px ${color}30, inset 0 0 8px ${color}0d`
-        : `0 0 15px ${alpha(color, 0.15)}`
+        : `0 0 15px ${alpha(color, 0.15)}`;
     const navActiveBorder = (color: string) =>
-      isCyberpunk ? `1px solid ${color}40` : `1px solid ${alpha(color, 0.25)}`
+      isCyberpunk ? `1px solid ${color}40` : `1px solid ${alpha(color, 0.25)}`;
     const navBadgeShadow = (color: string) =>
-      isCyberpunk ? `0 0 8px ${color}, 0 0 16px ${color}80` : `0 0 10px ${alpha(color, 0.4)}`
+      isCyberpunk ? `0 0 8px ${color}, 0 0 16px ${color}80` : `0 0 10px ${alpha(color, 0.4)}`;
 
     const navItemStyle = (color: string, active: boolean) => ({
       background: active ? navActiveBg(color) : 'transparent',
       color: active ? color : base.navInactiveText,
       boxShadow: active ? navActiveGlow(color) : 'none',
       border: active ? navActiveBorder(color) : '1px solid transparent',
-    })
+    });
 
     return {
       mode: theme,
@@ -359,8 +359,8 @@ export function useThemeColors(): ThemeColors {
       navActiveGlow,
       navActiveBorder,
       navBadgeShadow,
-    }
-  }, [theme])
+    };
+  }, [theme]);
 }
 
 /**
@@ -374,7 +374,7 @@ export const LIQUID_GLASS_NAV_COLORS: Record<string, string> = {
   '#00ffc8': '#00ffaa',
   '#41ffdd': '#34d399',
   '#008b9d': '#0891b2',
-}
+};
 
 /**
  * Get the theme-appropriate color for a nav item.
@@ -382,6 +382,6 @@ export const LIQUID_GLASS_NAV_COLORS: Record<string, string> = {
  * mode returns the mapped equivalent from Guidelines palette.
  */
 export function getThemeNavColor(originalColor: string, isCyberpunk: boolean): string {
-  if (isCyberpunk) return originalColor
-  return LIQUID_GLASS_NAV_COLORS[originalColor] || originalColor
+  if (isCyberpunk) return originalColor;
+  return LIQUID_GLASS_NAV_COLORS[originalColor] || originalColor;
 }

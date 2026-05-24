@@ -7,15 +7,15 @@
  * @tags P2,multi-instance,session-manager,zustand
  */
 
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-import type { Session, SessionData, SessionType } from './types'
+import type { Session, SessionData, SessionType } from './types';
 
 interface SessionState {
-  sessions: Session[]
-  activeSessionId: string | null
-  filter: { type?: SessionType; workspaceId?: string; status?: Session['status'] }
+  sessions: Session[];
+  activeSessionId: string | null;
+  filter: { type?: SessionType; workspaceId?: string; status?: Session['status'] };
 }
 
 interface SessionActions {
@@ -24,16 +24,16 @@ interface SessionActions {
     type: SessionType,
     workspaceId: string,
     data?: SessionData,
-  ) => Session
-  updateSession: (sessionId: string, updates: Partial<Session>) => void
-  deleteSession: (sessionId: string) => void
-  activateSession: (sessionId: string) => void
-  suspendSession: (sessionId: string) => void
-  resumeSession: (sessionId: string) => void
-  updateSessionData: (sessionId: string, data: Partial<SessionData>) => void
-  updateFilter: (filter: Partial<SessionState['filter']>) => void
-  getWorkspaceSessions: (workspaceId: string) => Session[]
-  getActiveSessions: () => Session[]
+  ) => Session;
+  updateSession: (sessionId: string, updates: Partial<Session>) => void;
+  deleteSession: (sessionId: string) => void;
+  activateSession: (sessionId: string) => void;
+  suspendSession: (sessionId: string) => void;
+  resumeSession: (sessionId: string) => void;
+  updateSessionData: (sessionId: string, data: Partial<SessionData>) => void;
+  updateFilter: (filter: Partial<SessionState['filter']>) => void;
+  getWorkspaceSessions: (workspaceId: string) => Session[];
+  getActiveSessions: () => Session[];
 }
 
 export const useSessionStore = create<SessionState & SessionActions>()(
@@ -54,71 +54,71 @@ export const useSessionStore = create<SessionState & SessionActions>()(
           data,
           workspaceId,
           windowId: '',
-        }
-        set((state) => ({ sessions: [...state.sessions, session] }))
-        return session
+        };
+        set(state => ({ sessions: [...state.sessions, session] }));
+        return session;
       },
 
       updateSession: (sessionId, updates) => {
-        set((state) => ({
-          sessions: state.sessions.map((s) =>
+        set(state => ({
+          sessions: state.sessions.map(s =>
             s.id === sessionId ? { ...s, ...updates, updatedAt: Date.now() } : s,
           ),
-        }))
+        }));
       },
 
-      deleteSession: (sessionId) => {
-        set((state) => ({
-          sessions: state.sessions.filter((s) => s.id !== sessionId),
+      deleteSession: sessionId => {
+        set(state => ({
+          sessions: state.sessions.filter(s => s.id !== sessionId),
           activeSessionId: state.activeSessionId === sessionId ? null : state.activeSessionId,
-        }))
+        }));
       },
 
-      activateSession: (sessionId) => {
-        set((state) => ({
+      activateSession: sessionId => {
+        set(state => ({
           activeSessionId: sessionId,
-          sessions: state.sessions.map((s) =>
+          sessions: state.sessions.map(s =>
             s.id === sessionId ? { ...s, status: 'active' as const, updatedAt: Date.now() } : s,
           ),
-        }))
+        }));
       },
 
-      suspendSession: (sessionId) => {
-        set((state) => ({
-          sessions: state.sessions.map((s) =>
+      suspendSession: sessionId => {
+        set(state => ({
+          sessions: state.sessions.map(s =>
             s.id === sessionId ? { ...s, status: 'suspended' as const, updatedAt: Date.now() } : s,
           ),
-        }))
+        }));
       },
 
-      resumeSession: (sessionId) => {
-        set((state) => ({
-          sessions: state.sessions.map((s) =>
+      resumeSession: sessionId => {
+        set(state => ({
+          sessions: state.sessions.map(s =>
             s.id === sessionId ? { ...s, status: 'active' as const, updatedAt: Date.now() } : s,
           ),
-        }))
+        }));
       },
 
       updateSessionData: (sessionId, data) => {
-        set((state) => ({
-          sessions: state.sessions.map((s) =>
+        set(state => ({
+          sessions: state.sessions.map(s =>
             s.id === sessionId ? { ...s, data: { ...s.data, ...data }, updatedAt: Date.now() } : s,
           ),
-        }))
+        }));
       },
 
-      updateFilter: (filter) => {
-        set((state) => ({ filter: { ...state.filter, ...filter } }))
+      updateFilter: filter => {
+        set(state => ({ filter: { ...state.filter, ...filter } }));
       },
 
-      getWorkspaceSessions: (workspaceId) =>
-        get().sessions.filter((s) => s.workspaceId === workspaceId),
+      getWorkspaceSessions: workspaceId =>
+        get().sessions.filter(s => s.workspaceId === workspaceId),
 
-      getActiveSessions: () => get().sessions.filter((s) => s.status === 'active'),
+      getActiveSessions: () => get().sessions.filter(s => s.status === 'active'),
     }),
     {
       name: 'yyc3-session-storage',
-      partialize: (state) => ({ sessions: state.sessions }),
+      partialize: state => ({ sessions: state.sessions }),
     },
   ),
-)
+);

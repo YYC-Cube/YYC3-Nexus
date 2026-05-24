@@ -1,27 +1,27 @@
-import { Component, ErrorInfo, ReactNode } from 'react'
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 
-import { AIModelProvider } from './components/context/ai-model-context'
-import { AppProvider, useApp } from './components/context/app-context'
-import { ContactsProvider } from './components/context/contacts-context'
-import { I18nProvider } from './components/context/i18n-context'
-import { ThemeSwitcherProvider } from './components/context/theme-switcher-context'
-import { CyberpunkWidget } from './components/core/cyberpunk-widget'
-import { LiquidGlassWrapper } from './components/core/liquid-glass-wrapper'
-import { PWAInstallPrompt } from './components/core/pwa-install'
-import { CyberpunkStandalone } from './components/cyberpunk-standalone'
-import { APP_VERSION } from './version'
+import { AIModelProvider } from './components/context/ai-model-context';
+import { AppProvider, useApp } from './components/context/app-context';
+import { ContactsProvider } from './components/context/contacts-context';
+import { I18nProvider } from './components/context/i18n-context';
+import { ThemeSwitcherProvider } from './components/context/theme-switcher-context';
+import { CyberpunkWidget } from './components/core/cyberpunk-widget';
+import { LiquidGlassWrapper } from './components/core/liquid-glass-wrapper';
+import { PWAInstallPrompt } from './components/core/pwa-install';
+import { CyberpunkStandalone } from './components/cyberpunk-standalone';
+import { APP_VERSION } from './version';
 
 // Preload all components to prevent dynamic import errors
-import './components/core/preload-fix'
+import './components/core/preload-fix';
 
 // Version management
 if (typeof window !== 'undefined') {
-  const storedVersion = localStorage.getItem('yyc_app_version')
+  const storedVersion = localStorage.getItem('yyc_app_version');
   if (storedVersion !== APP_VERSION) {
     // Version updated silently — no console output in production
-    localStorage.setItem('yyc_app_version', APP_VERSION)
+    localStorage.setItem('yyc_app_version', APP_VERSION);
     if ('caches' in window) {
-      caches.keys().then((names) => names.forEach((name) => caches.delete(name)))
+      caches.keys().then(names => names.forEach(name => caches.delete(name)));
     }
   }
 }
@@ -32,17 +32,15 @@ class ErrorBoundary extends Component<
   { hasError: boolean; error?: Error }
 > {
   constructor(props: { children: ReactNode }) {
-    super(props)
-    this.state = { hasError: false }
+    super(props);
+    this.state = { hasError: false };
   }
 
   static getDerivedStateFromError(error: Error) {
-    return { hasError: true, error }
+    return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo)
-  }
+  componentDidCatch(_error: Error, _errorInfo: ErrorInfo) {}
 
   render() {
     if (this.state.hasError) {
@@ -65,22 +63,22 @@ class ErrorBoundary extends Component<
                 background: '#00f0ff',
                 color: '#0a0a0a',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#00d4ff')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = '#00f0ff')}
+              onMouseEnter={e => (e.currentTarget.style.background = '#00d4ff')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#00f0ff')}
             >
               刷新页面 / Refresh
             </button>
           </div>
         </div>
-      )
+      );
     }
 
-    return this.props.children
+    return this.props.children;
   }
 }
 
 function AppContent() {
-  const { appMode, setAppMode } = useApp()
+  const { appMode, setAppMode } = useApp();
 
   return (
     <LiquidGlassWrapper>
@@ -93,7 +91,7 @@ function AppContent() {
         <PWAInstallPrompt />
       </div>
     </LiquidGlassWrapper>
-  )
+  );
 }
 
 /**
@@ -116,5 +114,5 @@ export default function App() {
         </I18nProvider>
       </ThemeSwitcherProvider>
     </ErrorBoundary>
-  )
+  );
 }

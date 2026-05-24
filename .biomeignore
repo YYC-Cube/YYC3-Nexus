@@ -1,0 +1,40 @@
+# Biome Ignore File
+# 忽略不需要检查的文件和目录
+
+# 依赖目录
+node_modules/
+dist/
+build/
+coverage/
+
+# 配置文件
+*.config.js
+*.config.ts
+vite.config.*
+tailwind.config.*
+
+# 类型声明
+*.d.ts
+
+# 测试相关（已在 biome.json 中单独配置规则）
+# tests/
+
+# 生成的文件
+*.min.js
+*.min.css
+
+# 日志文件
+*.log
+
+# 临时文件
+.tmp/
+.temp/
+.vite/
+
+# 文档
+docs/
+*.md
+
+# 特定组件（可选：对于已知有特殊需求的组件）
+# src/app/components/core/neon-card.tsx
+# src/app/components/core/data-export-modal.tsx

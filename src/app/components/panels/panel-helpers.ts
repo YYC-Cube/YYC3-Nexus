@@ -12,7 +12,7 @@
  * @tags P1,frontend,panels,helpers
  */
 
-import { File, FileCode, FileImage, FileJson, FileText } from 'lucide-react'
+import { File, FileCode, FileImage, FileJson, FileText } from 'lucide-react';
 
 import type {
   AIProviderType,
@@ -21,7 +21,7 @@ import type {
   GitCommitItem,
   GitStatus,
   SearchResult,
-} from './panel-types'
+} from './panel-types';
 
 // ==========================================
 // File Icon Mapping
@@ -38,11 +38,11 @@ export const FILE_ICONS: Record<string, { icon: typeof File; color: string }> = 
   png: { icon: FileImage, color: '#ec4899' },
   jpg: { icon: FileImage, color: '#ec4899' },
   svg: { icon: FileImage, color: '#f97316' },
-}
+};
 
 export function getFileIcon(name: string) {
-  const ext = name.split('.').pop()?.toLowerCase() ?? ''
-  return FILE_ICONS[ext] ?? { icon: File, color: '#6b7280' }
+  const ext = name.split('.').pop()?.toLowerCase() ?? '';
+  return FILE_ICONS[ext] ?? { icon: File, color: '#6b7280' };
 }
 
 export function getGitStatusStyle(status?: FileNode['gitStatus']) {
@@ -52,24 +52,24 @@ export function getGitStatusStyle(status?: FileNode['gitStatus']) {
     deleted: { color: '#ef4444', label: 'D' },
     renamed: { color: '#3b82f6', label: 'R' },
     unmodified: { color: 'transparent', label: '' },
-  }
-  return map[status ?? 'unmodified'] ?? map.unmodified
+  };
+  return map[status ?? 'unmodified'] ?? map.unmodified;
 }
 
 export function formatFileSize(bytes?: number): string {
-  if (!bytes) return ''
-  if (bytes < 1024) return `${bytes}B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)}MB`
+  if (!bytes) return '';
+  if (bytes < 1024) return `${bytes}B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)}MB`;
 }
 
 export function timeAgo(ts?: number): string {
-  if (!ts) return ''
-  const diff = Date.now() - ts
-  if (diff < 60000) return '刚刚'
-  if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`
-  if (diff < 86400000) return `${Math.floor(diff / 3600000)}小时前`
-  return `${Math.floor(diff / 86400000)}天前`
+  if (!ts) return '';
+  const diff = Date.now() - ts;
+  if (diff < 60000) return '刚刚';
+  if (diff < 3600000) return `${Math.floor(diff / 60000)}分钟前`;
+  if (diff < 86400000) return `${Math.floor(diff / 3600000)}小时前`;
+  return `${Math.floor(diff / 86400000)}天前`;
 }
 
 // ==========================================
@@ -112,7 +112,7 @@ export const AI_PROVIDER_MODELS: Record<
     ],
     defaultBaseUrl: 'https://api.deepseek.com/v1',
   },
-}
+};
 
 // ==========================================
 // Mock Data
@@ -309,7 +309,7 @@ export const MOCK_FILE_TREE: FileNode[] = [
       },
     ],
   },
-]
+];
 
 export const MOCK_GIT_STATUS: GitStatus = {
   branch: 'feature/left-panel-v2',
@@ -319,7 +319,7 @@ export const MOCK_GIT_STATUS: GitStatus = {
   modified: 5,
   untracked: 1,
   conflicts: 0,
-}
+};
 
 export const MOCK_GIT_LOG: GitCommitItem[] = [
   {
@@ -357,7 +357,7 @@ export const MOCK_GIT_LOG: GitCommitItem[] = [
     date: Date.now() - 172800000,
     files: 4,
   },
-]
+];
 
 export const MOCK_SEARCH_RESULTS: Record<string, SearchResult[]> = {
   files: [
@@ -462,7 +462,7 @@ export const MOCK_SEARCH_RESULTS: Record<string, SearchResult[]> = {
       score: 0.88,
     },
   ],
-}
+};
 
 export const AI_RESPONSES = [
   'Based on your current codebase analysis, I recommend implementing the WebSocket integration using a custom hook pattern for better reusability across components.',
@@ -470,7 +470,7 @@ export const AI_RESPONSES = [
   'Looking at the task-board-page, the DnD implementation can be optimized by memoizing the `useDrag` and `useDrop` configurations with `useMemo` to reduce re-renders.',
   'Your theme system using `useThemeColors` is well-structured. To add animation tokens, extend the `ThemeColors` interface with transition/easing presets.',
   "For the file explorer's virtual scrolling, I suggest using `react-window` to efficiently render large file trees with 10,000+ nodes without performance degradation.",
-]
+];
 
 export const AI_SUGGESTIONS_POOL: AISuggestion[] = [
   {
@@ -501,4 +501,4 @@ export const AI_SUGGESTIONS_POOL: AISuggestion[] = [
     description: '使用 React 错误边界包裹面板',
     confidence: 0.86,
   },
-]
+];

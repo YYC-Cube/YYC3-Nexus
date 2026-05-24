@@ -14,56 +14,56 @@
 // ==========================================
 
 export interface GitConfig {
-  token: string // GitHub Personal Access Token
-  owner: string // Repository owner
-  repo: string // Repository name
-  branch: string // Current branch
-  baseUrl?: string // API base URL (default: https://api.github.com)
+  token: string; // GitHub Personal Access Token
+  owner: string; // Repository owner
+  repo: string; // Repository name
+  branch: string; // Current branch
+  baseUrl?: string; // API base URL (default: https://api.github.com)
 }
 
 export interface GitCommitInfo {
-  sha: string
-  message: string
-  author: { name: string; email: string; date: string }
-  filesChanged: number
-  url: string
+  sha: string;
+  message: string;
+  author: { name: string; email: string; date: string };
+  filesChanged: number;
+  url: string;
 }
 
 export interface GitBranchInfo {
-  name: string
-  sha: string
-  protected: boolean
-  current: boolean
+  name: string;
+  sha: string;
+  protected: boolean;
+  current: boolean;
 }
 
 export interface GitFileContent {
-  path: string
-  content: string // Base64 decoded content
-  sha: string // Blob SHA (needed for updates)
-  size: number
-  encoding: string
+  path: string;
+  content: string; // Base64 decoded content
+  sha: string; // Blob SHA (needed for updates)
+  size: number;
+  encoding: string;
 }
 
 export interface GitRepoStatus {
-  branch: string
-  ahead: number
-  behind: number
-  staged: { path: string; status: string }[]
-  modified: { path: string; status: string }[]
-  untracked: { path: string }[]
-  conflicts: { path: string }[]
+  branch: string;
+  ahead: number;
+  behind: number;
+  staged: { path: string; status: string }[];
+  modified: { path: string; status: string }[];
+  untracked: { path: string }[];
+  conflicts: { path: string }[];
 }
 
 export interface GitPullRequestInfo {
-  number: number
-  title: string
-  state: 'open' | 'closed' | 'merged'
-  author: string
-  createdAt: string
-  url: string
+  number: number;
+  title: string;
+  state: 'open' | 'closed' | 'merged';
+  author: string;
+  createdAt: string;
+  url: string;
 }
 
-export type GitOperationResult<T> = { success: true; data: T } | { success: false; error: string }
+export type GitOperationResult<T> = { success: true; data: T } | { success: false; error: string };
 
 // ==========================================
 // Mock Data
@@ -125,37 +125,37 @@ const MOCK_COMMITS: GitCommitInfo[] = [
     filesChanged: 4,
     url: '#',
   },
-]
+];
 
 const MOCK_BRANCHES: GitBranchInfo[] = [
   { name: 'main', sha: 'abc123', protected: true, current: false },
   { name: 'feature/left-panel-v2', sha: 'def456', protected: false, current: true },
   { name: 'feature/ai-provider', sha: 'ghi789', protected: false, current: false },
   { name: 'hotfix/safari-fix', sha: 'jkl012', protected: false, current: false },
-]
+];
 
 // ==========================================
 // Git API Service
 // ==========================================
 
 class GitAPIService {
-  private config: GitConfig | null = null
+  private config: GitConfig | null = null;
 
   /** Configure the Git service with token and repo info */
   configure(config: GitConfig): void {
-    this.config = { ...config, baseUrl: config.baseUrl || 'https://api.github.com' }
+    this.config = { ...config, baseUrl: config.baseUrl || 'https://api.github.com' };
   }
 
   /** Check if the service is configured with a real token */
   get isConfigured(): boolean {
-    return !!this.config?.token && this.config.token !== 'YOUR_GITHUB_TOKEN_HERE'
+    return !!this.config?.token && this.config.token !== 'YOUR_GITHUB_TOKEN_HERE';
   }
 
   /** Get current configuration (token masked) */
   get safeConfig(): (Omit<GitConfig, 'token'> & { hasToken: boolean }) | null {
-    if (!this.config) return null
-    const { token, ...rest } = this.config
-    return { ...rest, hasToken: !!token }
+    if (!this.config) return null;
+    const { token, ...rest } = this.config;
+    return { ...rest, hasToken: !!token };
   }
 
   // ------------------------------------------
@@ -165,17 +165,23 @@ class GitAPIService {
   /** List recent commits */
   async listCommits(perPage: number = 20): Promise<GitOperationResult<GitCommitInfo[]>> {
     if (!this.isConfigured) {
-      return { success: true, data: MOCK_COMMITS }
+      return { success: true, data: MOCK_COMMITS };
     }
 
     try {
       const res = await this.fetch(
-        `/repos/${this.config!.owner}/${this.config!.repo}/commits?sha=${this.config!.branch}&per_page=${perPage}`,
-      )
-      const data = await res.json()
+        `/repos/${this.config?.owner}/${this.config?.repo}/commits?sha=${this.config?.branch}&per_page=${perPage}`,
+      );
+      const data = await res.json();
+      const commits = data as Array<{
+        sha: string;
+        commit: { message: string; author: { name: string; email: string; date: string } };
+        stats?: { total: number };
+        html_url: string;
+      }>;
       return {
         success: true,
-        data: data.map((c: any) => ({
+        data: commits.map(c => ({
           sha: c.sha.substring(0, 7),
           message: c.commit.message,
           author: {
@@ -186,9 +192,10 @@ class GitAPIService {
           filesChanged: c.stats?.total ?? 0,
           url: c.html_url,
         })),
-      }
-    } catch (err: any) {
-      return { success: false, error: err.message }
+      };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      return { success: false, error: message };
     }
   }
 
@@ -206,27 +213,27 @@ class GitAPIService {
         author: { name: 'YYC3 Dev', email: 'admin@0379.email', date: new Date().toISOString() },
         filesChanged: 1,
         url: '#',
-      }
-      MOCK_COMMITS.unshift(mockCommit)
-      return { success: true, data: mockCommit }
+      };
+      MOCK_COMMITS.unshift(mockCommit);
+      return { success: true, data: mockCommit };
     }
 
     try {
-      const body: any = {
+      const body: Record<string, string | undefined> = {
         message,
         content: btoa(unescape(encodeURIComponent(content))),
-        branch: this.config!.branch,
-      }
-      if (sha) body.sha = sha
+        branch: this.config?.branch,
+      };
+      if (sha) body.sha = sha;
 
       const res = await this.fetch(
-        `/repos/${this.config!.owner}/${this.config!.repo}/contents/${path}`,
+        `/repos/${this.config?.owner}/${this.config?.repo}/contents/${path}`,
         {
           method: 'PUT',
           body: JSON.stringify(body),
         },
-      )
-      const data = await res.json()
+      );
+      const data = await res.json();
       return {
         success: true,
         data: {
@@ -240,9 +247,10 @@ class GitAPIService {
           filesChanged: 1,
           url: data.commit.html_url,
         },
-      }
-    } catch (err: any) {
-      return { success: false, error: err.message }
+      };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      return { success: false, error: message };
     }
   }
 
@@ -253,46 +261,53 @@ class GitAPIService {
   /** List branches */
   async listBranches(): Promise<GitOperationResult<GitBranchInfo[]>> {
     if (!this.isConfigured) {
-      return { success: true, data: MOCK_BRANCHES }
+      return { success: true, data: MOCK_BRANCHES };
     }
 
     try {
-      const res = await this.fetch(`/repos/${this.config!.owner}/${this.config!.repo}/branches`)
-      const data = await res.json()
+      const res = await this.fetch(`/repos/${this.config?.owner}/${this.config?.repo}/branches`);
+      const data = await res.json();
+      const branches = data as Array<{
+        name: string;
+        commit: { sha: string };
+        protected: boolean;
+      }>;
       return {
         success: true,
-        data: data.map((b: any) => ({
+        data: branches.map(b => ({
           name: b.name,
           sha: b.commit.sha.substring(0, 7),
           protected: b.protected,
-          current: b.name === this.config!.branch,
+          current: b.name === this.config?.branch,
         })),
-      }
-    } catch (err: any) {
-      return { success: false, error: err.message }
+      };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      return { success: false, error: message };
     }
   }
 
   /** Create a new branch */
   async createBranch(name: string, fromSha: string): Promise<GitOperationResult<GitBranchInfo>> {
     if (!this.isConfigured) {
-      const branch: GitBranchInfo = { name, sha: fromSha, protected: false, current: false }
-      MOCK_BRANCHES.push(branch)
-      return { success: true, data: branch }
+      const branch: GitBranchInfo = { name, sha: fromSha, protected: false, current: false };
+      MOCK_BRANCHES.push(branch);
+      return { success: true, data: branch };
     }
 
     try {
-      const res = await this.fetch(`/repos/${this.config!.owner}/${this.config!.repo}/git/refs`, {
+      const res = await this.fetch(`/repos/${this.config?.owner}/${this.config?.repo}/git/refs`, {
         method: 'POST',
         body: JSON.stringify({ ref: `refs/heads/${name}`, sha: fromSha }),
-      })
-      const data = await res.json()
+      });
+      const data = await res.json();
       return {
         success: true,
         data: { name, sha: data.object.sha.substring(0, 7), protected: false, current: false },
-      }
-    } catch (err: any) {
-      return { success: false, error: err.message }
+      };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      return { success: false, error: message };
     }
   }
 
@@ -308,25 +323,26 @@ class GitAPIService {
         data: {
           path,
           content: `// Mock file content for: ${path}\n// This is a simulated response.\n\nexport function placeholder() {\n  return 'YYC³ CloudPivot';\n}\n`,
-          sha: 'mock-sha-' + Math.random().toString(36).substring(2, 8),
+          sha: `mock-sha-${Math.random().toString(36).substring(2, 8)}`,
           size: 128,
           encoding: 'utf-8',
         },
-      }
+      };
     }
 
     try {
       const res = await this.fetch(
-        `/repos/${this.config!.owner}/${this.config!.repo}/contents/${path}?ref=${this.config!.branch}`,
-      )
-      const data = await res.json()
-      const content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))))
+        `/repos/${this.config?.owner}/${this.config?.repo}/contents/${path}?ref=${this.config?.branch}`,
+      );
+      const data = await res.json();
+      const content = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
       return {
         success: true,
         data: { path: data.path, content, sha: data.sha, size: data.size, encoding: data.encoding },
-      }
-    } catch (err: any) {
-      return { success: false, error: err.message }
+      };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      return { success: false, error: message };
     }
   }
 
@@ -337,17 +353,18 @@ class GitAPIService {
     sha: string,
   ): Promise<GitOperationResult<{ deleted: boolean }>> {
     if (!this.isConfigured) {
-      return { success: true, data: { deleted: true } }
+      return { success: true, data: { deleted: true } };
     }
 
     try {
-      await this.fetch(`/repos/${this.config!.owner}/${this.config!.repo}/contents/${path}`, {
+      await this.fetch(`/repos/${this.config?.owner}/${this.config?.repo}/contents/${path}`, {
         method: 'DELETE',
-        body: JSON.stringify({ message, sha, branch: this.config!.branch }),
-      })
-      return { success: true, data: { deleted: true } }
-    } catch (err: any) {
-      return { success: false, error: err.message }
+        body: JSON.stringify({ message, sha, branch: this.config?.branch }),
+      });
+      return { success: true, data: { deleted: true } };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      return { success: false, error: message };
     }
   }
 
@@ -374,33 +391,43 @@ class GitAPIService {
           {
             number: 41,
             title: 'feat: task-board Zustand + DnD upgrade',
-            state: 'merged' as any,
+            state: 'merged' as const,
             author: 'YYC3 Dev',
             createdAt: new Date(Date.now() - 86400000).toISOString(),
             url: '#',
           },
         ],
-      }
+      };
     }
 
     try {
       const res = await this.fetch(
-        `/repos/${this.config!.owner}/${this.config!.repo}/pulls?state=${state}`,
-      )
-      const data = await res.json()
+        `/repos/${this.config?.owner}/${this.config?.repo}/pulls?state=${state}`,
+      );
+      const data = await res.json();
+      const pullRequests = data as Array<{
+        number: number;
+        title: string;
+        state: string;
+        merged_at: string | null;
+        user: { login: string };
+        created_at: string;
+        html_url: string;
+      }>;
       return {
         success: true,
-        data: data.map((pr: any) => ({
+        data: pullRequests.map(pr => ({
           number: pr.number,
           title: pr.title,
-          state: pr.merged_at ? 'merged' : pr.state,
+          state: (pr.merged_at ? 'merged' : pr.state) as 'open' | 'closed' | 'merged',
           author: pr.user.login,
           createdAt: pr.created_at,
           url: pr.html_url,
         })),
-      }
-    } catch (err: any) {
-      return { success: false, error: err.message }
+      };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      return { success: false, error: message };
     }
   }
 
@@ -410,23 +437,23 @@ class GitAPIService {
 
   /** Fetch wrapper with auth headers */
   private async fetch(path: string, options: RequestInit = {}): Promise<Response> {
-    const url = `${this.config!.baseUrl}${path}`
+    const url = `${this.config?.baseUrl}${path}`;
     const res = await fetch(url, {
       ...options,
       headers: {
         Accept: 'application/vnd.github.v3+json',
-        Authorization: `Bearer ${this.config!.token}`,
+        Authorization: `Bearer ${this.config?.token}`,
         'Content-Type': 'application/json',
         ...((options.headers as Record<string, string>) ?? {}),
       },
-    })
+    });
     if (!res.ok) {
-      const body = await res.text().catch(() => '')
-      throw new Error(`GitHub API ${res.status}: ${body.substring(0, 200)}`)
+      const body = await res.text().catch(() => '');
+      throw new Error(`GitHub API ${res.status}: ${body.substring(0, 200)}`);
     }
-    return res
+    return res;
   }
 }
 
 /** Singleton Git API Service */
-export const gitAPIService = new GitAPIService()
+export const gitAPIService = new GitAPIService();

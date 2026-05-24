@@ -11,41 +11,40 @@
  * @tags settings,account,profile
  */
 
-import { Briefcase, Camera, Link as LinkIcon, Mail, MapPin, User } from 'lucide-react'
-import { motion } from 'motion/react'
-import { useState } from 'react'
+import { Briefcase, Camera, Link as LinkIcon, Mail, MapPin, User } from 'lucide-react';
+import { motion } from 'motion/react';
+import { useState } from 'react';
 
-import { accountService } from '../../services/settings-services'
-import { useSettingsStore } from '../../stores/useSettingsStore'
-import { useThemeColors } from '../hooks/use-theme-colors'
+import { accountService } from '../../services/settings-services';
+import { useSettingsStore } from '../../stores/useSettingsStore';
+import { useThemeColors } from '../hooks/use-theme-colors';
 
 export function AccountSettingsPanel() {
-  const tc = useThemeColors()
-  const { settings, updateUserProfile } = useSettingsStore()
-  const { userProfile } = settings
+  const tc = useThemeColors();
+  const { settings, updateUserProfile } = useSettingsStore();
+  const { userProfile } = settings;
 
-  const [isUploading, setIsUploading] = useState(false)
+  const [isUploading, setIsUploading] = useState(false);
 
   // 处理头像上传
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    setIsUploading(true)
+    setIsUploading(true);
     try {
-      const avatarUrl = await accountService.uploadAvatar(file)
-      updateUserProfile({ avatar: avatarUrl })
-    } catch (error) {
-      console.error('头像上传失败:', error)
+      const avatarUrl = await accountService.uploadAvatar(file);
+      updateUserProfile({ avatar: avatarUrl });
+    } catch (_error) {
     } finally {
-      setIsUploading(false)
+      setIsUploading(false);
     }
-  }
+  };
 
   // 处理字段更新
   const handleFieldUpdate = (field: string, value: string) => {
-    updateUserProfile({ [field]: value })
-  }
+    updateUserProfile({ [field]: value });
+  };
 
   return (
     <div className="space-y-8">
@@ -121,7 +120,7 @@ export function AccountSettingsPanel() {
           icon={User}
           label="用户名"
           value={userProfile.username}
-          onChange={(value) => handleFieldUpdate('username', value)}
+          onChange={value => handleFieldUpdate('username', value)}
           tc={tc}
         />
 
@@ -131,7 +130,7 @@ export function AccountSettingsPanel() {
           label="邮箱"
           type="email"
           value={userProfile.email}
-          onChange={(value) => handleFieldUpdate('email', value)}
+          onChange={value => handleFieldUpdate('email', value)}
           tc={tc}
         />
 
@@ -140,7 +139,7 @@ export function AccountSettingsPanel() {
           icon={Briefcase}
           label="角色"
           value={userProfile.role || ''}
-          onChange={(value) => handleFieldUpdate('role', value)}
+          onChange={value => handleFieldUpdate('role', value)}
           placeholder="例如：AI 架构师"
           tc={tc}
         />
@@ -150,7 +149,7 @@ export function AccountSettingsPanel() {
           icon={MapPin}
           label="位置"
           value={userProfile.location || ''}
-          onChange={(value) => handleFieldUpdate('location', value)}
+          onChange={value => handleFieldUpdate('location', value)}
           placeholder="例如：北京"
           tc={tc}
         />
@@ -160,7 +159,7 @@ export function AccountSettingsPanel() {
           icon={LinkIcon}
           label="个人网站"
           value={userProfile.website || ''}
-          onChange={(value) => handleFieldUpdate('website', value)}
+          onChange={value => handleFieldUpdate('website', value)}
           placeholder="https://"
           tc={tc}
         />
@@ -172,7 +171,7 @@ export function AccountSettingsPanel() {
           </label>
           <textarea
             value={userProfile.bio || ''}
-            onChange={(e) => handleFieldUpdate('bio', e.target.value)}
+            onChange={e => handleFieldUpdate('bio', e.target.value)}
             placeholder="介绍一下自己..."
             rows={4}
             className="w-full px-4 py-3 rounded-lg outline-none transition-all resize-none"
@@ -185,18 +184,18 @@ export function AccountSettingsPanel() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // 表单字段组件
 interface FormFieldProps {
-  icon: React.ElementType
-  label: string
-  value: string
-  onChange: (value: string) => void
-  type?: string
-  placeholder?: string
-  tc: ReturnType<typeof useThemeColors>
+  icon: React.ElementType;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: string;
+  placeholder?: string;
+  tc: ReturnType<typeof useThemeColors>;
 }
 
 function FormField({
@@ -222,7 +221,7 @@ function FormField({
         <input
           type={type}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           placeholder={placeholder}
           className="w-full pl-12 pr-4 py-3 rounded-lg outline-none transition-all"
           style={{
@@ -233,5 +232,5 @@ function FormField({
         />
       </div>
     </div>
-  )
+  );
 }

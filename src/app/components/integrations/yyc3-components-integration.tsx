@@ -3,12 +3,12 @@
  * @description YYC³ UI 组件库集成示例 — 展示如何在 My-mgmt 项目中使用 @yyc3/ui 2.0.0 组件
  */
 
-import React from 'react'
+import type React from 'react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { Badge } from '../ui/badge'
-import { Button } from '../ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import {
   Dialog,
   DialogContent,
@@ -16,13 +16,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../ui/dialog'
-import { Input } from '../ui/input'
-import { Label } from '../ui/label'
-import { Progress } from '../ui/progress'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
-import { Textarea } from '../ui/textarea'
+} from '../ui/dialog';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Progress } from '../ui/progress';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Textarea } from '../ui/textarea';
 
 // ==========================================
 // 示例 1: 使用 YYC³ Button 组件
@@ -50,7 +50,7 @@ export function Yyc3ButtonExample() {
         <a href="#">作为链接</a>
       </Button>
     </div>
-  )
+  );
 }
 
 // ==========================================
@@ -58,12 +58,12 @@ export function Yyc3ButtonExample() {
 // ==========================================
 
 interface DashboardCardProps {
-  title: string
-  value: string | number
-  description?: string
-  trend?: 'up' | 'down' | 'stable'
-  trendValue?: string
-  icon?: React.ReactNode
+  title: string;
+  value: string | number;
+  description?: string;
+  trend?: 'up' | 'down' | 'stable';
+  trendValue?: string;
+  icon?: React.ReactNode;
 }
 
 export function Yyc3DashboardCard({
@@ -78,7 +78,7 @@ export function Yyc3DashboardCard({
     up: 'text-green-500',
     down: 'text-red-500',
     stable: 'text-gray-500',
-  }
+  };
 
   return (
     <Card className="relative overflow-hidden">
@@ -100,7 +100,7 @@ export function Yyc3DashboardCard({
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // ==========================================
@@ -166,7 +166,7 @@ export function Yyc3EmployeeCareForm() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // ==========================================
@@ -258,7 +258,7 @@ export function Yyc3MarketingDashboard() {
         </Tabs>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // ==========================================
@@ -339,7 +339,7 @@ export function Yyc3CustomerFollowUpDialog() {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
 // ==========================================
@@ -352,4 +352,4 @@ export default {
   Yyc3EmployeeCareForm,
   Yyc3MarketingDashboard,
   Yyc3CustomerFollowUpDialog,
-}
+};

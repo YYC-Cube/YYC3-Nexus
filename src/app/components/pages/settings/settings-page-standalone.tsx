@@ -26,23 +26,23 @@ import {
   Settings as SettingsIcon,
   User,
   Zap,
-} from 'lucide-react'
-import { motion } from 'motion/react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { motion } from 'motion/react';
+import { useState } from 'react';
 
-import { useI18n } from '../../context/i18n-context'
-import { useThemeSwitcher } from '../../context/theme-switcher-context'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { useI18n } from '../../context/i18n-context';
+import { useThemeSwitcher } from '../../context/theme-switcher-context';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 /**
  * 独立设置页面 - 无外部状态依赖
  */
 export function SettingsPage() {
-  const tc = useThemeColors()
-  const { theme, setTheme } = useThemeSwitcher()
-  const { language, setLanguage } = useI18n()
-  const [activeCategory, setActiveCategory] = useState('general')
-  const [searchQuery, setSearchQuery] = useState('')
+  const tc = useThemeColors();
+  const { theme, setTheme } = useThemeSwitcher();
+  const { language, setLanguage } = useI18n();
+  const [activeCategory, setActiveCategory] = useState('general');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
     { id: 'account', label: '账号信息', icon: User, description: '管理您的个人信息和头像' },
@@ -65,7 +65,7 @@ export function SettingsPage() {
     { id: 'rules', label: '规则管理', icon: FileCode, description: '自定义规则和约束' },
     { id: 'skills', label: '技能管理', icon: Zap, description: '自定义技能和能力' },
     { id: 'import-export', label: '导入/导出', icon: Download, description: '备份和迁移设置' },
-  ]
+  ];
 
   // 渲染通用设置面板
   const renderGeneralSettings = () => (
@@ -190,7 +190,7 @@ export function SettingsPage() {
 
         <select
           value={language}
-          onChange={(e) => setLanguage(e.target.value as any)}
+          onChange={e => setLanguage(e.target.value as unknown as typeof language)}
           className="w-full px-4 py-3 rounded-lg outline-none"
           style={{
             background: tc.bgInput,
@@ -215,14 +215,14 @@ export function SettingsPage() {
         <p style={{ color: tc.accent }}>💡 更多设置功能正在开发中...</p>
       </div>
     </div>
-  )
+  );
 
   // 渲染占位面板
   const renderPlaceholderPanel = (categoryId: string) => {
-    const category = categories.find((c) => c.id === categoryId)
-    if (!category) return null
+    const category = categories.find(c => c.id === categoryId);
+    if (!category) return null;
 
-    const Icon = category.icon
+    const Icon = category.icon;
 
     return (
       <div className="space-y-6">
@@ -246,16 +246,16 @@ export function SettingsPage() {
           </p>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   // 渲染当前面板
   const renderCurrentPanel = () => {
     if (activeCategory === 'general') {
-      return renderGeneralSettings()
+      return renderGeneralSettings();
     }
-    return renderPlaceholderPanel(activeCategory)
-  }
+    return renderPlaceholderPanel(activeCategory);
+  };
 
   return (
     <div
@@ -294,7 +294,7 @@ export function SettingsPage() {
             type="text"
             placeholder="搜索设置..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="w-full py-3 pl-12 pr-4 bg-transparent outline-none"
             style={{ color: tc.textPrimary }}
           />
@@ -314,9 +314,9 @@ export function SettingsPage() {
             }}
           >
             <div className="space-y-1">
-              {categories.map((category) => {
-                const Icon = category.icon
-                const isActive = activeCategory === category.id
+              {categories.map(category => {
+                const Icon = category.icon;
+                const isActive = activeCategory === category.id;
 
                 return (
                   <button
@@ -336,7 +336,7 @@ export function SettingsPage() {
                     <span className="flex-1 text-sm font-medium">{category.label}</span>
                     {isActive && <ChevronRight size={16} />}
                   </button>
-                )
+                );
               })}
             </div>
           </div>
@@ -364,5 +364,5 @@ export function SettingsPage() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

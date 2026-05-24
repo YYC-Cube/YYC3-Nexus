@@ -10,11 +10,11 @@ import {
   Target,
   TrendingUp,
   Users,
-} from 'lucide-react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { useState } from 'react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 营销效果分析 - Marketing Analytics
@@ -22,17 +22,17 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 interface MetricData {
-  label: string
-  value: number
-  change: number
-  trend: 'up' | 'down'
-  icon: typeof TrendingUp
-  color: string
+  label: string;
+  value: number;
+  change: number;
+  trend: 'up' | 'down';
+  icon: typeof TrendingUp;
+  color: string;
 }
 
 export function MarketingAnalyticsPage() {
-  const tc = useThemeColors()
-  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d')
+  const tc = useThemeColors();
+  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
 
   const metrics: MetricData[] = [
     {
@@ -67,14 +67,14 @@ export function MarketingAnalyticsPage() {
       icon: Users,
       color: tc.accent,
     },
-  ]
+  ];
 
   const channelPerformance = [
     { channel: '抖音', roi: 4.2, cost: 45000, revenue: 189000, conversion: 5.8 },
     { channel: '微信', roi: 3.8, cost: 38000, revenue: 144400, conversion: 4.2 },
     { channel: '小红书', roi: 3.5, cost: 28000, revenue: 98000, conversion: 3.9 },
     { channel: '百度', roi: 2.9, cost: 35000, revenue: 101500, conversion: 3.1 },
-  ]
+  ];
 
   const campaignAnalytics = [
     {
@@ -101,7 +101,7 @@ export function MarketingAnalyticsPage() {
       revenue: 142000,
       roi: 5.2,
     },
-  ]
+  ];
 
   const aiInsights = [
     {
@@ -119,7 +119,7 @@ export function MarketingAnalyticsPage() {
       content: '抖音+小红书组合投放效果提升35%，建议增加联动策略',
       impact: '预计提升整体转化率 12%',
     },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -135,7 +135,7 @@ export function MarketingAnalyticsPage() {
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            {(['7d', '30d', '90d'] as const).map((range) => (
+            {(['7d', '30d', '90d'] as const).map(range => (
               <button
                 key={range}
                 onClick={() => setTimeRange(range)}
@@ -167,9 +167,9 @@ export function MarketingAnalyticsPage() {
 
       {/* 核心指标 */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {metrics.map((metric) => {
-          const Icon = metric.icon
-          const TrendIcon = metric.trend === 'up' ? ArrowUp : ArrowDown
+        {metrics.map(metric => {
+          const Icon = metric.icon;
+          const TrendIcon = metric.trend === 'up' ? ArrowUp : ArrowDown;
 
           return (
             <NeonCard key={metric.label} className="p-6">
@@ -197,7 +197,7 @@ export function MarketingAnalyticsPage() {
                     : metric.value}
               </p>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
@@ -351,9 +351,9 @@ export function MarketingAnalyticsPage() {
           活动效果详情
         </h2>
         <div className="space-y-4">
-          {campaignAnalytics.map((campaign) => {
-            const ctr = ((campaign.clicks / campaign.impressions) * 100).toFixed(2)
-            const conversionRate = ((campaign.conversions / campaign.clicks) * 100).toFixed(2)
+          {campaignAnalytics.map(campaign => {
+            const ctr = ((campaign.clicks / campaign.impressions) * 100).toFixed(2);
+            const conversionRate = ((campaign.conversions / campaign.clicks) * 100).toFixed(2);
 
             return (
               <div
@@ -423,10 +423,10 @@ export function MarketingAnalyticsPage() {
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </NeonCard>
     </div>
-  )
+  );
 }

@@ -29,38 +29,35 @@ import {
   Terminal,
   X,
   Zap,
-} from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useEffect, useRef, useState } from 'react'
-
-import { aiProxyService } from '../services/ai-proxy-service'
-
-import { AI_PROVIDER_MODELS, AI_SUGGESTIONS_POOL, timeAgo } from './panel-helpers'
-import { usePanelStore } from './panel-store'
-
-import type { AIChatMessage, AIProviderType, AISuggestion } from './panel-types'
-import type { ThemeColors } from '../hooks/use-theme-colors'
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { ThemeColors } from '../hooks/use-theme-colors';
+import { aiProxyService } from '../services/ai-proxy-service';
+import { AI_PROVIDER_MODELS, AI_SUGGESTIONS_POOL, timeAgo } from './panel-helpers';
+import { usePanelStore } from './panel-store';
+import type { AIChatMessage, AIProviderType, AISuggestion } from './panel-types';
 
 // ==========================================
 // Token 用量统计接口
 // ==========================================
 
 interface TokenUsageStats {
-  promptTokens: number
-  completionTokens: number
-  totalTokens: number
-  latencyMs: number
-  tokensPerSecond: number
-  provider: string
-  model: string
-  timestamp: number
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  latencyMs: number;
+  tokensPerSecond: number;
+  provider: string;
+  model: string;
+  timestamp: number;
 }
 
 /** 简易 token 估算（约 4 字符 = 1 token，中文约 1.5 字 = 1 token） */
 function estimateTokens(text: string): number {
-  const cjkChars = (text.match(/[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/g) || []).length
-  const otherChars = text.length - cjkChars
-  return Math.ceil(cjkChars / 1.5 + otherChars / 4)
+  const cjkChars = (text.match(/[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef]/g) || []).length;
+  const otherChars = text.length - cjkChars;
+  return Math.ceil(cjkChars / 1.5 + otherChars / 4);
 }
 
 // ==========================================
@@ -68,10 +65,10 @@ function estimateTokens(text: string): number {
 // ==========================================
 
 interface AIAssistantPanelProps {
-  tc: ThemeColors
-  selectedFile?: string | null
-  editorContentGetter: React.RefObject<(() => string) | null>
-  editorInsertRef?: React.RefObject<((text: string) => void) | null>
+  tc: ThemeColors;
+  selectedFile?: string | null;
+  editorContentGetter: React.RefObject<(() => string) | null>;
+  editorInsertRef?: React.RefObject<((text: string) => void) | null>;
 }
 
 export function AIAssistantPanel({
@@ -81,28 +78,28 @@ export function AIAssistantPanel({
   editorInsertRef,
 }: AIAssistantPanelProps) {
   const { aiMessages, addAIMessage, clearAIMessages, aiProviderConfig, setAIProviderConfig } =
-    usePanelStore()
-  const [input, setInput] = useState('')
-  const [processing, setProcessing] = useState(false)
-  const [streamingContent, setStreamingContent] = useState('')
-  const [suggestions, setSuggestions] = useState<AISuggestion[]>([])
-  const [showConfig, setShowConfig] = useState(false)
-  const [showApiKey, setShowApiKey] = useState(false)
-  const [showStats, setShowStats] = useState(false)
-  const [copiedId, setCopiedId] = useState<string | null>(null)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const abortRef = useRef<AbortController | null>(null)
+    usePanelStore();
+  const [input, setInput] = useState('');
+  const [processing, setProcessing] = useState(false);
+  const [streamingContent, setStreamingContent] = useState('');
+  const [suggestions, setSuggestions] = useState<AISuggestion[]>([]);
+  const [showConfig, setShowConfig] = useState(false);
+  const [showApiKey, setShowApiKey] = useState(false);
+  const [showStats, setShowStats] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   // Token 用量统计历史
-  const [tokenHistory, setTokenHistory] = useState<TokenUsageStats[]>([])
-  const [currentStats, setCurrentStats] = useState<TokenUsageStats | null>(null)
+  const [tokenHistory, setTokenHistory] = useState<TokenUsageStats[]>([]);
+  const [currentStats, setCurrentStats] = useState<TokenUsageStats | null>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [aiMessages, streamingContent])
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
 
-  const providerInfo = AI_PROVIDER_MODELS[aiProviderConfig.provider]
-  const isRealProvider = aiProviderConfig.provider !== 'mock' && aiProviderConfig.apiKey.length > 0
+  const providerInfo = AI_PROVIDER_MODELS[aiProviderConfig.provider];
+  const isRealProvider = aiProviderConfig.provider !== 'mock' && aiProviderConfig.apiKey.length > 0;
 
   // 累计 token 统计
   const totalStats = tokenHistory.reduce(
@@ -114,57 +111,57 @@ export function AIAssistantPanel({
       count: acc.count + 1,
     }),
     { promptTokens: 0, completionTokens: 0, totalTokens: 0, avgLatency: 0, count: 0 },
-  )
+  );
 
   // ==========================================
   // 流式发送
   // ==========================================
 
   const handleSend = useCallback(async () => {
-    if (!input.trim() || processing) return
+    if (!input.trim() || processing) return;
     const userMsg: AIChatMessage = {
       id: crypto.randomUUID(),
       role: 'user',
       content: input.trim(),
       timestamp: Date.now(),
-    }
-    addAIMessage(userMsg)
-    const _userInput = input.trim()
-    setInput('')
-    setProcessing(true)
-    setStreamingContent('')
+    };
+    addAIMessage(userMsg);
+    const _userInput = input.trim();
+    setInput('');
+    setProcessing(true);
+    setStreamingContent('');
 
     const history = [...aiMessages, userMsg]
       .slice(-10)
-      .map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content }))
-    abortRef.current = new AbortController()
+      .map(m => ({ role: m.role as 'user' | 'assistant', content: m.content }));
+    abortRef.current = new AbortController();
 
-    const startTime = Date.now()
-    let fullContent = ''
+    const startTime = Date.now();
+    let fullContent = '';
 
     try {
       const fileContext =
         selectedFile && editorContentGetter.current
           ? { filePath: selectedFile, content: editorContentGetter.current() }
-          : undefined
+          : undefined;
 
       const stream = aiProxyService.chatStream(
         aiProviderConfig,
         history,
         abortRef.current.signal,
         fileContext,
-      )
+      );
 
       for await (const chunk of stream) {
-        if (chunk.done) break
-        fullContent += chunk.token
-        setStreamingContent(fullContent)
+        if (chunk.done) break;
+        fullContent += chunk.token;
+        setStreamingContent(fullContent);
       }
 
-      const latencyMs = Date.now() - startTime
-      const promptTokens = estimateTokens(history.map((m) => m.content).join(' '))
-      const completionTokens = estimateTokens(fullContent)
-      const tokensPerSecond = latencyMs > 0 ? Math.round((completionTokens / latencyMs) * 1000) : 0
+      const latencyMs = Date.now() - startTime;
+      const promptTokens = estimateTokens(history.map(m => m.content).join(' '));
+      const completionTokens = estimateTokens(fullContent);
+      const tokensPerSecond = latencyMs > 0 ? Math.round((completionTokens / latencyMs) * 1000) : 0;
 
       const stats: TokenUsageStats = {
         promptTokens,
@@ -175,38 +172,39 @@ export function AIAssistantPanel({
         provider: aiProviderConfig.provider,
         model: aiProviderConfig.model,
         timestamp: Date.now(),
-      }
-      setCurrentStats(stats)
-      setTokenHistory((prev) => [...prev.slice(-49), stats])
+      };
+      setCurrentStats(stats);
+      setTokenHistory(prev => [...prev.slice(-49), stats]);
 
       const aiMsg: AIChatMessage = {
         id: crypto.randomUUID(),
         role: 'assistant',
         content: fullContent || '（无响应内容）',
         timestamp: Date.now(),
-      }
-      addAIMessage(aiMsg)
-    } catch (err: any) {
-      if (err?.name !== 'AbortError') {
+      };
+      addAIMessage(aiMsg);
+    } catch (err: unknown) {
+      if (!(err instanceof Error) || err.name !== 'AbortError') {
+        const errorMessage = err instanceof Error ? err.message : '未知错误';
         addAIMessage({
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: `⚠️ 错误: ${err?.message ?? '未知错误'}`,
+          content: `⚠️ 错误: ${errorMessage}`,
           timestamp: Date.now(),
-        })
+        });
       }
     }
 
-    setStreamingContent('')
-    const count = 1 + Math.floor(Math.random() * 2)
-    const pool = [...AI_SUGGESTIONS_POOL].sort(() => Math.random() - 0.5)
+    setStreamingContent('');
+    const count = 1 + Math.floor(Math.random() * 2);
+    const pool = [...AI_SUGGESTIONS_POOL].sort(() => Math.random() - 0.5);
     setSuggestions(
       pool
         .slice(0, count)
-        .map((s) => ({ ...s, id: crypto.randomUUID(), confidence: 0.8 + Math.random() * 0.19 })),
-    )
-    setProcessing(false)
-    abortRef.current = null
+        .map(s => ({ ...s, id: crypto.randomUUID(), confidence: 0.8 + Math.random() * 0.19 })),
+    );
+    setProcessing(false);
+    abortRef.current = null;
   }, [
     input,
     processing,
@@ -215,37 +213,37 @@ export function AIAssistantPanel({
     aiProviderConfig,
     selectedFile,
     editorContentGetter,
-  ])
+  ]);
 
   const handleStop = useCallback(() => {
-    abortRef.current?.abort()
-    setProcessing(false)
-    setStreamingContent('')
-  }, [])
+    abortRef.current?.abort();
+    setProcessing(false);
+    setStreamingContent('');
+  }, []);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault()
-        handleSend()
+        e.preventDefault();
+        handleSend();
       }
     },
     [handleSend],
-  )
+  );
 
   const handleCopy = useCallback((id: string, content: string) => {
     navigator.clipboard.writeText(content).then(() => {
-      setCopiedId(id)
-      setTimeout(() => setCopiedId(null), 1500)
-    })
-  }, [])
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 1500);
+    });
+  }, []);
 
   const handleInsert = useCallback(
     (content: string) => {
-      editorInsertRef?.current?.(content)
+      editorInsertRef?.current?.(content);
     },
     [editorInsertRef],
-  )
+  );
 
   return (
     <div className="flex flex-col h-full">
@@ -301,9 +299,9 @@ export function AIAssistantPanel({
           </button>
           <button
             onClick={() => {
-              clearAIMessages()
-              setTokenHistory([])
-              setCurrentStats(null)
+              clearAIMessages();
+              setTokenHistory([]);
+              setCurrentStats(null);
             }}
             className="text-[9px] px-1.5 py-0.5 rounded hover:bg-white/5 transition-colors"
             style={{ color: tc.textMuted }}
@@ -484,13 +482,13 @@ export function AIAssistantPanel({
                 </label>
                 <select
                   value={aiProviderConfig.provider}
-                  onChange={(e) => {
-                    const p = e.target.value as AIProviderType
+                  onChange={e => {
+                    const p = e.target.value as AIProviderType;
                     setAIProviderConfig({
                       provider: p,
                       model: AI_PROVIDER_MODELS[p].models[0].id,
                       baseUrl: AI_PROVIDER_MODELS[p].defaultBaseUrl,
-                    })
+                    });
                   }}
                   className="w-full text-[10px] px-2 py-1.5 rounded-lg border outline-none"
                   style={{
@@ -512,7 +510,7 @@ export function AIAssistantPanel({
                 </label>
                 <select
                   value={aiProviderConfig.model}
-                  onChange={(e) => setAIProviderConfig({ model: e.target.value })}
+                  onChange={e => setAIProviderConfig({ model: e.target.value })}
                   className="w-full text-[10px] px-2 py-1.5 rounded-lg border outline-none"
                   style={{
                     background: tc.bgInput,
@@ -520,7 +518,7 @@ export function AIAssistantPanel({
                     color: tc.textPrimary,
                   }}
                 >
-                  {providerInfo.models.map((m) => (
+                  {providerInfo.models.map(m => (
                     <option key={m.id} value={m.id}>
                       {m.name}
                     </option>
@@ -536,7 +534,7 @@ export function AIAssistantPanel({
                     <input
                       type={showApiKey ? 'text' : 'password'}
                       value={aiProviderConfig.apiKey}
-                      onChange={(e) => setAIProviderConfig({ apiKey: e.target.value })}
+                      onChange={e => setAIProviderConfig({ apiKey: e.target.value })}
                       placeholder="YOUR_API_KEY_HERE"
                       className="w-full text-[10px] px-2 py-1.5 pr-7 rounded-lg border outline-none font-mono"
                       style={{
@@ -565,7 +563,7 @@ export function AIAssistantPanel({
                   <input
                     type="text"
                     value={aiProviderConfig.baseUrl ?? ''}
-                    onChange={(e) => setAIProviderConfig({ baseUrl: e.target.value })}
+                    onChange={e => setAIProviderConfig({ baseUrl: e.target.value })}
                     placeholder={providerInfo.defaultBaseUrl}
                     className="w-full text-[10px] px-2 py-1.5 rounded-lg border outline-none font-mono"
                     style={{
@@ -586,7 +584,7 @@ export function AIAssistantPanel({
                   max="2"
                   step="0.1"
                   value={aiProviderConfig.temperature}
-                  onChange={(e) => setAIProviderConfig({ temperature: parseFloat(e.target.value) })}
+                  onChange={e => setAIProviderConfig({ temperature: parseFloat(e.target.value) })}
                   className="w-full h-1 rounded-full appearance-none cursor-pointer"
                   style={{
                     background: `linear-gradient(to right, ${tc.primary} 0%, ${tc.primary} ${(aiProviderConfig.temperature / 2) * 100}%, ${tc.borderDefault} ${(aiProviderConfig.temperature / 2) * 100}%, ${tc.borderDefault} 100%)`,
@@ -600,8 +598,8 @@ export function AIAssistantPanel({
                 <input
                   type="number"
                   value={aiProviderConfig.maxTokens}
-                  onChange={(e) =>
-                    setAIProviderConfig({ maxTokens: parseInt(e.target.value) || 2048 })
+                  onChange={e =>
+                    setAIProviderConfig({ maxTokens: parseInt(e.target.value, 10) || 2048 })
                   }
                   className="w-full text-[10px] px-2 py-1.5 rounded-lg border outline-none"
                   style={{
@@ -666,7 +664,7 @@ export function AIAssistantPanel({
             </div>
           </div>
         )}
-        {aiMessages.map((msg) => (
+        {aiMessages.map(msg => (
           <div key={msg.id} className="flex gap-2 group">
             <div
               className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
@@ -764,7 +762,7 @@ export function AIAssistantPanel({
             </div>
             <div className="flex items-center gap-1.5">
               <div className="flex gap-1">
-                {[0, 1, 2].map((i) => (
+                {[0, 1, 2].map(i => (
                   <motion.div
                     key={i}
                     className="w-1.5 h-1.5 rounded-full"
@@ -788,12 +786,12 @@ export function AIAssistantPanel({
             <p className="text-[9px] uppercase tracking-wider" style={{ color: tc.textMuted }}>
               建议
             </p>
-            {suggestions.map((s) => (
+            {suggestions.map(s => (
               <button
                 key={s.id}
                 onClick={() => {
-                  setInput(s.title)
-                  setSuggestions((prev) => prev.filter((x) => x.id !== s.id))
+                  setInput(s.title);
+                  setSuggestions(prev => prev.filter(x => x.id !== s.id));
                 }}
                 className="w-full text-left flex items-start gap-2 p-2 rounded-lg border transition-all hover:bg-white/[0.03]"
                 style={{ borderColor: tc.borderSubtle }}
@@ -839,7 +837,7 @@ export function AIAssistantPanel({
         <div className="flex items-end gap-1.5">
           <textarea
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={
               isRealProvider
@@ -850,11 +848,11 @@ export function AIAssistantPanel({
             disabled={processing}
             className="flex-1 px-2.5 py-1.5 text-[11px] rounded-lg border outline-none resize-none transition-all"
             style={{ background: tc.bgInput, borderColor: tc.borderDefault, color: tc.textPrimary }}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = '#a78bfa50'
+            onFocus={e => {
+              e.currentTarget.style.borderColor = '#a78bfa50';
             }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = tc.borderDefault
+            onBlur={e => {
+              e.currentTarget.style.borderColor = tc.borderDefault;
             }}
           />
           {processing ? (
@@ -882,5 +880,5 @@ export function AIAssistantPanel({
         </div>
       </div>
     </div>
-  )
+  );
 }

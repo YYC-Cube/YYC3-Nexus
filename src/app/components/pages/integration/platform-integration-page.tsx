@@ -11,10 +11,10 @@ import {
   Settings,
   ShoppingCart,
   Users,
-} from 'lucide-react'
+} from 'lucide-react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 平台对接中心 - Platform Integration Center
@@ -22,18 +22,18 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 interface Platform {
-  id: string
-  name: string
-  type: string
-  status: 'connected' | 'disconnected' | 'error'
-  icon: typeof Globe
-  lastSync: string
-  dataCount: number
-  color: string
+  id: string;
+  name: string;
+  type: string;
+  status: 'connected' | 'disconnected' | 'error';
+  icon: typeof Globe;
+  lastSync: string;
+  dataCount: number;
+  color: string;
 }
 
 export function PlatformIntegrationPage() {
-  const tc = useThemeColors()
+  const tc = useThemeColors();
 
   const platforms: Platform[] = [
     {
@@ -96,24 +96,24 @@ export function PlatformIntegrationPage() {
       dataCount: 0,
       color: tc.textMuted,
     },
-  ]
+  ];
 
   const stats = [
     {
       label: '已连接平台',
-      value: platforms.filter((p) => p.status === 'connected').length.toString(),
+      value: platforms.filter(p => p.status === 'connected').length.toString(),
       icon: CheckCircle2,
       color: tc.success,
     },
     {
       label: '待连接',
-      value: platforms.filter((p) => p.status === 'disconnected').length.toString(),
+      value: platforms.filter(p => p.status === 'disconnected').length.toString(),
       icon: Clock,
       color: tc.textMuted,
     },
     {
       label: '异常平台',
-      value: platforms.filter((p) => p.status === 'error').length.toString(),
+      value: platforms.filter(p => p.status === 'error').length.toString(),
       icon: AlertCircle,
       color: tc.danger,
     },
@@ -123,18 +123,18 @@ export function PlatformIntegrationPage() {
       icon: Database,
       color: tc.primary,
     },
-  ]
+  ];
 
   const getStatusConfig = (status: Platform['status']) => {
     switch (status) {
       case 'connected':
-        return { label: '已连接', color: tc.success, icon: CheckCircle2 }
+        return { label: '已连接', color: tc.success, icon: CheckCircle2 };
       case 'disconnected':
-        return { label: '未连接', color: tc.textMuted, icon: Clock }
+        return { label: '未连接', color: tc.textMuted, icon: Clock };
       case 'error':
-        return { label: '连接异常', color: tc.danger, icon: AlertCircle }
+        return { label: '连接异常', color: tc.danger, icon: AlertCircle };
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -157,8 +157,8 @@ export function PlatformIntegrationPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon
+        {stats.map(stat => {
+          const Icon = stat.icon;
           return (
             <NeonCard key={stat.label} className="p-6">
               <div className="flex items-start justify-between mb-4">
@@ -171,15 +171,15 @@ export function PlatformIntegrationPage() {
                 {stat.value}
               </p>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {platforms.map((platform) => {
-          const Icon = platform.icon
-          const statusConfig = getStatusConfig(platform.status)
-          const StatusIcon = statusConfig.icon
+        {platforms.map(platform => {
+          const Icon = platform.icon;
+          const statusConfig = getStatusConfig(platform.status);
+          const StatusIcon = statusConfig.icon;
 
           return (
             <NeonCard
@@ -270,9 +270,9 @@ export function PlatformIntegrationPage() {
                 </button>
               </div>
             </NeonCard>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

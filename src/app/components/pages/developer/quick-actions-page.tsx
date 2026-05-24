@@ -48,12 +48,12 @@ import {
   Trash2,
   Type,
   Zap,
-} from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useState } from 'react'
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useState } from 'react';
 
-import { useI18n } from '../../context/i18n-context'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { useI18n } from '../../context/i18n-context';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // Types
@@ -79,32 +79,32 @@ type ActionType =
   | 'correct'
   | 'explain'
   | 'comment'
-  | 'findIssues'
+  | 'findIssues';
 
-type ActionTarget = 'code' | 'text' | 'document' | 'ai'
-type ActionStatus = 'idle' | 'processing' | 'success' | 'error'
+type ActionTarget = 'code' | 'text' | 'document' | 'ai';
+type ActionStatus = 'idle' | 'processing' | 'success' | 'error';
 
 interface QuickAction {
-  id: string
-  type: ActionType
-  target: ActionTarget
-  title: string
-  description: string
-  icon: typeof Copy
-  color: string
-  shortcut?: string
-  requiresAI: boolean
-  status: ActionStatus
+  id: string;
+  type: ActionType;
+  target: ActionTarget;
+  title: string;
+  description: string;
+  icon: typeof Copy;
+  color: string;
+  shortcut?: string;
+  requiresAI: boolean;
+  status: ActionStatus;
 }
 
 interface ClipboardItem {
-  id: string
-  content: string
-  type: 'text' | 'code' | 'html'
-  language?: string
-  copiedAt: number
-  sourceFile?: string
-  size: number
+  id: string;
+  content: string;
+  type: 'text' | 'code' | 'html';
+  language?: string;
+  copiedAt: number;
+  sourceFile?: string;
+  size: number;
 }
 
 // ==========================================
@@ -215,7 +215,7 @@ const CODE_ACTIONS: QuickAction[] = [
     requiresAI: true,
     status: 'idle',
   },
-]
+];
 
 const DOCUMENT_ACTIONS: QuickAction[] = [
   {
@@ -262,7 +262,7 @@ const DOCUMENT_ACTIONS: QuickAction[] = [
     requiresAI: true,
     status: 'idle',
   },
-]
+];
 
 const TEXT_ACTIONS: QuickAction[] = [
   {
@@ -309,7 +309,7 @@ const TEXT_ACTIONS: QuickAction[] = [
     requiresAI: true,
     status: 'idle',
   },
-]
+];
 
 const AI_ACTIONS: QuickAction[] = [
   {
@@ -345,9 +345,9 @@ const AI_ACTIONS: QuickAction[] = [
     requiresAI: true,
     status: 'idle',
   },
-]
+];
 
-type TabId = 'code' | 'document' | 'text' | 'ai' | 'clipboard' | 'context'
+type TabId = 'code' | 'document' | 'text' | 'ai' | 'clipboard' | 'context';
 
 const TABS: { id: TabId; label: string; labelZh: string; icon: typeof Code; color: string }[] = [
   { id: 'code', label: 'Code Actions', labelZh: 'Code Actions', icon: Terminal, color: '#00f0ff' },
@@ -356,7 +356,7 @@ const TABS: { id: TabId; label: string; labelZh: string; icon: typeof Code; colo
   { id: 'ai', label: 'AI Assist', labelZh: 'AI Assist', icon: Brain, color: '#f97316' },
   { id: 'clipboard', label: 'Clipboard', labelZh: 'Clipboard', icon: Clipboard, color: '#22c55e' },
   { id: 'context', label: 'Context', labelZh: 'Context', icon: Sparkles, color: '#ec4899' },
-]
+];
 
 // ==========================================
 // Mock Data
@@ -388,7 +388,7 @@ export function UserCard({ name, email, role }: UserProps) {
       {isOnline && <span className="online">Online</span>}
     </div>
   );
-}`
+}`;
 
 const MOCK_CLIPBOARD: ClipboardItem[] = [
   {
@@ -431,7 +431,7 @@ const MOCK_CLIPBOARD: ClipboardItem[] = [
     copiedAt: Date.now() - 1800000,
     size: 53,
   },
-]
+];
 
 const CONTEXT_SUGGESTIONS = [
   {
@@ -469,7 +469,7 @@ const CONTEXT_SUGGESTIONS = [
     confidence: 95,
     color: '#ef4444',
   },
-]
+];
 
 // ==========================================
 // Sub-components
@@ -480,23 +480,23 @@ function ActionCard({
   tc,
   onExecute,
 }: {
-  action: QuickAction
-  tc: ReturnType<typeof useThemeColors>
-  onExecute: (action: QuickAction) => void
+  action: QuickAction;
+  tc: ReturnType<typeof useThemeColors>;
+  onExecute: (action: QuickAction) => void;
 }) {
-  const [status, setStatus] = useState<ActionStatus>('idle')
-  const Icon = action.icon
+  const [status, setStatus] = useState<ActionStatus>('idle');
+  const Icon = action.icon;
 
   const handleClick = useCallback(() => {
-    if (status === 'processing') return
-    setStatus('processing')
-    onExecute(action)
-    const duration = action.requiresAI ? 1500 + Math.random() * 1000 : 300 + Math.random() * 400
+    if (status === 'processing') return;
+    setStatus('processing');
+    onExecute(action);
+    const duration = action.requiresAI ? 1500 + Math.random() * 1000 : 300 + Math.random() * 400;
     setTimeout(() => {
-      setStatus('success')
-      setTimeout(() => setStatus('idle'), 2000)
-    }, duration)
-  }, [action, onExecute, status])
+      setStatus('success');
+      setTimeout(() => setStatus('idle'), 2000);
+    }, duration);
+  }, [action, onExecute, status]);
 
   return (
     <motion.div
@@ -597,39 +597,39 @@ function ActionCard({
         </div>
       </button>
     </motion.div>
-  )
+  );
 }
 
 function ClipboardPanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
-  const [items, setItems] = useState(MOCK_CLIPBOARD)
-  const [filter, setFilter] = useState<'all' | 'code' | 'text' | 'html'>('all')
+  const [items, setItems] = useState(MOCK_CLIPBOARD);
+  const [filter, setFilter] = useState<'all' | 'code' | 'text' | 'html'>('all');
 
-  const filtered = filter === 'all' ? items : items.filter((i) => i.type === filter)
+  const filtered = filter === 'all' ? items : items.filter(i => i.type === filter);
 
   const formatTime = (ts: number) => {
-    const diff = Date.now() - ts
-    if (diff < 60000) return 'just now'
-    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`
-    return `${Math.floor(diff / 3600000)}h ago`
-  }
+    const diff = Date.now() - ts;
+    if (diff < 60000) return 'just now';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+    return `${Math.floor(diff / 3600000)}h ago`;
+  };
 
   const handleCopy = useCallback((content: string) => {
     navigator.clipboard.writeText(content).catch(() => {
       /* clipboard denied */
-    })
-  }, [])
+    });
+  }, []);
 
   const handleDelete = useCallback((id: string) => {
-    setItems((prev) => prev.filter((i) => i.id !== id))
-  }, [])
+    setItems(prev => prev.filter(i => i.id !== id));
+  }, []);
 
-  const typeColors: Record<string, string> = { code: '#00f0ff', text: '#22c55e', html: '#f97316' }
+  const typeColors: Record<string, string> = { code: '#00f0ff', text: '#22c55e', html: '#f97316' };
 
   return (
     <div className="space-y-4">
       {/* Filter bar */}
       <div className="flex items-center gap-2">
-        {(['all', 'code', 'text', 'html'] as const).map((f) => (
+        {(['all', 'code', 'text', 'html'] as const).map(f => (
           <button
             key={f}
             onClick={() => setFilter(f)}
@@ -642,7 +642,7 @@ function ClipboardPanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
           >
             {f === 'all' ? 'All' : f.toUpperCase()}
             <span className="ml-1 opacity-50">
-              ({f === 'all' ? items.length : items.filter((i) => i.type === f).length})
+              ({f === 'all' ? items.length : items.filter(i => i.type === f).length})
             </span>
           </button>
         ))}
@@ -734,7 +734,7 @@ function ClipboardPanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 function ContextPanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
@@ -865,11 +865,11 @@ function ContextPanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function CodePreviewPanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
-  const [selectedLang] = useState('typescript')
+  const [selectedLang] = useState('typescript');
 
   return (
     <div
@@ -919,7 +919,7 @@ function CodePreviewPanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
         ))}
       </pre>
     </div>
-  )
+  );
 }
 
 // ==========================================
@@ -932,12 +932,12 @@ function StatsBar({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
     { label: 'AI Calls', value: '23', icon: Brain, color: '#8b5cf6' },
     { label: 'Clipboard Items', value: '12', icon: Clipboard, color: '#22c55e' },
     { label: 'Time Saved', value: '2.4h', icon: Clock, color: '#f97316' },
-  ]
+  ];
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
       {stats.map((s, i) => {
-        const Icon = s.icon
+        const Icon = s.icon;
         return (
           <motion.div
             key={s.label}
@@ -966,10 +966,10 @@ function StatsBar({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
               </p>
             </div>
           </motion.div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
 // ==========================================
@@ -977,44 +977,44 @@ function StatsBar({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
 // ==========================================
 
 export function QuickActionsPage() {
-  const tc = useThemeColors()
-  const { t: _t } = useI18n()
-  const [activeTab, setActiveTab] = useState<TabId>('code')
-  const [searchQuery, setSearchQuery] = useState('')
+  const tc = useThemeColors();
+  const { t: _t } = useI18n();
+  const [activeTab, setActiveTab] = useState<TabId>('code');
+  const [searchQuery, setSearchQuery] = useState('');
   const [actionLog, setActionLog] = useState<
     { id: string; title: string; status: string; time: number }[]
-  >([])
+  >([]);
 
   const handleExecute = useCallback((action: QuickAction) => {
-    setActionLog((prev) => [
+    setActionLog(prev => [
       { id: crypto.randomUUID(), title: action.title, status: 'success', time: Date.now() },
       ...prev.slice(0, 9),
-    ])
-  }, [])
+    ]);
+  }, []);
 
   const getActions = (): QuickAction[] => {
     switch (activeTab) {
       case 'code':
-        return CODE_ACTIONS
+        return CODE_ACTIONS;
       case 'document':
-        return DOCUMENT_ACTIONS
+        return DOCUMENT_ACTIONS;
       case 'text':
-        return TEXT_ACTIONS
+        return TEXT_ACTIONS;
       case 'ai':
-        return AI_ACTIONS
+        return AI_ACTIONS;
       default:
-        return []
+        return [];
     }
-  }
+  };
 
-  const actions = getActions()
+  const actions = getActions();
   const filteredActions = searchQuery
     ? actions.filter(
-        (a) =>
+        a =>
           a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           a.description.toLowerCase().includes(searchQuery.toLowerCase()),
       )
-    : actions
+    : actions;
 
   return (
     <div className="h-full overflow-y-auto p-4 lg:p-6 space-y-6" style={{ background: tc.bgBase }}>
@@ -1057,20 +1057,20 @@ export function QuickActionsPage() {
               type="text"
               placeholder="Search actions..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-4 py-2 text-[12px] rounded-xl border outline-none transition-all duration-200"
               style={{
                 background: tc.bgInput,
                 borderColor: tc.borderDefault,
                 color: tc.textPrimary,
               }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = `${tc.primary}50`
-                e.currentTarget.style.boxShadow = `0 0 0 3px ${tc.primary}15`
+              onFocus={e => {
+                e.currentTarget.style.borderColor = `${tc.primary}50`;
+                e.currentTarget.style.boxShadow = `0 0 0 3px ${tc.primary}15`;
               }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = tc.borderDefault
-                e.currentTarget.style.boxShadow = 'none'
+              onBlur={e => {
+                e.currentTarget.style.borderColor = tc.borderDefault;
+                e.currentTarget.style.boxShadow = 'none';
               }}
             />
           </div>
@@ -1089,9 +1089,9 @@ export function QuickActionsPage() {
           backdropFilter: tc.backdropFilter,
         }}
       >
-        {TABS.map((tab) => {
-          const Icon = tab.icon
-          const active = activeTab === tab.id
+        {TABS.map(tab => {
+          const Icon = tab.icon;
+          const active = activeTab === tab.id;
           return (
             <button
               key={tab.id}
@@ -1107,7 +1107,7 @@ export function QuickActionsPage() {
               <Icon className="w-3.5 h-3.5" />
               {tab.label}
             </button>
-          )
+          );
         })}
       </div>
 
@@ -1142,7 +1142,7 @@ export function QuickActionsPage() {
                 exit={{ opacity: 0, x: 20 }}
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {filteredActions.map((action) => (
+                  {filteredActions.map(action => (
                     <ActionCard key={action.id} action={action} tc={tc} onExecute={handleExecute} />
                   ))}
                 </div>
@@ -1184,7 +1184,7 @@ export function QuickActionsPage() {
                   Execute an action to see history
                 </p>
               ) : (
-                actionLog.map((log) => (
+                actionLog.map(log => (
                   <div
                     key={log.id}
                     className="flex items-center justify-between px-2 py-1.5 rounded-lg"
@@ -1250,5 +1250,5 @@ export function QuickActionsPage() {
         }
       `}</style>
     </div>
-  )
+  );
 }

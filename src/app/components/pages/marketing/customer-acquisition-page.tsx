@@ -9,11 +9,11 @@ import {
   TrendingUp,
   UserPlus,
   Zap,
-} from 'lucide-react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { useState } from 'react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 客户获取系统 - Customer Acquisition System
@@ -21,22 +21,22 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 interface Lead {
-  id: string
-  name: string
-  company: string
-  position: string
-  email: string
-  phone: string
-  source: string
-  score: number
-  status: 'new' | 'contacted' | 'qualified' | 'converted'
-  createdAt: string
-  value: number
+  id: string;
+  name: string;
+  company: string;
+  position: string;
+  email: string;
+  phone: string;
+  source: string;
+  score: number;
+  status: 'new' | 'contacted' | 'qualified' | 'converted';
+  createdAt: string;
+  value: number;
 }
 
 export function CustomerAcquisitionPage() {
-  const tc = useThemeColors()
-  const [selectedStatus, setSelectedStatus] = useState<'all' | Lead['status']>('all')
+  const tc = useThemeColors();
+  const [selectedStatus, setSelectedStatus] = useState<'all' | Lead['status']>('all');
 
   const leads: Lead[] = [
     {
@@ -91,12 +91,12 @@ export function CustomerAcquisitionPage() {
       createdAt: '2024-06-02 16:45',
       value: 28000,
     },
-  ]
+  ];
 
-  const filteredLeads = leads.filter((lead) => {
-    if (selectedStatus === 'all') return true
-    return lead.status === selectedStatus
-  })
+  const filteredLeads = leads.filter(lead => {
+    if (selectedStatus === 'all') return true;
+    return lead.status === selectedStatus;
+  });
 
   const stats = [
     {
@@ -127,34 +127,34 @@ export function CustomerAcquisitionPage() {
       icon: TrendingUp,
       color: tc.accent,
     },
-  ]
+  ];
 
   const sourceStats = [
     { source: '抖音广告', leads: 82, conversion: 28, cost: 145, color: tc.primary },
     { source: '微信公众号', leads: 65, conversion: 22, cost: 98, color: tc.secondary },
     { source: '小红书', leads: 48, conversion: 18, cost: 178, color: tc.accent },
     { source: '百度搜索', leads: 52, conversion: 15, cost: 220, color: tc.warning },
-  ]
+  ];
 
   const getStatusConfig = (status: Lead['status']) => {
     switch (status) {
       case 'new':
-        return { label: '新线索', color: tc.primary, bgColor: tc.alpha(tc.primary, 0.15) }
+        return { label: '新线索', color: tc.primary, bgColor: tc.alpha(tc.primary, 0.15) };
       case 'contacted':
-        return { label: '已联系', color: tc.secondary, bgColor: tc.alpha(tc.secondary, 0.15) }
+        return { label: '已联系', color: tc.secondary, bgColor: tc.alpha(tc.secondary, 0.15) };
       case 'qualified':
-        return { label: '已认证', color: tc.success, bgColor: tc.alpha(tc.success, 0.15) }
+        return { label: '已认证', color: tc.success, bgColor: tc.alpha(tc.success, 0.15) };
       case 'converted':
-        return { label: '已转化', color: tc.accent, bgColor: tc.alpha(tc.accent, 0.15) }
+        return { label: '已转化', color: tc.accent, bgColor: tc.alpha(tc.accent, 0.15) };
     }
-  }
+  };
 
   const getScoreColor = (score: number) => {
-    if (score >= 90) return tc.success
-    if (score >= 80) return tc.primary
-    if (score >= 70) return tc.secondary
-    return tc.textMuted
-  }
+    if (score >= 90) return tc.success;
+    if (score >= 80) return tc.primary;
+    if (score >= 70) return tc.secondary;
+    return tc.textMuted;
+  };
 
   return (
     <div className="space-y-6">
@@ -183,8 +183,8 @@ export function CustomerAcquisitionPage() {
 
       {/* 统计卡片 */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {stats.map((stat) => {
-          const Icon = stat.icon
+        {stats.map(stat => {
+          const Icon = stat.icon;
           return (
             <NeonCard key={stat.label} className="p-6">
               <div className="flex items-start justify-between mb-4">
@@ -208,7 +208,7 @@ export function CustomerAcquisitionPage() {
                 {stat.value}
               </p>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
@@ -281,8 +281,8 @@ export function CustomerAcquisitionPage() {
           获客渠道表现
         </h2>
         <div className="space-y-4">
-          {sourceStats.map((source) => {
-            const conversionRate = ((source.conversion / source.leads) * 100).toFixed(1)
+          {sourceStats.map(source => {
+            const conversionRate = ((source.conversion / source.leads) * 100).toFixed(1);
             return (
               <div
                 key={source.source}
@@ -333,14 +333,14 @@ export function CustomerAcquisitionPage() {
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </NeonCard>
 
       {/* 线索筛选 */}
       <div className="flex items-center gap-3">
-        {(['all', 'new', 'contacted', 'qualified', 'converted'] as const).map((status) => (
+        {(['all', 'new', 'contacted', 'qualified', 'converted'] as const).map(status => (
           <button
             key={status}
             onClick={() => setSelectedStatus(status)}
@@ -360,9 +360,9 @@ export function CustomerAcquisitionPage() {
       {/* 线索列表 */}
       <NeonCard className="p-6">
         <div className="space-y-4">
-          {filteredLeads.map((lead) => {
-            const statusConfig = getStatusConfig(lead.status)
-            const scoreColor = getScoreColor(lead.score)
+          {filteredLeads.map(lead => {
+            const statusConfig = getStatusConfig(lead.status);
+            const scoreColor = getScoreColor(lead.score);
 
             return (
               <div
@@ -504,10 +504,10 @@ export function CustomerAcquisitionPage() {
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </NeonCard>
     </div>
-  )
+  );
 }

@@ -12,30 +12,28 @@
  * @tags P1,frontend,panels,quick-access
  */
 
-import { Clock, Heart, Star } from 'lucide-react'
-import { useCallback } from 'react'
-
-import { getFileIcon, timeAgo } from './panel-helpers'
-import { usePanelStore } from './panel-store'
-
-import type { QuickAccessItem } from './panel-types'
-import type { ThemeColors } from '../hooks/use-theme-colors'
+import { Clock, Heart, Star } from 'lucide-react';
+import { useCallback } from 'react';
+import type { ThemeColors } from '../hooks/use-theme-colors';
+import { getFileIcon, timeAgo } from './panel-helpers';
+import { usePanelStore } from './panel-store';
+import type { QuickAccessItem } from './panel-types';
 
 export function QuickAccessPanel({ tc }: { tc: ThemeColors }) {
-  const { recentFiles, favoriteFiles, toggleFavorite, selectFile, addRecentFile } = usePanelStore()
+  const { recentFiles, favoriteFiles, toggleFavorite, selectFile, addRecentFile } = usePanelStore();
 
   const handleOpen = useCallback(
     (item: QuickAccessItem) => {
-      selectFile(item.path)
-      addRecentFile({ ...item, lastAccessed: Date.now() })
+      selectFile(item.path);
+      addRecentFile({ ...item, lastAccessed: Date.now() });
     },
     [selectFile, addRecentFile],
-  )
+  );
 
   const renderItem = (item: QuickAccessItem, showFavBtn: boolean = true) => {
-    const fileIcon = getFileIcon(item.name)
-    const FileIconComp = fileIcon.icon
-    const isFav = favoriteFiles.some((f) => f.path === item.path)
+    const fileIcon = getFileIcon(item.name);
+    const FileIconComp = fileIcon.icon;
+    const isFav = favoriteFiles.some(f => f.path === item.path);
     return (
       <div
         key={item.path}
@@ -60,9 +58,9 @@ export function QuickAccessPanel({ tc }: { tc: ThemeColors }) {
           </span>
           {showFavBtn && (
             <button
-              onClick={(e) => {
-                e.stopPropagation()
-                toggleFavorite(item)
+              onClick={e => {
+                e.stopPropagation();
+                toggleFavorite(item);
               }}
               className="opacity-0 group-hover:opacity-100 transition-opacity"
             >
@@ -77,8 +75,8 @@ export function QuickAccessPanel({ tc }: { tc: ThemeColors }) {
           )}
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -99,7 +97,7 @@ export function QuickAccessPanel({ tc }: { tc: ThemeColors }) {
                 收藏 ({favoriteFiles.length})
               </span>
             </div>
-            {favoriteFiles.map((f) => renderItem(f, true))}
+            {favoriteFiles.map(f => renderItem(f, true))}
           </div>
         )}
         {recentFiles.length > 0 && (
@@ -110,7 +108,7 @@ export function QuickAccessPanel({ tc }: { tc: ThemeColors }) {
                 最近 ({recentFiles.length})
               </span>
             </div>
-            {recentFiles.slice(0, 10).map((f) => renderItem(f))}
+            {recentFiles.slice(0, 10).map(f => renderItem(f))}
           </div>
         )}
         {recentFiles.length === 0 && favoriteFiles.length === 0 && (
@@ -126,5 +124,5 @@ export function QuickAccessPanel({ tc }: { tc: ThemeColors }) {
         )}
       </div>
     </div>
-  )
+  );
 }

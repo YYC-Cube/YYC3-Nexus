@@ -1,46 +1,46 @@
 import {
-    AlertCircle,
-    AlignLeft,
-    Brain,
-    Calendar,
-    Check,
-    CheckCircle2,
-    ChevronRight,
-    ClipboardList,
-    Eye,
-    EyeOff,
-    FileText,
-    Hash,
-    List,
-    Loader2,
-    MessageSquare,
-    Phone,
-    Plus,
-    Puzzle,
-    RefreshCw,
-    Send,
-    Sliders,
-    Sparkles,
-    Star,
-    ToggleLeft,
-    Type,
-    Upload,
-    Users,
-    Wand2,
-} from 'lucide-react'
+  AlertCircle,
+  AlignLeft,
+  Brain,
+  Calendar,
+  Check,
+  CheckCircle2,
+  ChevronRight,
+  ClipboardList,
+  Eye,
+  EyeOff,
+  FileText,
+  Hash,
+  List,
+  Loader2,
+  MessageSquare,
+  Phone,
+  Plus,
+  Puzzle,
+  RefreshCw,
+  Send,
+  Sliders,
+  Sparkles,
+  Star,
+  ToggleLeft,
+  Type,
+  Upload,
+  Users,
+  Wand2,
+} from 'lucide-react';
 import {
-    type CSSProperties,
-    type FocusEvent,
-    memo,
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react'
+  type CSSProperties,
+  type FocusEvent,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
-import { useApp } from './context/app-context'
-import { NeonCard } from './core/neon-card'
+import { useApp } from './context/app-context';
+import { NeonCard } from './core/neon-card';
 
 // ==========================================
 // YYC³ 智能表单系统 — Smart Form Engine
@@ -49,19 +49,19 @@ import { NeonCard } from './core/neon-card'
 // ==========================================
 
 /** localStorage key for persisting form submission history. */
-export const FORM_STORAGE_KEY = 'yyc3_form_submissions'
+export const FORM_STORAGE_KEY = 'yyc3_form_submissions';
 
 /** localStorage key for persisting user-created custom form templates. */
-export const CUSTOM_TEMPLATES_KEY = 'yyc3_custom_templates'
+export const CUSTOM_TEMPLATES_KEY = 'yyc3_custom_templates';
 
 /** Union type for all possible form field values across all field types. */
-export type FormFieldValue = string | number | boolean | string[] | null | undefined
+export type FormFieldValue = string | number | boolean | string[] | null | undefined;
 
 function toInputValue(v: FormFieldValue): string | number | readonly string[] {
-  if (v === null || v === undefined) return ''
-  if (typeof v === 'boolean') return v ? 'true' : 'false'
-  if (Array.isArray(v)) return v
-  return v
+  if (v === null || v === undefined) return '';
+  if (typeof v === 'boolean') return v ? 'true' : 'false';
+  if (Array.isArray(v)) return v;
+  return v;
 }
 
 /** Supported field input types in the smart form system. */
@@ -76,26 +76,26 @@ export type FieldType =
   | 'slider'
   | 'date'
   | 'rating'
-  | 'file'
+  | 'file';
 
 /**
  * Definition of a single form field, including type, validation, and AI hints.
  * Used by {@link FormTemplate} to declare the form schema.
  */
 export interface FieldDef {
-  id: string
-  type: FieldType
-  label: string
-  placeholder?: string
-  required?: boolean
-  options?: string[] // for select/radio/checkbox
-  min?: number
-  max?: number // for slider/number
-  step?: number
-  defaultValue?: FormFieldValue
-  aiHint?: string // AI suggestion tooltip
-  validation?: 'email' | 'phone' | 'url' | 'none'
-  color?: string
+  id: string;
+  type: FieldType;
+  label: string;
+  placeholder?: string;
+  required?: boolean;
+  options?: string[]; // for select/radio/checkbox
+  min?: number;
+  max?: number; // for slider/number
+  step?: number;
+  defaultValue?: FormFieldValue;
+  aiHint?: string; // AI suggestion tooltip
+  validation?: 'email' | 'phone' | 'url' | 'none';
+  color?: string;
 }
 
 /**
@@ -103,13 +103,13 @@ export interface FieldDef {
  * Both built-in and user-created templates share this interface.
  */
 export interface FormTemplate {
-  id: string
-  title: string
-  subtitle: string
-  icon: typeof ClipboardList
-  color: string
-  description: string
-  fields: FieldDef[]
+  id: string;
+  title: string;
+  subtitle: string;
+  icon: typeof ClipboardList;
+  color: string;
+  description: string;
+  fields: FieldDef[];
 }
 
 // ---- Built-in Templates ----
@@ -438,7 +438,7 @@ export const formTemplates: FormTemplate[] = [
       },
     ],
   },
-]
+];
 
 // ---- Field Type metadata ----
 /** Lookup table mapping each {@link FieldType} to its display label, icon component, and theme color. */
@@ -455,7 +455,7 @@ export const fieldTypeInfo: Record<FieldType, { label: string; icon: typeof Type
     date: { label: '日期', icon: Calendar, color: '#00ffcc' },
     rating: { label: '评分', icon: Star, color: '#00ffcc' },
     file: { label: '文件', icon: Upload, color: '#41ffdd' },
-  }
+  };
 
 // ---- Validation helpers ----
 function validateField(field: FieldDef, value: FormFieldValue): string | null {
@@ -466,19 +466,19 @@ function validateField(field: FieldDef, value: FormFieldValue): string | null {
       value === '' ||
       (Array.isArray(value) && value.length === 0))
   ) {
-    return `${field.label} 为必填项`
+    return `${field.label} 为必填项`;
   }
   if (field.validation === 'email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value))) {
-    return '请输入有效的邮箱地址'
+    return '请输入有效的邮箱地址';
   }
   if (
     field.validation === 'phone' &&
     value &&
     !/^1[3-9]\d{9}$/.test(String(value).replace(/\s/g, ''))
   ) {
-    return '请输入有效的手机号码'
+    return '请输入有效的手机号码';
   }
-  return null
+  return null;
 }
 
 // ---- AI suggestion simulator ----
@@ -491,7 +491,7 @@ const aiSuggestions: Record<string, string[]> = {
     '价格敏感，需要提供定制报价方案。建议下次沟通时强调 ROI。',
   ],
   improvement: ['响应速度还可以更快', '希望有更多自助服务选项', 'AI 客服的回答还需要更精准'],
-}
+};
 
 // ==========================================
 //  Smart Form Page — Main Export
@@ -502,25 +502,25 @@ const aiSuggestions: Record<string, string[]> = {
  * Supports AI-assisted field suggestions, real-time validation, and localStorage persistence.
  */
 export function SmartFormPage() {
-  const { addNotification, addActivity } = useApp()
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null)
-  const [formValues, setFormValues] = useState<Record<string, FormFieldValue>>({})
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [touched, setTouched] = useState<Set<string>>(new Set())
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
-  const [showPreview, setShowPreview] = useState(false)
-  const [aiSuggestionField, setAiSuggestionField] = useState<string | null>(null)
-  const [submissionCount, setSubmissionCount] = useState(0)
-  const formRef = useRef<HTMLDivElement>(null)
+  const { addNotification, addActivity } = useApp();
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [formValues, setFormValues] = useState<Record<string, FormFieldValue>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Set<string>>(new Set());
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [aiSuggestionField, setAiSuggestionField] = useState<string | null>(null);
+  const [submissionCount, setSubmissionCount] = useState(0);
+  const formRef = useRef<HTMLDivElement>(null);
 
   // Phase 8.5: Load custom templates from localStorage
-  const [customTemplates, setCustomTemplates] = useState<FormTemplate[]>([])
+  const [customTemplates, setCustomTemplates] = useState<FormTemplate[]>([]);
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(CUSTOM_TEMPLATES_KEY)
+      const raw = localStorage.getItem(CUSTOM_TEMPLATES_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw)
+        const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) {
           setCustomTemplates(
             parsed.map((ct: Record<string, unknown>) => ({
@@ -532,99 +532,99 @@ export function SmartFormPage() {
               description: (ct.description as string) || '自定义模板',
               fields: (ct.fields as FormTemplate['fields']) || [],
             })),
-          )
+          );
         }
       }
     } catch {
       /* ignore */
     }
-  }, [])
+  }, []);
 
   // Combined template list (built-in + custom)
-  const allTemplates = useMemo(() => [...formTemplates, ...customTemplates], [customTemplates])
+  const allTemplates = useMemo(() => [...formTemplates, ...customTemplates], [customTemplates]);
 
   // Load submission count from localStorage
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(FORM_STORAGE_KEY)
+      const raw = localStorage.getItem(FORM_STORAGE_KEY);
       if (raw) {
-        const data = JSON.parse(raw)
-        setSubmissionCount(Array.isArray(data) ? data.length : 0)
+        const data = JSON.parse(raw);
+        setSubmissionCount(Array.isArray(data) ? data.length : 0);
       }
     } catch {
       /* ignore */
     }
-  }, [])
+  }, []);
 
   const template = useMemo(
-    () => allTemplates.find((t) => t.id === selectedTemplate) ?? null,
+    () => allTemplates.find(t => t.id === selectedTemplate) ?? null,
     [selectedTemplate, allTemplates],
-  )
+  );
 
   // Initialize form values when template changes
   useEffect(() => {
-    if (!template) return
-    const defaults: Record<string, FormFieldValue> = {}
-    template.fields.forEach((f) => {
-      if (f.defaultValue !== undefined) defaults[f.id] = f.defaultValue
-      else if (f.type === 'checkbox') defaults[f.id] = []
-      else if (f.type === 'toggle') defaults[f.id] = false
-      else if (f.type === 'slider') defaults[f.id] = f.min ?? 0
-      else if (f.type === 'rating') defaults[f.id] = 0
-      else defaults[f.id] = ''
-    })
-    setFormValues(defaults)
-    setErrors({})
-    setTouched(new Set())
-    setSubmitSuccess(false)
-    setShowPreview(false)
-  }, [template])
+    if (!template) return;
+    const defaults: Record<string, FormFieldValue> = {};
+    template.fields.forEach(f => {
+      if (f.defaultValue !== undefined) defaults[f.id] = f.defaultValue;
+      else if (f.type === 'checkbox') defaults[f.id] = [];
+      else if (f.type === 'toggle') defaults[f.id] = false;
+      else if (f.type === 'slider') defaults[f.id] = f.min ?? 0;
+      else if (f.type === 'rating') defaults[f.id] = 0;
+      else defaults[f.id] = '';
+    });
+    setFormValues(defaults);
+    setErrors({});
+    setTouched(new Set());
+    setSubmitSuccess(false);
+    setShowPreview(false);
+  }, [template]);
 
   const updateField = useCallback((fieldId: string, value: FormFieldValue) => {
-    setFormValues((prev) => ({ ...prev, [fieldId]: value }))
-    setTouched((prev) => new Set(prev).add(fieldId))
+    setFormValues(prev => ({ ...prev, [fieldId]: value }));
+    setTouched(prev => new Set(prev).add(fieldId));
     // Clear error on change
-    setErrors((prev) => {
-      const next = { ...prev }
-      delete next[fieldId]
-      return next
-    })
-  }, [])
+    setErrors(prev => {
+      const next = { ...prev };
+      delete next[fieldId];
+      return next;
+    });
+  }, []);
 
   const validateAll = useCallback((): boolean => {
-    if (!template) return false
-    const newErrors: Record<string, string> = {}
-    template.fields.forEach((f) => {
-      const err = validateField(f, formValues[f.id])
-      if (err) newErrors[f.id] = err
-    })
-    setErrors(newErrors)
+    if (!template) return false;
+    const newErrors: Record<string, string> = {};
+    template.fields.forEach(f => {
+      const err = validateField(f, formValues[f.id]);
+      if (err) newErrors[f.id] = err;
+    });
+    setErrors(newErrors);
     // Mark all as touched
-    setTouched(new Set(template.fields.map((f) => f.id)))
-    return Object.keys(newErrors).length === 0
-  }, [template, formValues])
+    setTouched(new Set(template.fields.map(f => f.id)));
+    return Object.keys(newErrors).length === 0;
+  }, [template, formValues]);
 
   const handleSubmit = useCallback(async () => {
-    if (!validateAll() || !template) return
-    setIsSubmitting(true)
+    if (!validateAll() || !template) return;
+    setIsSubmitting(true);
 
     // Simulate AI processing delay
-    await new Promise((r) => setTimeout(r, 1800))
+    await new Promise(r => setTimeout(r, 1800));
 
     // Save to localStorage
     try {
-      const raw = localStorage.getItem(FORM_STORAGE_KEY)
-      const existing = raw ? JSON.parse(raw) : []
+      const raw = localStorage.getItem(FORM_STORAGE_KEY);
+      const existing = raw ? JSON.parse(raw) : [];
       const entry = {
         id: `form_${Date.now()}`,
         templateId: template.id,
         templateTitle: template.title,
         values: formValues,
         submittedAt: new Date().toISOString(),
-      }
-      const updated = [entry, ...existing].slice(0, 100)
-      localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(updated))
-      setSubmissionCount(updated.length)
+      };
+      const updated = [entry, ...existing].slice(0, 100);
+      localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify(updated));
+      setSubmissionCount(updated.length);
     } catch {
       /* ignore */
     }
@@ -635,43 +635,43 @@ export function SmartFormPage() {
       message: `「${template.title}」已提交并保存，AI 正在处理数据…`,
       type: 'success',
       color: '#00ffc8',
-    })
+    });
     addActivity({
       action: '表单提交',
       target: `${template.title} · 智能表单系统`,
       type: 'system',
       color: template.color,
-    })
+    });
 
-    setIsSubmitting(false)
-    setSubmitSuccess(true)
-  }, [validateAll, template, formValues, addNotification, addActivity])
+    setIsSubmitting(false);
+    setSubmitSuccess(true);
+  }, [validateAll, template, formValues, addNotification, addActivity]);
 
   const resetForm = useCallback(() => {
-    setSubmitSuccess(false)
-    setSelectedTemplate(null)
-    setFormValues({})
-    setErrors({})
-    setTouched(new Set())
-  }, [])
+    setSubmitSuccess(false);
+    setSelectedTemplate(null);
+    setFormValues({});
+    setErrors({});
+    setTouched(new Set());
+  }, []);
 
   const showAiSuggestion = useCallback((fieldId: string) => {
-    setAiSuggestionField((prev) => (prev === fieldId ? null : fieldId))
-  }, [])
+    setAiSuggestionField(prev => (prev === fieldId ? null : fieldId));
+  }, []);
 
   // ---- Computed stats ----
   const filledCount = useMemo(() => {
-    if (!template) return 0
-    return template.fields.filter((f) => {
-      const v = formValues[f.id]
-      if (v === undefined || v === null || v === '') return false
-      if (Array.isArray(v) && v.length === 0) return false
-      return true
-    }).length
-  }, [template, formValues])
+    if (!template) return 0;
+    return template.fields.filter(f => {
+      const v = formValues[f.id];
+      if (v === undefined || v === null || v === '') return false;
+      if (Array.isArray(v) && v.length === 0) return false;
+      return true;
+    }).length;
+  }, [template, formValues]);
 
-  const totalFields = template?.fields.length ?? 0
-  const completionPct = totalFields > 0 ? Math.round((filledCount / totalFields) * 100) : 0
+  const totalFields = template?.fields.length ?? 0;
+  const completionPct = totalFields > 0 ? Math.round((filledCount / totalFields) * 100) : 0;
 
   // ==================== RENDER ====================
 
@@ -714,7 +714,7 @@ export function SmartFormPage() {
           <div className="flex gap-3 justify-center">
             <button
               onClick={() => {
-                setSubmitSuccess(false)
+                setSubmitSuccess(false);
               }}
               className="px-5 py-2.5 rounded-xl text-sm flex items-center gap-2 transition-all duration-300"
               style={{
@@ -741,7 +741,7 @@ export function SmartFormPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   // Template selector
@@ -806,7 +806,7 @@ export function SmartFormPage() {
               sub: '数据质量',
             },
           ].map((m, i) => {
-            const Icon = m.icon
+            const Icon = m.icon;
             return (
               <NeonCard key={i} color={m.color}>
                 <div className="flex items-start justify-between">
@@ -830,7 +830,7 @@ export function SmartFormPage() {
                 </div>
                 <p className="text-[10px] mt-2 text-white/20">{m.sub}</p>
               </NeonCard>
-            )
+            );
           })}
         </div>
 
@@ -841,7 +841,7 @@ export function SmartFormPage() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {allTemplates.map((tpl, i) => {
-              const Icon = tpl.icon
+              const Icon = tpl.icon;
               return (
                 <button
                   key={tpl.id}
@@ -852,13 +852,13 @@ export function SmartFormPage() {
                     borderColor: `${tpl.color}20`,
                     animation: `spring-in 0.4s var(--spring-easing) ${i * 0.08}s both`,
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = `${tpl.color}50`
-                    e.currentTarget.style.boxShadow = `0 0 25px ${tpl.color}20, inset 0 0 15px ${tpl.color}08`
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = `${tpl.color}50`;
+                    e.currentTarget.style.boxShadow = `0 0 25px ${tpl.color}20, inset 0 0 15px ${tpl.color}08`;
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = `${tpl.color}20`
-                    e.currentTarget.style.boxShadow = 'none'
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = `${tpl.color}20`;
+                    e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
                   {/* Glow bg */}
@@ -909,24 +909,24 @@ export function SmartFormPage() {
                         <Sparkles className="w-2.5 h-2.5 inline mr-0.5" />
                         AI 辅助
                       </span>
-                      {tpl.fields.some((f) => f.required) && (
+                      {tpl.fields.some(f => f.required) && (
                         <span className="text-[9px] text-white/15">
-                          {tpl.fields.filter((f) => f.required).length} 必填
+                          {tpl.fields.filter(f => f.required).length} 必填
                         </span>
                       )}
                     </div>
                   </div>
                 </button>
-              )
+              );
             })}
           </div>
         </NeonCard>
       </div>
-    )
+    );
   }
 
   // ---- Active Form ----
-  const TemplateIcon = template.icon
+  const TemplateIcon = template.icon;
 
   return (
     <div
@@ -980,7 +980,7 @@ export function SmartFormPage() {
           </div>
 
           <button
-            onClick={() => setShowPreview((p) => !p)}
+            onClick={() => setShowPreview(p => !p)}
             className="px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition-all duration-300"
             style={{
               background: showPreview ? `${template.color}15` : 'rgba(255,255,255,0.03)',
@@ -1005,17 +1005,17 @@ export function SmartFormPage() {
                   field={field}
                   value={formValues[field.id]}
                   error={touched.has(field.id) ? errors[field.id] : undefined}
-                  onChange={(v) => updateField(field.id, v)}
+                  onChange={v => updateField(field.id, v)}
                   onBlur={() => {
-                    setTouched((prev) => new Set(prev).add(field.id))
-                    const err = validateField(field, formValues[field.id])
-                    if (err) setErrors((prev) => ({ ...prev, [field.id]: err }))
+                    setTouched(prev => new Set(prev).add(field.id));
+                    const err = validateField(field, formValues[field.id]);
+                    if (err) setErrors(prev => ({ ...prev, [field.id]: err }));
                   }}
                   showAiSuggestion={aiSuggestionField === field.id}
                   onToggleAi={() => showAiSuggestion(field.id)}
-                  onApplyAiSuggestion={(v) => {
-                    updateField(field.id, v)
-                    setAiSuggestionField(null)
+                  onApplyAiSuggestion={v => {
+                    updateField(field.id, v);
+                    setAiSuggestionField(null);
                   }}
                   index={idx}
                   templateColor={template.color}
@@ -1131,8 +1131,8 @@ export function SmartFormPage() {
                 <div className="flex justify-between text-[10px]">
                   <span className="text-white/20">必填项</span>
                   <span className="text-[#00ffc8]">
-                    {template.fields.filter((f) => f.required && formValues[f.id]).length}/
-                    {template.fields.filter((f) => f.required).length}
+                    {template.fields.filter(f => f.required && formValues[f.id]).length}/
+                    {template.fields.filter(f => f.required).length}
                   </span>
                 </div>
                 <div className="flex justify-between text-[10px]">
@@ -1147,7 +1147,7 @@ export function SmartFormPage() {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 // ==========================================
@@ -1165,20 +1165,20 @@ const FormField = memo(function FormField({
   index,
   templateColor,
 }: {
-  field: FieldDef
-  value: FormFieldValue
-  error?: string
-  onChange: (v: FormFieldValue) => void
-  onBlur: () => void
-  showAiSuggestion: boolean
-  onToggleAi: () => void
-  onApplyAiSuggestion: (v: FormFieldValue) => void
-  index: number
-  templateColor: string
+  field: FieldDef;
+  value: FormFieldValue;
+  error?: string;
+  onChange: (v: FormFieldValue) => void;
+  onBlur: () => void;
+  showAiSuggestion: boolean;
+  onToggleAi: () => void;
+  onApplyAiSuggestion: (v: FormFieldValue) => void;
+  index: number;
+  templateColor: string;
 }) {
-  const color = field.color || templateColor
-  const hasError = !!error
-  const suggestions = aiSuggestions[field.id] || []
+  const color = field.color || templateColor;
+  const hasError = !!error;
+  const suggestions = aiSuggestions[field.id] || [];
 
   const inputStyle: CSSProperties = {
     background: 'rgba(10,10,10,0.6)',
@@ -1187,22 +1187,22 @@ const FormField = memo(function FormField({
     borderRadius: 12,
     transition: 'all 0.3s ease',
     outline: 'none',
-  }
+  };
 
   const focusHandler = (
     e: FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
-    e.currentTarget.style.borderColor = hasError ? 'rgba(0,95,115,0.7)' : `${color}60`
-    e.currentTarget.style.boxShadow = `0 0 15px ${hasError ? 'rgba(0,95,115,0.15)' : `${color}15`}`
-  }
+    e.currentTarget.style.borderColor = hasError ? 'rgba(0,95,115,0.7)' : `${color}60`;
+    e.currentTarget.style.boxShadow = `0 0 15px ${hasError ? 'rgba(0,95,115,0.15)' : `${color}15`}`;
+  };
 
   const blurHandler = (
     e: FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
-    e.currentTarget.style.borderColor = hasError ? 'rgba(0,95,115,0.5)' : `${color}20`
-    e.currentTarget.style.boxShadow = 'none'
-    onBlur()
-  }
+    e.currentTarget.style.borderColor = hasError ? 'rgba(0,95,115,0.5)' : `${color}20`;
+    e.currentTarget.style.boxShadow = 'none';
+    onBlur();
+  };
 
   return (
     <div style={{ animation: `spring-in 0.3s var(--spring-easing) ${index * 0.04}s both` }}>
@@ -1282,7 +1282,7 @@ const FormField = memo(function FormField({
         <input
           type="text"
           value={toInputValue(value)}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           onFocus={focusHandler}
           onBlur={blurHandler}
           placeholder={field.placeholder}
@@ -1295,7 +1295,7 @@ const FormField = memo(function FormField({
         <input
           type="number"
           value={toInputValue(value)}
-          onChange={(e) => onChange(e.target.value === '' ? '' : Number(e.target.value))}
+          onChange={e => onChange(e.target.value === '' ? '' : Number(e.target.value))}
           onFocus={focusHandler}
           onBlur={blurHandler}
           placeholder={field.placeholder}
@@ -1309,9 +1309,9 @@ const FormField = memo(function FormField({
       {field.type === 'textarea' && (
         <textarea
           value={toInputValue(value)}
-          onChange={(e) => onChange(e.target.value)}
-          onFocus={focusHandler as any}
-          onBlur={blurHandler as any}
+          onChange={e => onChange(e.target.value)}
+          onFocus={focusHandler as React.FocusEventHandler<HTMLTextAreaElement>}
+          onBlur={blurHandler as React.FocusEventHandler<HTMLTextAreaElement>}
           placeholder={field.placeholder}
           rows={3}
           className="w-full px-4 py-2.5 text-sm resize-none"
@@ -1323,9 +1323,9 @@ const FormField = memo(function FormField({
         <select
           aria-label={field.label}
           value={toInputValue(value)}
-          onChange={(e) => onChange(e.target.value)}
-          onFocus={focusHandler as any}
-          onBlur={blurHandler as any}
+          onChange={e => onChange(e.target.value)}
+          onFocus={focusHandler as React.FocusEventHandler<HTMLSelectElement>}
+          onBlur={blurHandler as React.FocusEventHandler<HTMLSelectElement>}
           className="w-full px-4 py-2.5 text-sm appearance-none cursor-pointer"
           style={{
             ...inputStyle,
@@ -1337,7 +1337,7 @@ const FormField = memo(function FormField({
           <option value="" style={{ background: '#0a0a0a', color: 'rgba(255,255,255,0.3)' }}>
             请选择…
           </option>
-          {field.options?.map((opt) => (
+          {field.options?.map(opt => (
             <option
               key={opt}
               value={opt}
@@ -1351,8 +1351,8 @@ const FormField = memo(function FormField({
 
       {field.type === 'radio' && (
         <div className="flex flex-wrap gap-2">
-          {field.options?.map((opt) => {
-            const selected = value === opt
+          {field.options?.map(opt => {
+            const selected = value === opt;
             return (
               <button
                 key={opt}
@@ -1369,23 +1369,23 @@ const FormField = memo(function FormField({
                 {selected && <Check className="w-3 h-3 inline mr-1" />}
                 {opt}
               </button>
-            )
+            );
           })}
         </div>
       )}
 
       {field.type === 'checkbox' && (
         <div className="flex flex-wrap gap-2">
-          {field.options?.map((opt) => {
-            const arr = Array.isArray(value) ? value : []
-            const checked = arr.includes(opt)
+          {field.options?.map(opt => {
+            const arr = Array.isArray(value) ? value : [];
+            const checked = arr.includes(opt);
             return (
               <button
                 key={opt}
                 type="button"
                 onClick={() => {
-                  const next = checked ? arr.filter((v: string) => v !== opt) : [...arr, opt]
-                  onChange(next)
+                  const next = checked ? arr.filter((v: string) => v !== opt) : [...arr, opt];
+                  onChange(next);
                 }}
                 className="px-3 py-2 rounded-xl text-xs transition-all duration-300"
                 style={{
@@ -1402,7 +1402,7 @@ const FormField = memo(function FormField({
                 )}
                 {opt}
               </button>
-            )
+            );
           })}
         </div>
       )}
@@ -1440,7 +1440,7 @@ const FormField = memo(function FormField({
               step={field.step ?? 1}
               aria-label={field.label}
               value={typeof value === 'number' ? value : (field.min ?? 0)}
-              onChange={(e) => onChange(Number(e.target.value))}
+              onChange={e => onChange(Number(e.target.value))}
               className="flex-1 h-1.5 rounded-full appearance-none cursor-pointer"
               style={{
                 background: `linear-gradient(to right, ${color} ${((Number(value) - (field.min ?? 0)) / ((field.max ?? 100) - (field.min ?? 0))) * 100}%, rgba(255,255,255,0.08) ${((Number(value) - (field.min ?? 0)) / ((field.max ?? 100) - (field.min ?? 0))) * 100}%)`,
@@ -1473,7 +1473,7 @@ const FormField = memo(function FormField({
           type="date"
           aria-label={field.label}
           value={toInputValue(value)}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           onFocus={focusHandler}
           onBlur={blurHandler}
           className="w-full px-4 py-2.5 text-sm"
@@ -1483,7 +1483,7 @@ const FormField = memo(function FormField({
 
       {field.type === 'rating' && (
         <div className="flex items-center gap-1.5">
-          {[1, 2, 3, 4, 5].map((star) => (
+          {[1, 2, 3, 4, 5].map(star => (
             <button
               key={star}
               type="button"
@@ -1497,7 +1497,9 @@ const FormField = memo(function FormField({
                   color: star <= (Number(value) || 0) ? '#00ffcc' : 'rgba(255,255,255,0.08)',
                   fill: star <= (Number(value) || 0) ? '#00ffcc' : 'transparent',
                   filter:
-                    star <= (Number(value) || 0) ? 'drop-shadow(0 0 6px rgba(0,255,204,0.5))' : 'none',
+                    star <= (Number(value) || 0)
+                      ? 'drop-shadow(0 0 6px rgba(0,255,204,0.5))'
+                      : 'none',
                   transition: 'all 0.2s ease',
                 }}
               />
@@ -1518,5 +1520,5 @@ const FormField = memo(function FormField({
         </div>
       )}
     </div>
-  )
-})
+  );
+});

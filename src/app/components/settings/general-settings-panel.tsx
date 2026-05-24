@@ -11,22 +11,21 @@
  * @tags settings,general,theme,language
  */
 
-import { Code, Globe, Palette, Zap } from 'lucide-react'
-import { motion } from 'motion/react'
+import { Code, Globe, Palette, Zap } from 'lucide-react';
+import { motion } from 'motion/react';
 
-import { useSettingsStore } from '../../stores/useSettingsStore'
-import { useI18n } from '../context/i18n-context'
-import { useThemeSwitcher } from '../context/theme-switcher-context'
-import { useThemeColors } from '../hooks/use-theme-colors'
-
-import type { Language } from '../../types/settings'
+import { useSettingsStore } from '../../stores/useSettingsStore';
+import type { Language } from '../../types/settings';
+import { useI18n } from '../context/i18n-context';
+import { useThemeSwitcher } from '../context/theme-switcher-context';
+import { useThemeColors } from '../hooks/use-theme-colors';
 
 export function GeneralSettingsPanel() {
-  const tc = useThemeColors()
-  const { theme, setTheme } = useThemeSwitcher()
-  const { language, setLanguage } = useI18n()
-  const { settings, updateGeneralSettings } = useSettingsStore()
-  const { generalSettings } = settings
+  const tc = useThemeColors();
+  const { theme, setTheme } = useThemeSwitcher();
+  const { language, setLanguage } = useI18n();
+  const { settings, updateGeneralSettings } = useSettingsStore();
+  const { generalSettings } = settings;
 
   return (
     <div className="space-y-8">
@@ -78,7 +77,7 @@ export function GeneralSettingsPanel() {
       <SettingsSection icon={Globe} title="语言" description="选择系统显示语言" tc={tc}>
         <select
           value={language}
-          onChange={(e) => setLanguage(e.target.value as Language)}
+          onChange={e => setLanguage(e.target.value as Language)}
           className="w-full px-4 py-3 rounded-lg outline-none"
           style={{
             background: tc.bgInput,
@@ -103,7 +102,7 @@ export function GeneralSettingsPanel() {
             <input
               type="text"
               value={generalSettings.editorFont}
-              onChange={(e) => updateGeneralSettings({ editorFont: e.target.value })}
+              onChange={e => updateGeneralSettings({ editorFont: e.target.value })}
               className="w-full px-4 py-3 rounded-lg outline-none"
               style={{
                 background: tc.bgInput,
@@ -123,7 +122,9 @@ export function GeneralSettingsPanel() {
               min="10"
               max="24"
               value={generalSettings.editorFontSize}
-              onChange={(e) => updateGeneralSettings({ editorFontSize: parseInt(e.target.value) })}
+              onChange={e =>
+                updateGeneralSettings({ editorFontSize: parseInt(e.target.value, 10) })
+              }
               className="w-full"
             />
           </div>
@@ -132,7 +133,7 @@ export function GeneralSettingsPanel() {
           <ToggleOption
             label="自动换行"
             checked={generalSettings.wordWrap}
-            onChange={(checked) => updateGeneralSettings({ wordWrap: checked })}
+            onChange={checked => updateGeneralSettings({ wordWrap: checked })}
             tc={tc}
           />
         </div>
@@ -144,28 +145,28 @@ export function GeneralSettingsPanel() {
           <ToggleOption
             label="启用动画效果"
             checked={generalSettings.enableAnimations}
-            onChange={(checked) => updateGeneralSettings({ enableAnimations: checked })}
+            onChange={checked => updateGeneralSettings({ enableAnimations: checked })}
             tc={tc}
           />
           <ToggleOption
             label="启用音效"
             checked={generalSettings.enableSounds}
-            onChange={(checked) => updateGeneralSettings({ enableSounds: checked })}
+            onChange={checked => updateGeneralSettings({ enableSounds: checked })}
             tc={tc}
           />
         </div>
       </SettingsSection>
     </div>
-  )
+  );
 }
 
 // 设置区块组件
 interface SettingsSectionProps {
-  icon: React.ElementType
-  title: string
-  description: string
-  children: React.ReactNode
-  tc: ReturnType<typeof useThemeColors>
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  children: React.ReactNode;
+  tc: ReturnType<typeof useThemeColors>;
 }
 
 function SettingsSection({ icon: Icon, title, description, children, tc }: SettingsSectionProps) {
@@ -200,17 +201,17 @@ function SettingsSection({ icon: Icon, title, description, children, tc }: Setti
       </div>
       {children}
     </motion.div>
-  )
+  );
 }
 
 // 主题选项组件
 interface ThemeOptionProps {
-  name: string
-  description: string
-  active: boolean
-  onClick: () => void
-  preview: React.ReactNode
-  tc: ReturnType<typeof useThemeColors>
+  name: string;
+  description: string;
+  active: boolean;
+  onClick: () => void;
+  preview: React.ReactNode;
+  tc: ReturnType<typeof useThemeColors>;
 }
 
 function ThemeOption({ name, description, active, onClick, preview, tc }: ThemeOptionProps) {
@@ -234,15 +235,15 @@ function ThemeOption({ name, description, active, onClick, preview, tc }: ThemeO
         </div>
       </div>
     </button>
-  )
+  );
 }
 
 // 开关选项组件
 interface ToggleOptionProps {
-  label: string
-  checked: boolean
-  onChange: (checked: boolean) => void
-  tc: ReturnType<typeof useThemeColors>
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  tc: ReturnType<typeof useThemeColors>;
 }
 
 function ToggleOption({ label, checked, onChange, tc }: ToggleOptionProps) {
@@ -269,5 +270,5 @@ function ToggleOption({ label, checked, onChange, tc }: ToggleOptionProps) {
         />
       </button>
     </label>
-  )
+  );
 }

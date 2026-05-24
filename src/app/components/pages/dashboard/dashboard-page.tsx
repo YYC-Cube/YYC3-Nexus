@@ -15,8 +15,8 @@ import {
   Users,
   Wifi,
   Zap,
-} from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+} from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Area,
   AreaChart,
@@ -32,13 +32,13 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts'
+} from 'recharts';
 
-import { useApp, useLiveKPI } from '../../context/app-context'
-import { useI18n } from '../../context/i18n-context'
-import { CyberTooltip } from '../../core/cyber-tooltip'
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { useApp, useLiveKPI } from '../../context/app-context';
+import { useI18n } from '../../context/i18n-context';
+import { CyberTooltip } from '../../core/cyber-tooltip';
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // 数据驾驶舱 — Dashboard Page
@@ -47,7 +47,7 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 interface DashboardPageProps {
-  onOpenExport?: () => void
+  onOpenExport?: () => void;
 }
 
 /**
@@ -58,12 +58,12 @@ interface DashboardPageProps {
  * @param onOpenExport - Optional callback to open the data export modal.
  */
 export function DashboardPage({ onOpenExport }: DashboardPageProps) {
-  const { setActivePage, recentActivities } = useApp()
-  const liveKPI = useLiveKPI()
-  const { t } = useI18n()
-  const tc = useThemeColors()
-  const [currentTime, setCurrentTime] = useState(new Date())
-  const [flashIdx, setFlashIdx] = useState<number | null>(null)
+  const { setActivePage, recentActivities } = useApp();
+  const liveKPI = useLiveKPI();
+  const { t } = useI18n();
+  const tc = useThemeColors();
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [flashIdx, setFlashIdx] = useState<number | null>(null);
 
   // Move all data arrays inside component to access t()
   const weeklyTrendData = useMemo(
@@ -77,7 +77,7 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
       { day: t('week.sun'), customers: 52, calls: 42, aiTasks: 167 },
     ],
     [t],
-  )
+  );
 
   const customerStageData = useMemo(
     () => [
@@ -88,7 +88,7 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
       { name: t('clm.stage.loyalty'), value: 267, color: tc.muted },
     ],
     [t, tc],
-  )
+  );
 
   const hourlyCallData = useMemo(
     () => [
@@ -106,7 +106,7 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
       { hour: '19', calls: 8 },
     ],
     [],
-  )
+  );
 
   const aiPerformanceData = useMemo(
     () => [
@@ -116,7 +116,7 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
       { name: t('dash.conversionPredict'), value: 85, fill: tc.success },
     ],
     [t, tc],
-  )
+  );
 
   const quickNavItems = useMemo(
     () => [
@@ -150,29 +150,29 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
       },
     ],
     [t, tc],
-  )
+  );
 
   useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-  const timeStr = currentTime.toLocaleTimeString('zh-CN', { hour12: false })
+  const timeStr = currentTime.toLocaleTimeString('zh-CN', { hour12: false });
   const dateStr = currentTime.toLocaleDateString('zh-CN', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
     weekday: 'long',
-  })
+  });
 
   // Trigger flash animation when KPIs update
   useEffect(() => {
-    if (liveKPI.refreshKey === 0) return
-    const idx = liveKPI.refreshKey % 4
-    setFlashIdx(idx)
-    const timer = setTimeout(() => setFlashIdx(null), 800)
-    return () => clearTimeout(timer)
-  }, [liveKPI.refreshKey])
+    if (liveKPI.refreshKey === 0) return;
+    const idx = liveKPI.refreshKey % 4;
+    setFlashIdx(idx);
+    const timer = setTimeout(() => setFlashIdx(null), 800);
+    return () => clearTimeout(timer);
+  }, [liveKPI.refreshKey]);
 
   // Performance: memoize chart data (static)
   const chartData = useMemo(
@@ -183,7 +183,7 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
       aiPerformance: aiPerformanceData,
     }),
     [weeklyTrendData, customerStageData, hourlyCallData, aiPerformanceData],
-  )
+  );
 
   // Dynamic metric values from live KPI
   const liveMetrics = useMemo(
@@ -226,14 +226,14 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
       },
     ],
     [liveKPI.customers, liveKPI.calls, liveKPI.aiTasks, liveKPI.responseMs, t, tc],
-  )
+  );
 
   function formatTimeAgo(d: Date) {
-    const diff = Date.now() - d.getTime()
-    if (diff < 60000) return t('common.justNow')
-    if (diff < 3600000) return t('common.minutesAgo', { n: Math.floor(diff / 60000) })
-    if (diff < 86400000) return t('common.hoursAgo', { n: Math.floor(diff / 3600000) })
-    return t('common.daysAgo', { n: Math.floor(diff / 86400000) })
+    const diff = Date.now() - d.getTime();
+    if (diff < 60000) return t('common.justNow');
+    if (diff < 3600000) return t('common.minutesAgo', { n: Math.floor(diff / 60000) });
+    if (diff < 86400000) return t('common.hoursAgo', { n: Math.floor(diff / 3600000) });
+    return t('common.daysAgo', { n: Math.floor(diff / 86400000) });
   }
 
   return (
@@ -264,11 +264,11 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
                 border: `1px solid ${tc.alpha(tc.primary, 0.2)}`,
                 color: tc.primary,
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = `0 0 12px ${tc.alpha(tc.primary, 0.2)}`
+              onMouseEnter={e => {
+                e.currentTarget.style.boxShadow = `0 0 12px ${tc.alpha(tc.primary, 0.2)}`;
               }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = 'none'
+              onMouseLeave={e => {
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
               <Download className="w-3 h-3" />
@@ -310,8 +310,8 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
       {/* === TOP METRICS with Live KPI === */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
         {liveMetrics.map((m, i) => {
-          const Icon = m.icon
-          const isFlashing = flashIdx === i
+          const Icon = m.icon;
+          const isFlashing = flashIdx === i;
           return (
             <NeonCard key={i} color={m.color}>
               <div style={{ animation: isFlashing ? 'value-pulse 0.6s ease-out' : 'none' }}>
@@ -352,7 +352,7 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
                 </div>
               </div>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
@@ -568,7 +568,7 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
           </h3>
           <div className="space-y-2">
             {quickNavItems.map((item, i) => {
-              const Icon = item.icon
+              const Icon = item.icon;
               return (
                 <button
                   key={i}
@@ -578,15 +578,15 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
                     background: 'rgba(10,10,10,0.4)',
                     borderColor: `${item.color}15`,
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = `${item.color}40`
-                    e.currentTarget.style.boxShadow = `0 0 12px ${item.color}15`
-                    e.currentTarget.style.background = `${item.color}08`
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = `${item.color}40`;
+                    e.currentTarget.style.boxShadow = `0 0 12px ${item.color}15`;
+                    e.currentTarget.style.background = `${item.color}08`;
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = `${item.color}15`
-                    e.currentTarget.style.boxShadow = 'none'
-                    e.currentTarget.style.background = 'rgba(10,10,10,0.4)'
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = `${item.color}15`;
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.background = 'rgba(10,10,10,0.4)';
                   }}
                 >
                   <div
@@ -603,7 +603,7 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
                   </div>
                   <ChevronRight className="w-3.5 h-3.5 text-white/10 group-hover:text-white/30 transition-colors" />
                 </button>
-              )
+              );
             })}
           </div>
         </NeonCard>
@@ -629,8 +629,8 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
                   call: Phone,
                   system: Cpu,
                   ai: Bot,
-                }
-                const Icon = typeIcons[act.type] || Activity
+                };
+                const Icon = typeIcons[act.type] || Activity;
                 return (
                   <div
                     key={act.id}
@@ -658,7 +658,7 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
                       {formatTimeAgo(act.timestamp)}
                     </span>
                   </div>
-                )
+                );
               })}
             </div>
           </NeonCard>
@@ -683,8 +683,8 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
               },
               { label: t('dash.securityScore'), value: 98, color: tc.accent, icon: Shield },
             ].map((sys, i) => {
-              const Icon = sys.icon
-              const percent = sys.max ? (sys.value / sys.max) * 100 : sys.value
+              const Icon = sys.icon;
+              const percent = sys.max ? (sys.value / sys.max) * 100 : sys.value;
               return (
                 <div key={i}>
                   <div className="flex items-center justify-between mb-1.5">
@@ -708,7 +708,7 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
                     />
                   </div>
                 </div>
-              )
+              );
             })}
 
             {/* Uptime & Version */}
@@ -733,22 +733,22 @@ export function DashboardPage({ onOpenExport }: DashboardPageProps) {
       {/* === Phase 8: Form Quick Stat === */}
       <FormDashboardCard onGoToForms={() => setActivePage('forms')} />
     </div>
-  )
+  );
 }
 
 // Phase 8: Form submission mini-dashboard card
 function FormDashboardCard({ onGoToForms }: { onGoToForms: () => void }) {
-  const { t } = useI18n()
-  const [count, setCount] = useState(0)
+  const { t } = useI18n();
+  const [count, setCount] = useState(0);
   useEffect(() => {
     try {
-      const raw = localStorage.getItem('yyc3_form_submissions')
-      const d = raw ? JSON.parse(raw) : []
-      setCount(Array.isArray(d) ? d.length : 0)
+      const raw = localStorage.getItem('yyc3_form_submissions');
+      const d = raw ? JSON.parse(raw) : [];
+      setCount(Array.isArray(d) ? d.length : 0);
     } catch {
       /* */
     }
-  }, [])
+  }, []);
 
   return (
     <div className="mt-6">
@@ -784,5 +784,5 @@ function FormDashboardCard({ onGoToForms }: { onGoToForms: () => void }) {
         </div>
       </NeonCard>
     </div>
-  )
+  );
 }

@@ -1,21 +1,21 @@
 import {
-    Activity,
-    ArrowRight,
-    Bug,
-    CheckCircle2,
-    Clock,
-    Cpu,
-    Lightbulb,
-    Loader2,
-    RefreshCw,
-    Wifi,
-    XCircle,
-} from 'lucide-react'
-import { useMemo, useState } from 'react'
+  Activity,
+  ArrowRight,
+  Bug,
+  CheckCircle2,
+  Clock,
+  Cpu,
+  Lightbulb,
+  Loader2,
+  RefreshCw,
+  Wifi,
+  XCircle,
+} from 'lucide-react';
+import { useMemo, useState } from 'react';
 
-import { useI18n } from './context/i18n-context'
+import { useI18n } from './context/i18n-context';
 
-import type { DiagnosticResult, ProviderDef } from './model-settings-types'
+import type { DiagnosticResult, ProviderDef } from './model-settings-types';
 
 export function SmartDiagnosticsPanel({
   providers,
@@ -25,50 +25,55 @@ export function SmartDiagnosticsPanel({
   onSelectModel,
   activeModelKey,
 }: {
-  providers: ProviderDef[]
-  apiKeys: Record<string, string>
-  diagnostics: Record<string, DiagnosticResult>
-  onRunDiagnostic: (providerId: string, modelId: string) => void
-  onSelectModel: (providerId: string, modelId: string) => void
-  activeModelKey: string | null
+  providers: ProviderDef[];
+  apiKeys: Record<string, string>;
+  diagnostics: Record<string, DiagnosticResult>;
+  onRunDiagnostic: (providerId: string, modelId: string) => void;
+  onSelectModel: (providerId: string, modelId: string) => void;
+  activeModelKey: string | null;
 }) {
-  const { t: i } = useI18n()
-  const [running, setRunning] = useState(false)
+  const { t: i } = useI18n();
+  const [running, setRunning] = useState(false);
 
   const allModels = useMemo(() => {
     const list: { providerId: string; providerName: string; modelId: string; modelName: string }[] =
-      []
-    providers.forEach((p) => {
-      p.models.forEach((m) => {
-        list.push({ providerId: p.id, providerName: p.shortName, modelId: m.id, modelName: m.name })
-      })
-    })
-    return list
-  }, [providers])
+      [];
+    providers.forEach(p => {
+      p.models.forEach(m => {
+        list.push({
+          providerId: p.id,
+          providerName: p.shortName,
+          modelId: m.id,
+          modelName: m.name,
+        });
+      });
+    });
+    return list;
+  }, [providers]);
 
   const handleRunAll = async () => {
-    setRunning(true)
+    setRunning(true);
     for (const m of allModels) {
-      onRunDiagnostic(m.providerId, m.modelId)
-      await new Promise((r) => setTimeout(r, 300))
+      onRunDiagnostic(m.providerId, m.modelId);
+      await new Promise(r => setTimeout(r, 300));
     }
-    setTimeout(() => setRunning(false), 2000)
-  }
+    setTimeout(() => setRunning(false), 2000);
+  };
 
-  const totalModels = allModels.length
+  const totalModels = allModels.length;
   const testedModels = Object.values(diagnostics).filter(
-    (d) => d.status === 'success' || d.status === 'error',
-  ).length
-  const onlineModels = Object.values(diagnostics).filter((d) => d.status === 'success').length
-  const errorModels = Object.values(diagnostics).filter((d) => d.status === 'error').length
+    d => d.status === 'success' || d.status === 'error',
+  ).length;
+  const onlineModels = Object.values(diagnostics).filter(d => d.status === 'success').length;
+  const errorModels = Object.values(diagnostics).filter(d => d.status === 'error').length;
   const avgLatency = (() => {
     const latencies = Object.values(diagnostics)
-      .filter((d) => d.latency != null)
-      .map((d) => d.latency!)
+      .filter(d => d.latency != null)
+      .map(d => d.latency!);
     return latencies.length > 0
       ? Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length)
-      : 0
-  })()
+      : 0;
+  })();
 
   return (
     <div className="space-y-4">
@@ -95,11 +100,11 @@ export function SmartDiagnosticsPanel({
           },
           {
             label: i('ms.diagLatency'),
-            value: avgLatency ? avgLatency + 'ms' : '-',
+            value: avgLatency ? `${avgLatency}ms` : '-',
             icon: Clock,
             color: 'text-amber-400',
           },
-        ].map((card) => (
+        ].map(card => (
           <div
             key={card.label}
             className="p-3 rounded-xl border border-white/[0.06] bg-white/[0.02] text-center"
@@ -126,11 +131,11 @@ export function SmartDiagnosticsPanel({
       </button>
 
       {/* Results by provider */}
-      {providers.map((provider) => {
+      {providers.map(provider => {
         const providerDiags = provider.models
-          .map((m) => ({ model: m, diag: diagnostics[provider.id + ':' + m.id] }))
-          .filter((d) => d.diag)
-        if (providerDiags.length === 0) return null
+          .map(m => ({ model: m, diag: diagnostics[`${provider.id}:${m.id}`] }))
+          .filter(d => d.diag);
+        if (providerDiags.length === 0) return null;
         return (
           <div key={provider.id} className="space-y-1.5">
             <div className="flex items-center gap-2">
@@ -139,15 +144,15 @@ export function SmartDiagnosticsPanel({
               <span className="text-[9px] text-white/15">
                 {i('ms.onlineCount', {
                   count:
-                    providerDiags.filter((d) => d.diag.status === 'success').length +
+                    providerDiags.filter(d => d.diag.status === 'success').length +
                     '/' +
                     providerDiags.length,
                 })}
               </span>
             </div>
             {providerDiags.map(({ model, diag }) => {
-              const modelKey = provider.id + ':' + model.id
-              const isActive = activeModelKey === modelKey
+              const modelKey = `${provider.id}:${model.id}`;
+              const isActive = activeModelKey === modelKey;
               return (
                 <div
                   key={model.id}
@@ -202,10 +207,10 @@ export function SmartDiagnosticsPanel({
                     </button>
                   )}
                 </div>
-              )
+              );
             })}
           </div>
-        )
+        );
       })}
 
       {/* AI suggestions */}
@@ -217,7 +222,7 @@ export function SmartDiagnosticsPanel({
           </div>
           <div className="space-y-1.5 pl-6">
             {Object.values(diagnostics)
-              .filter((d) => d.status === 'error')
+              .filter(d => d.status === 'error')
               .slice(0, 3)
               .map((diag, idx) => (
                 <div key={idx} className="text-[10px] text-white/35 flex items-start gap-1.5">
@@ -244,5 +249,5 @@ export function SmartDiagnosticsPanel({
         </div>
       )}
     </div>
-  )
+  );
 }

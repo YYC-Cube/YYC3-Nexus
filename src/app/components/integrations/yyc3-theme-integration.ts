@@ -3,20 +3,20 @@
  * @description YYC³ 主题系统集成配置 — 将 @yyc3/ui 2.0.0 主题系统与 My-mgmt 现有主题融合
  */
 
-import type { ThemeConfig } from '../context/app-context'
+import type { ThemeConfig } from '../context/app-context';
 
 // ==========================================
 // YYC³ 主题预设定义
 // 支持: yyc3-dark / yyc3-light / yyc3-brand / nova
 // ==========================================
 
-export type YYC3ThemePreset = 'yyc3-dark' | 'yyc3-light' | 'yyc3-brand' | 'nova'
+export type YYC3ThemePreset = 'yyc3-dark' | 'yyc3-light' | 'yyc3-brand' | 'nova';
 
 export interface YYC3ThemeConfig {
-  preset: YYC3ThemePreset
-  colors: YYC3ColorTokens
-  effects: YYC3EffectConfig
-  typography: YYC3TypographyConfig
+  preset: YYC3ThemePreset;
+  colors: YYC3ColorTokens;
+  effects: YYC3EffectConfig;
+  typography: YYC3TypographyConfig;
 }
 
 // ==========================================
@@ -25,51 +25,51 @@ export interface YYC3ThemeConfig {
 
 export interface YYC3ColorTokens {
   // 主色调
-  primary: string
-  primaryForeground: string
+  primary: string;
+  primaryForeground: string;
 
   // 次要色
-  secondary: string
-  secondaryForeground: string
+  secondary: string;
+  secondaryForeground: string;
 
   // 强调色
-  accent: string
-  accentForeground: string
+  accent: string;
+  accentForeground: string;
 
   // 背景色
-  background: string
-  foreground: string
+  background: string;
+  foreground: string;
 
   // 卡片
-  card: string
-  cardForeground: string
+  card: string;
+  cardForeground: string;
 
   // 边框
-  border: string
-  input: string
+  border: string;
+  input: string;
 
   // 状态色
-  destructive: string
-  destructiveForeground: string
-  muted: string
-  mutedForeground: string
-  ring: string
+  destructive: string;
+  destructiveForeground: string;
+  muted: string;
+  mutedForeground: string;
+  ring: string;
 
   // 特殊色（YYC³ 扩展）
   neon: {
-    cyan: string
-    magenta: string
-    yellow: string
-    green: string
-  }
+    cyan: string;
+    magenta: string;
+    yellow: string;
+    green: string;
+  };
 
   // 渐变色
   gradients: {
-    primary: string
-    secondary: string
-    accent: string
-    neon: string
-  }
+    primary: string;
+    secondary: string;
+    accent: string;
+    neon: string;
+  };
 }
 
 // ==========================================
@@ -79,32 +79,32 @@ export interface YYC3ColorTokens {
 export interface YYC3EffectConfig {
   // 霓虹发光
   neonGlow: {
-    enabled: boolean
-    intensity: number // 0-100
-    spread: number // 0-50
-  }
+    enabled: boolean;
+    intensity: number; // 0-100
+    spread: number; // 0-50
+  };
 
   // 毛玻璃
   glassmorphism: {
-    enabled: boolean
-    blur: number // 0-30
-    opacity: number // 0-1
-  }
+    enabled: boolean;
+    blur: number; // 0-30
+    opacity: number; // 0-1
+  };
 
   // 动画
   animation: {
-    spring: boolean
-    glitch: boolean
-    dataFlow: boolean
-    scanline: boolean
-  }
+    spring: boolean;
+    glitch: boolean;
+    dataFlow: boolean;
+    scanline: boolean;
+  };
 
   // 阴影
   shadows: {
-    neon: string
-    soft: string
-    hard: string
-  }
+    neon: string;
+    soft: string;
+    hard: string;
+  };
 }
 
 // ==========================================
@@ -113,26 +113,26 @@ export interface YYC3EffectConfig {
 
 export interface YYC3TypographyConfig {
   fontFamily: {
-    sans: string
-    mono: string
-    display: string
-  }
+    sans: string;
+    mono: string;
+    display: string;
+  };
   fontSize: {
-    xs: string
-    sm: string
-    base: string
-    lg: string
-    xl: string
-    '2xl': string
-    '3xl': string
-    '4xl': string
-  }
+    xs: string;
+    sm: string;
+    base: string;
+    lg: string;
+    xl: string;
+    '2xl': string;
+    '3xl': string;
+    '4xl': string;
+  };
   fontWeight: {
-    normal: number
-    medium: number
-    semibold: number
-    bold: number
-  }
+    normal: number;
+    medium: number;
+    semibold: number;
+    bold: number;
+  };
 }
 
 // ==========================================
@@ -507,7 +507,7 @@ export const YYC3_THEME_PRESETS: Record<YYC3ThemePreset, YYC3ThemeConfig> = {
       },
     },
   },
-}
+};
 
 // ==========================================
 // 主题转换工具函数
@@ -523,12 +523,12 @@ export function convertYyc3ToAppTheme(yyc3Theme: YYC3ThemeConfig): Partial<Theme
     dataFlowEnabled: yyc3Theme.effects.animation.dataFlow,
     springAnimEnabled: yyc3Theme.effects.animation.spring,
     blurEnabled: yyc3Theme.effects.glassmorphism.enabled,
-  }
+  };
 }
 
 export function getAppThemeForYyc3(preset: YYC3ThemePreset): Partial<ThemeConfig> {
-  const yyc3Config = YYC3_THEME_PRESETS[preset]
-  return convertYyc3ToAppTheme(yyc3Config)
+  const yyc3Config = YYC3_THEME_PRESETS[preset];
+  return convertYyc3ToAppTheme(yyc3Config);
 }
 
 // ==========================================
@@ -537,7 +537,7 @@ export function getAppThemeForYyc3(preset: YYC3ThemePreset): Partial<ThemeConfig
 // ==========================================
 
 export function generateYyc3CssVariables(theme: YYC3ThemeConfig): string {
-  const { colors, effects, typography } = theme
+  const { colors, effects, typography } = theme;
 
   return `
     :root {
@@ -588,13 +588,13 @@ export function generateYyc3CssVariables(theme: YYC3ThemeConfig): string {
       --yyc3-font-mono: ${typography.fontFamily.mono};
       --yyc3-font-display: ${typography.fontFamily.display};
     }
-  `
+  `;
 }
 
 // ==========================================
 // 导出默认配置
 // ==========================================
 
-export const DEFAULT_YYC3_PRESET: YYC3ThemePreset = 'yyc3-dark'
+export const DEFAULT_YYC3_PRESET: YYC3ThemePreset = 'yyc3-dark';
 
-export default YYC3_THEME_PRESETS
+export default YYC3_THEME_PRESETS;

@@ -11,48 +11,48 @@
  * @tags settings,import,export,backup
  */
 
-import { Download, Upload } from 'lucide-react'
+import { Download, Upload } from 'lucide-react';
 
-import { useSettingsStore } from '../../stores/useSettingsStore'
-import { useThemeColors } from '../hooks/use-theme-colors'
+import { useSettingsStore } from '../../stores/useSettingsStore';
+import { useThemeColors } from '../hooks/use-theme-colors';
 
 export function ImportExportPanel() {
-  const tc = useThemeColors()
-  const { exportConfig, importConfig } = useSettingsStore()
+  const tc = useThemeColors();
+  const { exportConfig, importConfig } = useSettingsStore();
 
   const handleExport = () => {
-    const config = exportConfig()
-    const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `yyc3-settings-${new Date().toISOString().split('T')[0]}.json`
-    a.click()
-    URL.revokeObjectURL(url)
-  }
+    const config = exportConfig();
+    const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `yyc3-settings-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   const handleImport = () => {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = 'application/json'
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0]
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.onchange = e => {
+      const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
-        const reader = new FileReader()
-        reader.onload = (event) => {
+        const reader = new FileReader();
+        reader.onload = event => {
           try {
-            const config = JSON.parse(event.target?.result as string)
-            importConfig(config)
-            alert('配置导入成功！')
-          } catch (error) {
-            alert('配置文件格式错误')
+            const config = JSON.parse(event.target?.result as string);
+            importConfig(config);
+            alert('配置导入成功！');
+          } catch (_error) {
+            alert('配置文件格式错误');
           }
-        }
-        reader.readAsText(file)
+        };
+        reader.readAsText(file);
       }
-    }
-    input.click()
-  }
+    };
+    input.click();
+  };
 
   return (
     <div className="space-y-6">
@@ -98,5 +98,5 @@ export function ImportExportPanel() {
         </button>
       </div>
     </div>
-  )
+  );
 }

@@ -15,11 +15,11 @@ import {
   Trash2,
   Upload,
   Video,
-} from 'lucide-react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { useState } from 'react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 营销素材管理 - Marketing Assets Management
@@ -27,23 +27,23 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 interface Asset {
-  id: string
-  name: string
-  type: 'image' | 'video' | 'document' | 'audio'
-  size: string
-  format: string
-  uploadDate: string
-  tags: string[]
-  usage: number
-  status: 'approved' | 'pending' | 'rejected'
-  thumbnail?: string
+  id: string;
+  name: string;
+  type: 'image' | 'video' | 'document' | 'audio';
+  size: string;
+  format: string;
+  uploadDate: string;
+  tags: string[];
+  usage: number;
+  status: 'approved' | 'pending' | 'rejected';
+  thumbnail?: string;
 }
 
 export function MarketingAssetsPage() {
-  const tc = useThemeColors()
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [selectedType, setSelectedType] = useState<'all' | Asset['type']>('all')
-  const [searchQuery, setSearchQuery] = useState('')
+  const tc = useThemeColors();
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [selectedType, setSelectedType] = useState<'all' | Asset['type']>('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const assets: Asset[] = [
     {
@@ -112,70 +112,70 @@ export function MarketingAssetsPage() {
       usage: 7,
       status: 'approved',
     },
-  ]
+  ];
 
-  const filteredAssets = assets.filter((asset) => {
-    const typeMatch = selectedType === 'all' || asset.type === selectedType
+  const filteredAssets = assets.filter(asset => {
+    const typeMatch = selectedType === 'all' || asset.type === selectedType;
     const searchMatch =
       asset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      asset.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-    return typeMatch && searchMatch
-  })
+      asset.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+    return typeMatch && searchMatch;
+  });
 
   const typeStats = [
     {
       type: 'image' as const,
       label: '图片素材',
-      count: assets.filter((a) => a.type === 'image').length,
+      count: assets.filter(a => a.type === 'image').length,
       icon: Image,
       color: tc.primary,
     },
     {
       type: 'video' as const,
       label: '视频素材',
-      count: assets.filter((a) => a.type === 'video').length,
+      count: assets.filter(a => a.type === 'video').length,
       icon: Video,
       color: tc.secondary,
     },
     {
       type: 'document' as const,
       label: '文档素材',
-      count: assets.filter((a) => a.type === 'document').length,
+      count: assets.filter(a => a.type === 'document').length,
       icon: FileText,
       color: tc.accent,
     },
     {
       type: 'audio' as const,
       label: '音频素材',
-      count: assets.filter((a) => a.type === 'audio').length,
+      count: assets.filter(a => a.type === 'audio').length,
       icon: Music,
       color: tc.success,
     },
-  ]
+  ];
 
   const getTypeIcon = (type: Asset['type']) => {
     switch (type) {
       case 'image':
-        return Image
+        return Image;
       case 'video':
-        return Video
+        return Video;
       case 'document':
-        return FileText
+        return FileText;
       case 'audio':
-        return Music
+        return Music;
     }
-  }
+  };
 
   const getStatusConfig = (status: Asset['status']) => {
     switch (status) {
       case 'approved':
-        return { label: '已批准', color: tc.success, icon: CheckCircle2 }
+        return { label: '已批准', color: tc.success, icon: CheckCircle2 };
       case 'pending':
-        return { label: '待审核', color: tc.warning, icon: Calendar }
+        return { label: '待审核', color: tc.warning, icon: Calendar };
       case 'rejected':
-        return { label: '已拒绝', color: tc.danger, icon: Trash2 }
+        return { label: '已拒绝', color: tc.danger, icon: Trash2 };
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -204,8 +204,8 @@ export function MarketingAssetsPage() {
 
       {/* 素材类型统计 */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {typeStats.map((stat) => {
-          const Icon = stat.icon
+        {typeStats.map(stat => {
+          const Icon = stat.icon;
           return (
             <NeonCard
               key={stat.type}
@@ -226,7 +226,7 @@ export function MarketingAssetsPage() {
                 {stat.label}
               </p>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
@@ -242,7 +242,7 @@ export function MarketingAssetsPage() {
             type="text"
             placeholder="搜索素材名称或标签..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-3 rounded-lg text-sm transition-all"
             style={{
               background: tc.bgInput,
@@ -308,10 +308,10 @@ export function MarketingAssetsPage() {
       {/* 素材列表 - Grid视图 */}
       {viewMode === 'grid' && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-          {filteredAssets.map((asset) => {
-            const TypeIcon = getTypeIcon(asset.type)
-            const statusConfig = getStatusConfig(asset.status)
-            const StatusIcon = statusConfig.icon
+          {filteredAssets.map(asset => {
+            const TypeIcon = getTypeIcon(asset.type);
+            const statusConfig = getStatusConfig(asset.status);
+            const StatusIcon = statusConfig.icon;
 
             return (
               <NeonCard key={asset.id} className="p-4 group cursor-pointer transition-all">
@@ -359,7 +359,7 @@ export function MarketingAssetsPage() {
 
                   {/* 标签 */}
                   <div className="flex flex-wrap gap-1">
-                    {asset.tags.slice(0, 3).map((tag) => (
+                    {asset.tags.slice(0, 3).map(tag => (
                       <span
                         key={tag}
                         className="px-2 py-0.5 rounded text-xs"
@@ -409,7 +409,7 @@ export function MarketingAssetsPage() {
                   </div>
                 </div>
               </NeonCard>
-            )
+            );
           })}
         </div>
       )}
@@ -467,9 +467,9 @@ export function MarketingAssetsPage() {
               </thead>
               <tbody>
                 {filteredAssets.map((asset, idx) => {
-                  const TypeIcon = getTypeIcon(asset.type)
-                  const statusConfig = getStatusConfig(asset.status)
-                  const StatusIcon = statusConfig.icon
+                  const TypeIcon = getTypeIcon(asset.type);
+                  const statusConfig = getStatusConfig(asset.status);
+                  const StatusIcon = statusConfig.icon;
 
                   return (
                     <tr
@@ -551,7 +551,7 @@ export function MarketingAssetsPage() {
                         </div>
                       </td>
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
             </table>
@@ -559,5 +559,5 @@ export function MarketingAssetsPage() {
         </NeonCard>
       )}
     </div>
-  )
+  );
 }

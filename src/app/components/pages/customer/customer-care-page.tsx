@@ -13,8 +13,8 @@ import {
   UserPlus,
   Users,
   Zap,
-} from 'lucide-react'
-import { useMemo, useState } from 'react'
+} from 'lucide-react';
+import { useMemo, useState } from 'react';
 import {
   Area,
   AreaChart,
@@ -23,30 +23,30 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts'
+} from 'recharts';
 
-import { useI18n } from '../../context/i18n-context'
-import { type ThemeMode, useThemeSwitcher } from '../../context/theme-switcher-context'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { useI18n } from '../../context/i18n-context';
+import { type ThemeMode, useThemeSwitcher } from '../../context/theme-switcher-context';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // Types & Interfaces
 // ==========================================
 
 interface Customer {
-  id: string
-  name: string
-  company: string
-  phone: string
-  email: string
-  status: 'pending' | 'inProgress' | 'completed' | 'archived'
-  level: 'vip' | 'high' | 'normal' | 'low'
-  source: 'referral' | 'online' | 'offline' | 'event'
-  lastContact: string
-  nextFollowUp: string
-  responsible: string
-  aiScore: number
-  value: number
+  id: string;
+  name: string;
+  company: string;
+  phone: string;
+  email: string;
+  status: 'pending' | 'inProgress' | 'completed' | 'archived';
+  level: 'vip' | 'high' | 'normal' | 'low';
+  source: 'referral' | 'online' | 'offline' | 'event';
+  lastContact: string;
+  nextFollowUp: string;
+  responsible: string;
+  aiScore: number;
+  value: number;
 }
 
 // ==========================================
@@ -174,7 +174,7 @@ const generateMockCustomers = (): Customer[] => [
     aiScore: 89,
     value: 380000,
   },
-]
+];
 
 const weeklyTrendData = [
   { day: '周一', customers: 245, followUps: 128, tasks: 89 },
@@ -184,7 +184,7 @@ const weeklyTrendData = [
   { day: '周五', customers: 335, followUps: 189, tasks: 142 },
   { day: '周六', customers: 298, followUps: 161, tasks: 108 },
   { day: '周日', customers: 276, followUps: 138, tasks: 95 },
-]
+];
 
 // ==========================================
 // Theme Helper Function
@@ -226,7 +226,7 @@ const getThemeClasses = (theme: ThemeMode) => {
       // 强调色
       accentPrimary: 'text-[var(--liquid-primary)]',
       accentBorder: 'border-[var(--liquid-primary)]',
-    }
+    };
   }
 
   // Cyberpunk theme (default)
@@ -264,8 +264,8 @@ const getThemeClasses = (theme: ThemeMode) => {
     // 强调色
     accentPrimary: 'text-[#00f0ff]',
     accentBorder: 'border-[#00f0ff]',
-  }
-}
+  };
+};
 
 // ==========================================
 // Main Component
@@ -278,88 +278,88 @@ const getThemeClasses = (theme: ThemeMode) => {
  * (supports both cyberpunk and liquid glass themes).
  */
 export function CustomerCarePage() {
-  const { t } = useI18n()
-  const { theme } = useThemeSwitcher()
-  const tc = useThemeColors()
-  const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string>('all')
-  const [levelFilter, setLevelFilter] = useState<string>('all')
-  const [sourceFilter, setSourceFilter] = useState<string>('all')
+  const { t } = useI18n();
+  const { theme } = useThemeSwitcher();
+  const tc = useThemeColors();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [levelFilter, setLevelFilter] = useState<string>('all');
+  const [sourceFilter, setSourceFilter] = useState<string>('all');
 
-  const mockCustomers = useMemo(() => generateMockCustomers(), [])
+  const mockCustomers = useMemo(() => generateMockCustomers(), []);
 
   // Filter customers
   const filteredCustomers = useMemo(() => {
-    return mockCustomers.filter((customer) => {
+    return mockCustomers.filter(customer => {
       // Search filter
-      const searchLower = searchQuery.toLowerCase()
+      const searchLower = searchQuery.toLowerCase();
       const matchesSearch =
         !searchQuery ||
         customer.name.toLowerCase().includes(searchLower) ||
         customer.company.toLowerCase().includes(searchLower) ||
         customer.phone.includes(searchQuery) ||
-        customer.email.toLowerCase().includes(searchLower)
+        customer.email.toLowerCase().includes(searchLower);
 
       // Status filter
-      const matchesStatus = statusFilter === 'all' || customer.status === statusFilter
+      const matchesStatus = statusFilter === 'all' || customer.status === statusFilter;
 
       // Level filter
-      const matchesLevel = levelFilter === 'all' || customer.level === levelFilter
+      const matchesLevel = levelFilter === 'all' || customer.level === levelFilter;
 
       // Source filter
-      const matchesSource = sourceFilter === 'all' || customer.source === sourceFilter
+      const matchesSource = sourceFilter === 'all' || customer.source === sourceFilter;
 
-      return matchesSearch && matchesStatus && matchesLevel && matchesSource
-    })
-  }, [mockCustomers, searchQuery, statusFilter, levelFilter, sourceFilter])
+      return matchesSearch && matchesStatus && matchesLevel && matchesSource;
+    });
+  }, [mockCustomers, searchQuery, statusFilter, levelFilter, sourceFilter]);
 
   // Statistics
   const stats = useMemo(() => {
-    const totalCustomers = mockCustomers.length
+    const totalCustomers = mockCustomers.length;
     const todayFollowUps = mockCustomers.filter(
-      (c) => c.nextFollowUp.includes('今天') || c.nextFollowUp.includes('今日'),
-    ).length
+      c => c.nextFollowUp.includes('今天') || c.nextFollowUp.includes('今日'),
+    ).length;
     const activeTasks = mockCustomers.filter(
-      (c) => c.status === 'pending' || c.status === 'inProgress',
-    ).length
-    const teamEfficiency = 87.5
+      c => c.status === 'pending' || c.status === 'inProgress',
+    ).length;
+    const teamEfficiency = 87.5;
 
-    return { totalCustomers, todayFollowUps, activeTasks, teamEfficiency }
-  }, [mockCustomers])
+    return { totalCustomers, todayFollowUps, activeTasks, teamEfficiency };
+  }, [mockCustomers]);
 
   // Get status color
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'text-[#00ffcc]'
+        return 'text-[#00ffcc]';
       case 'inProgress':
-        return 'text-[#00f0ff]'
+        return 'text-[#00f0ff]';
       case 'completed':
-        return 'text-[#00ff88]'
+        return 'text-[#00ff88]';
       case 'archived':
-        return 'text-[#888888]'
+        return 'text-[#888888]';
       default:
-        return 'text-gray-400'
+        return 'text-gray-400';
     }
-  }
+  };
 
   // Get level badge
   const getLevelBadge = (level: string) => {
     switch (level) {
       case 'vip':
-        return 'bg-[#00d4ff]/20 text-[#00d4ff] border-[#00d4ff]/30'
+        return 'bg-[#00d4ff]/20 text-[#00d4ff] border-[#00d4ff]/30';
       case 'high':
-        return 'bg-[#00f0ff]/20 text-[#00f0ff] border-[#00f0ff]/30'
+        return 'bg-[#00f0ff]/20 text-[#00f0ff] border-[#00f0ff]/30';
       case 'normal':
-        return 'bg-[#00ffcc]/20 text-[#00ffcc] border-[#00ffcc]/30'
+        return 'bg-[#00ffcc]/20 text-[#00ffcc] border-[#00ffcc]/30';
       case 'low':
-        return 'bg-gray-600/20 text-gray-400 border-gray-600/30'
+        return 'bg-gray-600/20 text-gray-400 border-gray-600/30';
       default:
-        return ''
+        return '';
     }
-  }
+  };
 
-  const themeClasses = getThemeClasses(theme)
+  const themeClasses = getThemeClasses(theme);
 
   return (
     <div
@@ -538,7 +538,7 @@ export function CustomerCarePage() {
                 <input
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={e => setSearchQuery(e.target.value)}
                   placeholder={t('care.searchPlaceholder')}
                   className={`${themeClasses.searchInput} ${themeClasses.textPrimary} placeholder:text-white/40 focus:outline-none transition-all`}
                 />
@@ -551,7 +551,7 @@ export function CustomerCarePage() {
                 />
                 <select
                   value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
+                  onChange={e => setStatusFilter(e.target.value)}
                   className={`${themeClasses.filterSelect} pl-11 ${themeClasses.textPrimary} focus:outline-none transition-all`}
                 >
                   <option value="all">{t('care.allStatus')}</option>
@@ -566,7 +566,7 @@ export function CustomerCarePage() {
               <div className="relative">
                 <select
                   value={levelFilter}
-                  onChange={(e) => setLevelFilter(e.target.value)}
+                  onChange={e => setLevelFilter(e.target.value)}
                   className={`${themeClasses.filterSelect} ${themeClasses.textPrimary} focus:outline-none transition-all`}
                 >
                   <option value="all">{t('care.allLevels')}</option>
@@ -586,10 +586,10 @@ export function CustomerCarePage() {
               {(searchQuery || statusFilter !== 'all' || levelFilter !== 'all') && (
                 <button
                   onClick={() => {
-                    setSearchQuery('')
-                    setStatusFilter('all')
-                    setLevelFilter('all')
-                    setSourceFilter('all')
+                    setSearchQuery('');
+                    setStatusFilter('all');
+                    setLevelFilter('all');
+                    setSourceFilter('all');
                   }}
                   className={themeClasses.resetButton}
                 >
@@ -653,7 +653,7 @@ export function CustomerCarePage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {filteredCustomers.map((customer) => (
+                  {filteredCustomers.map(customer => (
                     <tr key={customer.id} className={`group ${themeClasses.tableRow}`}>
                       <td className="px-4 py-3 whitespace-nowrap">
                         <div className="flex items-center gap-2">
@@ -768,5 +768,5 @@ export function CustomerCarePage() {
         </div>
       </main>
     </div>
-  )
+  );
 }

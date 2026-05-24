@@ -14,43 +14,40 @@
  */
 
 import {
-    AlertTriangle,
-    AlignLeft,
-    ArrowDownToLine,
-    BookOpen,
-    Bug,
-    Check,
-    Copy,
-    FileCode,
-    Loader2,
-    MessageSquare,
-    RefreshCw,
-    Sparkles,
-    TestTube,
-    Wand2,
-    Zap,
-} from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useRef, useState } from 'react'
-
-import { aiProxyService } from '../services/ai-proxy-service'
-
-import { usePanelStore } from './panel-store'
-
-import type { ThemeColors } from '../hooks/use-theme-colors'
-import type { AIProviderConfig, ChatMessage } from '../services/ai-proxy-service'
+  AlertTriangle,
+  AlignLeft,
+  ArrowDownToLine,
+  BookOpen,
+  Bug,
+  Check,
+  Copy,
+  FileCode,
+  Loader2,
+  MessageSquare,
+  RefreshCw,
+  Sparkles,
+  TestTube,
+  Wand2,
+  Zap,
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useRef, useState } from 'react';
+import type { ThemeColors } from '../hooks/use-theme-colors';
+import type { AIProviderConfig, ChatMessage } from '../services/ai-proxy-service';
+import { aiProxyService } from '../services/ai-proxy-service';
+import { usePanelStore } from './panel-store';
 
 // ==========================================
 // 类型 & 配置
 // ==========================================
 
 export interface QuickAction {
-  id: string
-  label: string
-  icon: typeof Copy
-  color: string
-  description: string
-  isAI: boolean
+  id: string;
+  label: string;
+  icon: typeof Copy;
+  color: string;
+  description: string;
+  isAI: boolean;
 }
 
 export const QUICK_ACTIONS: QuickAction[] = [
@@ -111,7 +108,7 @@ export const QUICK_ACTIONS: QuickAction[] = [
     description: 'AI 优化',
     isAI: true,
   },
-]
+];
 
 // ==========================================
 // AI 提示模板
@@ -122,7 +119,7 @@ export function buildActionPrompt(
   fileName: string,
   codeContent: string,
 ): ChatMessage[] {
-  const codeSnippet = codeContent.substring(0, 8000)
+  const codeSnippet = codeContent.substring(0, 8000);
 
   const prompts: Record<string, string> = {
     explain: `分析以下代码文件 "${fileName}"，提供清晰的结构化解释：
@@ -201,11 +198,11 @@ ${codeSnippet}
 \`\`\`
 
 提供具体的、可衡量的优化建议和代码示例。用中文回答。`,
-  }
+  };
 
-  const prompt = prompts[actionId]
-  if (!prompt) return []
-  return [{ role: 'user' as const, content: prompt }]
+  const prompt = prompts[actionId];
+  if (!prompt) return [];
+  return [{ role: 'user' as const, content: prompt }];
 }
 
 // ==========================================
@@ -222,8 +219,8 @@ export function getMockResponse(actionId: string, fileName: string, contentLengt
     docs: `${fileName} 文档已生成：\n• 添加了 JSDoc 注解\n• 生成了 README 使用示例\n• 为复杂逻辑添加了行内注释\n• TypeScript 接口文档已更新`,
     debug: `${fileName} 发现的问题：\n• ⚠️ 异步操作缺少错误处理\n• ⚠️ 潜在内存泄漏：事件监听器清理\n• ℹ️ 建议添加加载状态\n• ✅ 类型安全性良好`,
     optimize: `${fileName} 优化建议：\n• 懒加载重型依赖（Monaco 等）\n• 对纯展示组件使用 React.memo\n• 对搜索/过滤操作添加防抖\n• 预计包体积缩减约 ${Math.floor(Math.random() * 15 + 5)}%`,
-  }
-  return responses[actionId] ?? '操作已完成。'
+  };
+  return responses[actionId] ?? '操作已完成。';
 }
 
 // ==========================================
@@ -231,10 +228,10 @@ export function getMockResponse(actionId: string, fileName: string, contentLengt
 // ==========================================
 
 interface EditorQuickActionsProps {
-  tc: ThemeColors
-  filePath: string
-  editorContentGetter: React.RefObject<(() => string) | null>
-  editorInsertRef?: React.RefObject<((text: string) => void) | null>
+  tc: ThemeColors;
+  filePath: string;
+  editorContentGetter: React.RefObject<(() => string) | null>;
+  editorInsertRef?: React.RefObject<((text: string) => void) | null>;
 }
 
 export function EditorQuickActions({
@@ -243,81 +240,81 @@ export function EditorQuickActions({
   editorContentGetter,
   editorInsertRef,
 }: EditorQuickActionsProps) {
-  const { addAIMessage, aiProviderConfig } = usePanelStore()
-  const [activeAction, setActiveAction] = useState<string | null>(null)
+  const { addAIMessage, aiProviderConfig } = usePanelStore();
+  const [activeAction, setActiveAction] = useState<string | null>(null);
   const [result, setResult] = useState<{
-    action: string
-    content: string
-    isAI: boolean
-    latencyMs?: number
-    provider?: string
-    streaming?: boolean
-  } | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const abortRef = useRef<AbortController | null>(null)
-  const [_streamContent, setStreamContent] = useState('')
+    action: string;
+    content: string;
+    isAI: boolean;
+    latencyMs?: number;
+    provider?: string;
+    streaming?: boolean;
+  } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+  const [_streamContent, setStreamContent] = useState('');
 
-  const isRealProvider = aiProviderConfig.provider !== 'mock' && aiProviderConfig.apiKey.length > 0
+  const isRealProvider = aiProviderConfig.provider !== 'mock' && aiProviderConfig.apiKey.length > 0;
 
   const executeAction = useCallback(
     async (action: QuickAction) => {
-      const content = editorContentGetter.current?.() ?? ''
-      if (!content.trim()) return
+      const content = editorContentGetter.current?.() ?? '';
+      if (!content.trim()) return;
 
-      setActiveAction(action.id)
-      setResult(null)
-      setError(null)
-      setStreamContent('')
+      setActiveAction(action.id);
+      setResult(null);
+      setError(null);
+      setStreamContent('');
 
-      const fileName = filePath.split('/').pop() ?? 'file'
+      const fileName = filePath.split('/').pop() ?? 'file';
 
       // --- 本地操作（无 AI） ---
       if (action.id === 'copy') {
         try {
-          await navigator.clipboard.writeText(content)
+          await navigator.clipboard.writeText(content);
         } catch {
           /* fallback */
         }
-        setResult({ action: action.id, content: '已复制到剪贴板！', isAI: false })
-        setActiveAction(null)
-        return
+        setResult({ action: action.id, content: '已复制到剪贴板！', isAI: false });
+        setActiveAction(null);
+        return;
       }
 
       if (action.id === 'format') {
-        await new Promise((r) => setTimeout(r, 300))
+        await new Promise(r => setTimeout(r, 300));
         setResult({
           action: action.id,
           content: `已格式化 ${fileName} — 应用 Prettier 规则 (printWidth: 100, semi: true, singleQuote: false)`,
           isAI: false,
-        })
-        setActiveAction(null)
-        return
+        });
+        setActiveAction(null);
+        return;
       }
 
       // --- AI 流式响应 ---
       if (action.isAI) {
-        abortRef.current = new AbortController()
+        abortRef.current = new AbortController();
         try {
-          const messages = buildActionPrompt(action.id, fileName, content)
+          const messages = buildActionPrompt(action.id, fileName, content);
           if (messages.length === 0) {
             setResult({
               action: action.id,
               content: getMockResponse(action.id, fileName, content.length),
               isAI: false,
-            })
-            setActiveAction(null)
-            return
+            });
+            setActiveAction(null);
+            return;
           }
 
-          const startTime = Date.now()
-          let fullContent = ''
+          const startTime = Date.now();
+          let fullContent = '';
           setResult({
             action: action.id,
             content: '',
             isAI: true,
             streaming: true,
             provider: aiProviderConfig.provider,
-          })
+          });
 
           // Use streaming API
           const stream = aiProxyService.chatStream(
@@ -325,16 +322,16 @@ export function EditorQuickActions({
             messages,
             abortRef.current.signal,
             { filePath, content: content.substring(0, 6000) },
-          )
+          );
 
           for await (const chunk of stream) {
-            if (chunk.done) break
-            fullContent += chunk.token
-            setStreamContent(fullContent)
-            setResult((prev) => (prev ? { ...prev, content: fullContent } : null))
+            if (chunk.done) break;
+            fullContent += chunk.token;
+            setStreamContent(fullContent);
+            setResult(prev => (prev ? { ...prev, content: fullContent } : null));
           }
 
-          const latencyMs = Date.now() - startTime
+          const latencyMs = Date.now() - startTime;
           setResult({
             action: action.id,
             content: fullContent,
@@ -342,7 +339,7 @@ export function EditorQuickActions({
             latencyMs,
             provider: aiProviderConfig.provider,
             streaming: false,
-          })
+          });
 
           // 持久化到 AI 聊天历史
           addAIMessage({
@@ -350,46 +347,47 @@ export function EditorQuickActions({
             role: 'user',
             content: `[快捷操作: ${action.label}] ${fileName} (${isRealProvider ? `${aiProviderConfig.provider}/${aiProviderConfig.model}` : '模拟'})`,
             timestamp: Date.now(),
-          })
+          });
           addAIMessage({
             id: crypto.randomUUID(),
             role: 'assistant',
             content: fullContent,
             timestamp: Date.now(),
-          })
-        } catch (err: any) {
-          if (err?.name === 'AbortError') {
-            setError('操作已取消。')
+          });
+        } catch (err: unknown) {
+          if (err instanceof Error && err.name === 'AbortError') {
+            setError('操作已取消。');
           } else {
-            setError(err?.message ?? 'AI 请求失败。')
+            const message = err instanceof Error ? err.message : 'AI 请求失败。';
+            setError(message);
             setResult({
               action: action.id,
               content: getMockResponse(action.id, fileName, content.length),
               isAI: false,
-            })
+            });
           }
         } finally {
-          abortRef.current = null
-          setActiveAction(null)
+          abortRef.current = null;
+          setActiveAction(null);
         }
-        return
+        return;
       }
 
-      setActiveAction(null)
+      setActiveAction(null);
     },
     [filePath, editorContentGetter, addAIMessage, aiProviderConfig, isRealProvider],
-  )
+  );
 
   const handleCancel = useCallback(() => {
-    abortRef.current?.abort()
-    setActiveAction(null)
-  }, [])
+    abortRef.current?.abort();
+    setActiveAction(null);
+  }, []);
 
   const handleInsertToEditor = useCallback(() => {
     if (result?.content && editorInsertRef?.current) {
-      editorInsertRef.current(result.content)
+      editorInsertRef.current(result.content);
     }
-  }, [result, editorInsertRef])
+  }, [result, editorInsertRef]);
 
   return (
     <div>
@@ -399,10 +397,10 @@ export function EditorQuickActions({
         style={{ borderColor: tc.borderSubtle, background: tc.bgCard }}
       >
         <Sparkles className="w-3 h-3 shrink-0 mr-1" style={{ color: tc.textMuted }} />
-        {QUICK_ACTIONS.map((action) => {
-          const Icon = action.icon
-          const isActive = activeAction === action.id
-          const isDone = result?.action === action.id && !result?.streaming
+        {QUICK_ACTIONS.map(action => {
+          const Icon = action.icon;
+          const isActive = activeAction === action.id;
+          const isDone = result?.action === action.id && !result?.streaming;
           return (
             <button
               key={action.id}
@@ -427,7 +425,7 @@ export function EditorQuickActions({
                 <Zap className="w-2 h-2 ml-0.5" style={{ color: '#f59e0b' }} />
               )}
             </button>
-          )
+          );
         })}
 
         {/* 运行中取消按钮 */}
@@ -555,5 +553,5 @@ export function EditorQuickActions({
         )}
       </AnimatePresence>
     </div>
-  )
+  );
 }

@@ -1,18 +1,15 @@
+import type { LucideIcon } from "lucide-react";
 import {
-    Activity,
-    ArrowUpRight,
-    Bot,
-    CheckCircle2,
-    Clock,
-    Sparkles,
-    Zap,
-} from 'lucide-react'
-
-import { useThemeColors } from '../hooks/use-theme-colors'
-
-import { NeonCard } from './neon-card'
-
-import type { LucideIcon } from 'lucide-react'
+  Activity,
+  ArrowUpRight,
+  Bot,
+  CheckCircle2,
+  Clock,
+  Sparkles,
+  Zap,
+} from "lucide-react";
+import { useThemeColors } from "../hooks/use-theme-colors";
+import { NeonCard } from "./neon-card";
 
 // ==========================================
 // YYC³ Module Placeholder Page
@@ -21,37 +18,41 @@ import type { LucideIcon } from 'lucide-react'
 // ==========================================
 
 export interface ModuleFeature {
-  title: string
-  desc: string
-  icon?: LucideIcon
-  color?: string
-  status?: 'ready' | 'beta' | 'planned'
+  title: string;
+  desc: string;
+  icon?: LucideIcon;
+  color?: string;
+  status?: "ready" | "beta" | "planned";
 }
 
 export interface ModulePageConfig {
-  id: string
-  title: string
-  subtitle: string
-  icon: LucideIcon
-  color: string
-  category: string
-  features: ModuleFeature[]
-  aiCapabilities?: string[]
-  stats?: { label: string; value: string; trend?: string; trendUp?: boolean }[]
+  id: string;
+  title: string;
+  subtitle: string;
+  icon: LucideIcon;
+  color: string;
+  category: string;
+  features: ModuleFeature[];
+  aiCapabilities?: string[];
+  stats?: { label: string; value: string; trend?: string; trendUp?: boolean }[];
 }
 
 const STATUS_MAP = {
-  ready: { label: '已就绪', color: '#22c55e', icon: CheckCircle2 },
-  beta: { label: '测试中', color: '#eab308', icon: Activity },
-  planned: { label: '规划中', color: '#3b82f6', icon: Clock },
-}
+  ready: { label: "已就绪", color: "#22c55e", icon: CheckCircle2 },
+  beta: { label: "测试中", color: "#eab308", icon: Activity },
+  planned: { label: "规划中", color: "#3b82f6", icon: Clock },
+};
 
-export function ModulePlaceholderPage({ config }: { config: ModulePageConfig }) {
-  const tc = useThemeColors()
-  const Icon = config.icon
+export function ModulePlaceholderPage({
+  config,
+}: {
+  config: ModulePageConfig;
+}) {
+  const tc = useThemeColors();
+  const Icon = config.icon;
 
   return (
-    <div className="h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
+    <div className="h-full overflow-y-auto" style={{ scrollbarWidth: "none" }}>
       {/* Top accent line */}
       <div
         className="absolute top-0 left-0 right-0 h-1 z-10"
@@ -84,7 +85,9 @@ export function ModulePlaceholderPage({ config }: { config: ModulePageConfig }) 
             >
               {config.title}
             </h1>
-            <p className="text-[10px] text-white/20 tracking-wider">{config.subtitle}</p>
+            <p className="text-[10px] text-white/20 tracking-wider">
+              {config.subtitle}
+            </p>
           </div>
           <span
             className="ml-2 px-2 py-0.5 rounded-full text-[9px]"
@@ -104,9 +107,11 @@ export function ModulePlaceholderPage({ config }: { config: ModulePageConfig }) 
         <div className="px-6 pb-5">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {config.stats.map((stat, idx) => (
-              <NeonCard key={idx} color={config.color}>
+              <NeonCard key={stat.label} color={config.color}>
                 <div
-                  style={{ animation: `spring-in 0.35s var(--spring-easing) ${idx * 0.05}s both` }}
+                  style={{
+                    animation: `spring-in 0.35s var(--spring-easing) ${idx * 0.05}s both`,
+                  }}
                 >
                   <p className="text-[10px] text-white/30 mb-1">{stat.label}</p>
                   <p
@@ -124,8 +129,8 @@ export function ModulePlaceholderPage({ config }: { config: ModulePageConfig }) 
                         <ArrowUpRight
                           className="w-2.5 h-2.5"
                           style={{
-                            color: stat.trendUp ? '#22c55e' : '#ef4444',
-                            transform: stat.trendUp ? 'none' : 'rotate(90deg)',
+                            color: stat.trendUp ? "#22c55e" : "#ef4444",
+                            transform: stat.trendUp ? "none" : "rotate(90deg)",
                           }}
                         />
                       )}
@@ -133,10 +138,10 @@ export function ModulePlaceholderPage({ config }: { config: ModulePageConfig }) 
                         className="text-[9px]"
                         style={{
                           color: stat.trendUp
-                            ? '#22c55e'
+                            ? "#22c55e"
                             : stat.trendUp === false
-                              ? '#ef4444'
-                              : 'rgba(255,255,255,0.2)',
+                              ? "#ef4444"
+                              : "rgba(255,255,255,0.2)",
                         }}
                       >
                         {stat.trend}
@@ -158,14 +163,18 @@ export function ModulePlaceholderPage({ config }: { config: ModulePageConfig }) 
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {config.features.map((feature, idx) => {
-            const FIcon = feature.icon || Sparkles
-            const fColor = feature.color || config.color
-            const statusInfo = feature.status ? STATUS_MAP[feature.status] : STATUS_MAP.planned
-            const StatusIcon = statusInfo.icon
+            const FIcon = feature.icon || Sparkles;
+            const fColor = feature.color || config.color;
+            const statusInfo = feature.status
+              ? STATUS_MAP[feature.status]
+              : STATUS_MAP.planned;
+            const StatusIcon = statusInfo.icon;
             return (
-              <NeonCard key={idx} color={fColor}>
+              <NeonCard key={feature.title} color={fColor}>
                 <div
-                  style={{ animation: `spring-in 0.35s var(--spring-easing) ${idx * 0.04}s both` }}
+                  style={{
+                    animation: `spring-in 0.35s var(--spring-easing) ${idx * 0.04}s both`,
+                  }}
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
@@ -176,9 +185,14 @@ export function ModulePlaceholderPage({ config }: { config: ModulePageConfig }) 
                           border: `1px solid ${tc.alpha(fColor, 0.2)}`,
                         }}
                       >
-                        <FIcon className="w-3.5 h-3.5" style={{ color: fColor }} />
+                        <FIcon
+                          className="w-3.5 h-3.5"
+                          style={{ color: fColor }}
+                        />
                       </div>
-                      <h4 className="text-[12px] text-white/70">{feature.title}</h4>
+                      <h4 className="text-[12px] text-white/70">
+                        {feature.title}
+                      </h4>
                     </div>
                     <span
                       className="flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[8px]"
@@ -192,10 +206,12 @@ export function ModulePlaceholderPage({ config }: { config: ModulePageConfig }) 
                       {statusInfo.label}
                     </span>
                   </div>
-                  <p className="text-[10px] text-white/20 leading-relaxed">{feature.desc}</p>
+                  <p className="text-[10px] text-white/20 leading-relaxed">
+                    {feature.desc}
+                  </p>
                 </div>
               </NeonCard>
-            )
+            );
           })}
         </div>
       </div>
@@ -211,9 +227,11 @@ export function ModulePlaceholderPage({ config }: { config: ModulePageConfig }) 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
               {config.aiCapabilities.map((cap, idx) => (
                 <div
-                  key={idx}
+                  key={cap}
                   className="flex items-center gap-2 py-1.5"
-                  style={{ animation: `spring-in 0.3s var(--spring-easing) ${idx * 0.03}s both` }}
+                  style={{
+                    animation: `spring-in 0.3s var(--spring-easing) ${idx * 0.03}s both`,
+                  }}
                 >
                   <div
                     className="w-1.5 h-1.5 rounded-full shrink-0"
@@ -230,7 +248,7 @@ export function ModulePlaceholderPage({ config }: { config: ModulePageConfig }) 
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export { MODULE_CONFIGS } from '../module-configs'
+export { MODULE_CONFIGS } from "../module-configs";

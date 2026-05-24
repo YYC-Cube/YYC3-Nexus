@@ -11,8 +11,8 @@ import {
   TrendingUp,
   UserPlus,
   Users,
-} from 'lucide-react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -23,36 +23,36 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts'
+} from 'recharts';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 微信配置页面 - WeChat Configuration
 // 微信公众号·小程序·企业微信全生态配置管理
 // ==========================================
 
-type ConfigTab = 'basic' | 'menu' | 'reply' | 'message' | 'users' | 'stats'
+type ConfigTab = 'basic' | 'menu' | 'reply' | 'message' | 'users' | 'stats';
 
 export function WechatConfigPage() {
-  const tc = useThemeColors()
-  const [activeTab, setActiveTab] = useState<ConfigTab>('basic')
-  const [showSecret, setShowSecret] = useState(false)
-  const [copied, setCopied] = useState(false)
+  const tc = useThemeColors();
+  const [activeTab, setActiveTab] = useState<ConfigTab>('basic');
+  const [showSecret, setShowSecret] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const fanGrowthData = Array.from({ length: 7 }, (_, i) => ({
     day: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'][i],
     newFans: Math.floor(Math.random() * 500) + 100,
     lostFans: Math.floor(Math.random() * 100),
-  }))
+  }));
 
   const menuClickData = [
     { name: '产品介绍', value: 3200, color: '#22c55e' },
     { name: '客户服务', value: 2800, color: '#3b82f6' },
     { name: '在线咨询', value: 2100, color: '#8b5cf6' },
     { name: '最新活动', value: 1800, color: '#f97316' },
-  ]
+  ];
 
   const tabs = [
     { id: 'basic' as const, label: '基础配置', icon: Settings },
@@ -61,13 +61,13 @@ export function WechatConfigPage() {
     { id: 'message' as const, label: '消息推送', icon: Megaphone },
     { id: 'users' as const, label: '用户管理', icon: UserPlus },
     { id: 'stats' as const, label: '数据统计', icon: TrendingUp },
-  ]
+  ];
 
   const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
@@ -169,9 +169,9 @@ export function WechatConfigPage() {
       {/* Tabs */}
       <div className="px-6 pb-4">
         <div className="flex items-center gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-          {tabs.map((tab) => {
-            const Icon = tab.icon
-            const isActive = activeTab === tab.id
+          {tabs.map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
@@ -187,7 +187,7 @@ export function WechatConfigPage() {
                 <Icon className="w-3 h-3" />
                 {tab.label}
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -558,5 +558,5 @@ export function WechatConfigPage() {
         </NeonCard>
       </div>
     </div>
-  )
+  );
 }

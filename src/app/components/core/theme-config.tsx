@@ -14,16 +14,15 @@ import {
   Sun,
   Waves,
   Wind,
-} from 'lucide-react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { useState } from 'react';
 
-import { type ThemeConfig, useApp } from '../context/app-context'
-import { useI18n } from '../context/i18n-context'
-import { useThemeSwitcher } from '../context/theme-switcher-context'
-import { useThemeColors } from '../hooks/use-theme-colors'
+import { type ThemeConfig, useApp } from '../context/app-context';
+import { useI18n } from '../context/i18n-context';
+import { useThemeSwitcher } from '../context/theme-switcher-context';
+import { useThemeColors } from '../hooks/use-theme-colors';
 
-import { NeonCard } from './neon-card'
-
+import { NeonCard } from './neon-card';
 
 // ==========================================
 // YYC³ 主题配置面板 — Theme Config Panel
@@ -31,12 +30,12 @@ import { NeonCard } from './neon-card'
 // ==========================================
 
 interface ToggleItemProps {
-  label: string
-  sublabel: string
-  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
-  color: string
-  enabled: boolean
-  onChange: (v: boolean) => void
+  label: string;
+  sublabel: string;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  color: string;
+  enabled: boolean;
+  onChange: (v: boolean) => void;
 }
 
 function ToggleItem({ label, sublabel, icon: Icon, color, enabled, onChange }: ToggleItemProps) {
@@ -92,7 +91,7 @@ function ToggleItem({ label, sublabel, icon: Icon, color, enabled, onChange }: T
         />
       </button>
     </div>
-  )
+  );
 }
 
 /**
@@ -102,19 +101,19 @@ function ToggleItem({ label, sublabel, icon: Icon, color, enabled, onChange }: T
  * switching, preset management, live preview, and onboarding reset.
  */
 export function ThemeConfigPage() {
-  const { theme, updateTheme, resetTheme, setOnboardingDone } = useApp()
-  const { t, locale, setLocale } = useI18n()
-  const { theme: uiTheme, toggleTheme: toggleUITheme } = useThemeSwitcher()
-  const tc = useThemeColors()
-  const [showAdvanced, setShowAdvanced] = useState(false)
-  const [showPreview, setShowPreview] = useState(true)
+  const { theme, updateTheme, resetTheme, setOnboardingDone } = useApp();
+  const { t, locale, setLocale } = useI18n();
+  const { theme: uiTheme, toggleTheme: toggleUITheme } = useThemeSwitcher();
+  const tc = useThemeColors();
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showPreview, setShowPreview] = useState(true);
 
   const toggleItems: Array<{
-    key: keyof ThemeConfig
-    label: string
-    sublabel: string
-    icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
-    color: string
+    key: keyof ThemeConfig;
+    label: string;
+    sublabel: string;
+    icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+    color: string;
   }> = [
     {
       key: 'scanlineEnabled',
@@ -158,10 +157,10 @@ export function ThemeConfigPage() {
       icon: Droplets,
       color: '#00f0ff',
     },
-  ]
+  ];
 
-  const allEnabled = toggleItems.every((t) => theme[t.key] === true)
-  const _allDisabled = toggleItems.every((t) => theme[t.key] === false)
+  const allEnabled = toggleItems.every(t => theme[t.key] === true);
+  const _allDisabled = toggleItems.every(t => theme[t.key] === false);
 
   return (
     <div
@@ -224,7 +223,7 @@ export function ThemeConfigPage() {
             <div className="flex gap-2">
               <button
                 onClick={() => {
-                  if (uiTheme !== 'cyberpunk') toggleUITheme()
+                  if (uiTheme !== 'cyberpunk') toggleUITheme();
                 }}
                 className="px-3 py-1.5 rounded-xl text-xs transition-all duration-300 border"
                 style={{
@@ -240,7 +239,7 @@ export function ThemeConfigPage() {
               </button>
               <button
                 onClick={() => {
-                  if (uiTheme !== 'liquidGlass') toggleUITheme()
+                  if (uiTheme !== 'liquidGlass') toggleUITheme();
                 }}
                 className="px-3 py-1.5 rounded-xl text-xs transition-all duration-300 border"
                 style={{
@@ -357,13 +356,13 @@ export function ThemeConfigPage() {
               min={0}
               max={100}
               value={theme.neonIntensity}
-              onChange={(e) => updateTheme({ neonIntensity: Number(e.target.value) })}
+              onChange={e => updateTheme({ neonIntensity: Number(e.target.value) })}
               className="absolute inset-0 w-full opacity-0 cursor-pointer"
               style={{ height: 32, top: -12 }}
             />
             {/* Marks */}
             <div className="flex justify-between mt-2">
-              {[0, 25, 50, 75, 100].map((v) => (
+              {[0, 25, 50, 75, 100].map(v => (
                 <button
                   key={v}
                   onClick={() => updateTheme({ neonIntensity: v })}
@@ -390,12 +389,12 @@ export function ThemeConfigPage() {
             </div>
             <button
               onClick={() => {
-                const target = allEnabled ? false : true
-                const partial: Partial<ThemeConfig> = {}
-                toggleItems.forEach((t) => {
-                  ;(partial as any)[t.key] = target
-                })
-                updateTheme(partial)
+                const target = !allEnabled;
+                const partial: Partial<ThemeConfig> = {};
+                toggleItems.forEach(t => {
+                  (partial as Record<string, unknown>)[t.key] = target;
+                });
+                updateTheme(partial);
               }}
               className="text-[10px] px-2 py-0.5 rounded-lg transition-all duration-200"
               style={{
@@ -408,7 +407,7 @@ export function ThemeConfigPage() {
             </button>
           </div>
           <div className="space-y-2">
-            {toggleItems.map((item) => (
+            {toggleItems.map(item => (
               <ToggleItem
                 key={item.key}
                 label={item.label}
@@ -416,7 +415,7 @@ export function ThemeConfigPage() {
                 icon={item.icon}
                 color={item.color}
                 enabled={theme[item.key] as boolean}
-                onChange={(v) => updateTheme({ [item.key]: v })}
+                onChange={v => updateTheme({ [item.key]: v })}
               />
             ))}
           </div>
@@ -563,7 +562,7 @@ export function ThemeConfigPage() {
                 { label: '极简', neon: 30, effects: false, color: '#00f0ff' },
                 { label: '标准', neon: 80, effects: true, color: '#00d4ff' },
                 { label: '极致', neon: 100, effects: true, color: '#00ffcc' },
-              ].map((preset) => (
+              ].map(preset => (
                 <button
                   key={preset.label}
                   onClick={() => {
@@ -575,7 +574,7 @@ export function ThemeConfigPage() {
                       dataFlowEnabled: preset.effects,
                       springAnimEnabled: true,
                       blurEnabled: true,
-                    })
+                    });
                   }}
                   className="px-3 py-2 rounded-xl text-xs transition-all duration-300 border"
                   style={{
@@ -648,7 +647,7 @@ export function ThemeConfigPage() {
                     <span className="text-white/20">霓虹强度: </span>
                     <span className="text-[#00f0ff]">{theme.neonIntensity}%</span>
                   </div>
-                  {toggleItems.map((item) => (
+                  {toggleItems.map(item => (
                     <div key={item.key} className="text-[10px]">
                       <span className="text-white/20">{item.label}: </span>
                       <span style={{ color: theme[item.key] ? '#00ffc8' : '#005f73' }}>
@@ -686,5 +685,5 @@ export function ThemeConfigPage() {
         </NeonCard>
       </div>
     </div>
-  )
+  );
 }

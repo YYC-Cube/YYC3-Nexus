@@ -11,14 +11,14 @@
  * @tags settings,skills,custom
  */
 
-import { Zap } from 'lucide-react'
+import { Zap } from 'lucide-react';
 
-import { useSettingsStore } from '../../stores/useSettingsStore'
-import { useThemeColors } from '../hooks/use-theme-colors'
+import { useSettingsStore } from '../../stores/useSettingsStore';
+import { useThemeColors } from '../hooks/use-theme-colors';
 
 export function SkillsSettingsPanel() {
-  const tc = useThemeColors()
-  const { settings } = useSettingsStore()
+  const tc = useThemeColors();
+  const { settings } = useSettingsStore();
 
   return (
     <div className="space-y-6">
@@ -36,5 +36,5 @@ export function SkillsSettingsPanel() {
         <p style={{ color: tc.textMuted }}>技能管理面板</p>
       </div>
     </div>
-  )
+  );
 }

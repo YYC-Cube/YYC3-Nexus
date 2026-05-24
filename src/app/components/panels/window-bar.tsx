@@ -25,14 +25,12 @@ import {
   Settings,
   Terminal,
   X,
-} from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useRef, useState } from 'react'
-
-import { useWindowStore } from '../services/multi-instance/window-manager'
-
-import type { ThemeColors } from '../hooks/use-theme-colors'
-import type { WindowType } from '../services/multi-instance/types'
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useRef, useState } from 'react';
+import type { ThemeColors } from '../hooks/use-theme-colors';
+import type { WindowType } from '../services/multi-instance/types';
+import { useWindowStore } from '../services/multi-instance/window-manager';
 
 const WINDOW_TYPE_ICONS: Record<
   WindowType,
@@ -44,7 +42,7 @@ const WINDOW_TYPE_ICONS: Record<
   terminal: { icon: Terminal, color: '#a78bfa', label: '终端' },
   'ai-chat': { icon: Bot, color: '#ec4899', label: 'AI 对话' },
   settings: { icon: Settings, color: '#6b7280', label: '设置' },
-}
+};
 
 export function WindowBar({ tc }: { tc: ThemeColors }) {
   const {
@@ -56,75 +54,75 @@ export function WindowBar({ tc }: { tc: ThemeColors }) {
     minimizeWindow,
     restoreWindow,
     reorderWindows,
-  } = useWindowStore()
-  const [showNewMenu, setShowNewMenu] = useState(false)
+  } = useWindowStore();
+  const [showNewMenu, setShowNewMenu] = useState(false);
 
   // Drag state
-  const [dragIndex, setDragIndex] = useState<number | null>(null)
-  const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null)
-  const dragNodeRef = useRef<HTMLDivElement | null>(null)
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
+  const dragNodeRef = useRef<HTMLDivElement | null>(null);
 
   const handleCreateWindow = (type: WindowType) => {
-    const config = WINDOW_TYPE_ICONS[type]
-    createWindow(type, { title: `YYC³ - ${config.label}` })
-    setShowNewMenu(false)
-  }
+    const config = WINDOW_TYPE_ICONS[type];
+    createWindow(type, { title: `YYC³ - ${config.label}` });
+    setShowNewMenu(false);
+  };
 
   // --- Native HTML5 Drag & Drop Handlers ---
   const handleDragStart = useCallback((e: React.DragEvent<HTMLDivElement>, index: number) => {
-    setDragIndex(index)
-    dragNodeRef.current = e.currentTarget
-    e.dataTransfer.effectAllowed = 'move'
-    e.dataTransfer.setData('text/plain', String(index))
+    setDragIndex(index);
+    dragNodeRef.current = e.currentTarget;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(index));
     // Semi-transparent drag feedback
     requestAnimationFrame(() => {
       if (dragNodeRef.current) {
-        dragNodeRef.current.style.opacity = '0.4'
+        dragNodeRef.current.style.opacity = '0.4';
       }
-    })
-  }, [])
+    });
+  }, []);
 
   const handleDragOver = useCallback(
     (e: React.DragEvent<HTMLDivElement>, index: number) => {
-      e.preventDefault()
-      e.dataTransfer.dropEffect = 'move'
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
       if (dragIndex !== null && dragIndex !== index) {
-        setDropTargetIndex(index)
+        setDropTargetIndex(index);
       }
     },
     [dragIndex],
-  )
+  );
 
   const handleDragEnter = useCallback(
     (e: React.DragEvent<HTMLDivElement>, index: number) => {
-      e.preventDefault()
+      e.preventDefault();
       if (dragIndex !== null && dragIndex !== index) {
-        setDropTargetIndex(index)
+        setDropTargetIndex(index);
       }
     },
     [dragIndex],
-  )
+  );
 
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>, toIndex: number) => {
-      e.preventDefault()
+      e.preventDefault();
       if (dragIndex !== null && dragIndex !== toIndex) {
-        reorderWindows(dragIndex, toIndex)
+        reorderWindows(dragIndex, toIndex);
       }
-      setDragIndex(null)
-      setDropTargetIndex(null)
+      setDragIndex(null);
+      setDropTargetIndex(null);
     },
     [dragIndex, reorderWindows],
-  )
+  );
 
   const handleDragEnd = useCallback(() => {
     if (dragNodeRef.current) {
-      dragNodeRef.current.style.opacity = '1'
+      dragNodeRef.current.style.opacity = '1';
     }
-    setDragIndex(null)
-    setDropTargetIndex(null)
-    dragNodeRef.current = null
-  }, [])
+    setDragIndex(null);
+    setDropTargetIndex(null);
+    dragNodeRef.current = null;
+  }, []);
 
   if (instances.length === 0) {
     return (
@@ -140,7 +138,7 @@ export function WindowBar({ tc }: { tc: ThemeColors }) {
           <Plus className="w-3 h-3" /> 新建窗口
         </button>
       </div>
-    )
+    );
   }
 
   return (
@@ -150,20 +148,20 @@ export function WindowBar({ tc }: { tc: ThemeColors }) {
     >
       {/* Window tabs with native HTML5 drag-and-drop */}
       {instances.map((instance, index) => {
-        const isActive = instance.windowId === activeInstanceId
-        const cfg = WINDOW_TYPE_ICONS[instance.windowType] ?? WINDOW_TYPE_ICONS.main
-        const Icon = cfg.icon
-        const isDraggedOver = dropTargetIndex === index && dragIndex !== index
-        const isBeingDragged = dragIndex === index
+        const isActive = instance.windowId === activeInstanceId;
+        const cfg = WINDOW_TYPE_ICONS[instance.windowType] ?? WINDOW_TYPE_ICONS.main;
+        const Icon = cfg.icon;
+        const isDraggedOver = dropTargetIndex === index && dragIndex !== index;
+        const isBeingDragged = dragIndex === index;
 
         return (
           <div
             key={instance.windowId}
             draggable
-            onDragStart={(e) => handleDragStart(e, index)}
-            onDragOver={(e) => handleDragOver(e, index)}
-            onDragEnter={(e) => handleDragEnter(e, index)}
-            onDrop={(e) => handleDrop(e, index)}
+            onDragStart={e => handleDragStart(e, index)}
+            onDragOver={e => handleDragOver(e, index)}
+            onDragEnter={e => handleDragEnter(e, index)}
+            onDrop={e => handleDrop(e, index)}
             onDragEnd={handleDragEnd}
             className="flex items-center gap-1 px-2 py-1 rounded-md cursor-grab shrink-0 group transition-all active:cursor-grabbing select-none"
             style={{
@@ -198,9 +196,9 @@ export function WindowBar({ tc }: { tc: ThemeColors }) {
             </span>
             {instance.isMinimized && (
               <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  restoreWindow(instance.windowId)
+                onClick={e => {
+                  e.stopPropagation();
+                  restoreWindow(instance.windowId);
                 }}
                 className="opacity-0 group-hover:opacity-100 transition-opacity"
               >
@@ -209,9 +207,9 @@ export function WindowBar({ tc }: { tc: ThemeColors }) {
             )}
             {!instance.isMinimized && instances.length > 1 && (
               <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  minimizeWindow(instance.windowId)
+                onClick={e => {
+                  e.stopPropagation();
+                  minimizeWindow(instance.windowId);
                 }}
                 className="opacity-0 group-hover:opacity-100 transition-opacity"
               >
@@ -220,9 +218,9 @@ export function WindowBar({ tc }: { tc: ThemeColors }) {
             )}
             {!instance.isMain && (
               <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  closeWindow(instance.windowId)
+                onClick={e => {
+                  e.stopPropagation();
+                  closeWindow(instance.windowId);
                 }}
                 className="opacity-0 group-hover:opacity-100 transition-opacity"
               >
@@ -230,7 +228,7 @@ export function WindowBar({ tc }: { tc: ThemeColors }) {
               </button>
             )}
           </div>
-        )
+        );
       })}
 
       {/* New window button */}
@@ -284,5 +282,5 @@ export function WindowBar({ tc }: { tc: ThemeColors }) {
         {instances.length} {instances.length === 1 ? '个窗口' : '个窗口'}
       </span>
     </div>
-  )
+  );
 }

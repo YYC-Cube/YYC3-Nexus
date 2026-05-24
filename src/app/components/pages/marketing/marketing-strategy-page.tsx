@@ -9,11 +9,11 @@ import {
   TrendingUp,
   Users,
   Zap,
-} from 'lucide-react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { useState } from 'react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 营销方案策划 - Marketing Strategy Planning
@@ -21,21 +21,21 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 interface StrategyPlan {
-  id: string
-  name: string
-  objective: string
-  status: 'draft' | 'approved' | 'active' | 'completed'
-  budget: number
-  startDate: string
-  endDate: string
-  channels: string[]
-  kpis: { name: string; target: number; current: number }[]
-  aiScore: number
+  id: string;
+  name: string;
+  objective: string;
+  status: 'draft' | 'approved' | 'active' | 'completed';
+  budget: number;
+  startDate: string;
+  endDate: string;
+  channels: string[];
+  kpis: { name: string; target: number; current: number }[];
+  aiScore: number;
 }
 
 export function MarketingStrategyPage() {
-  const tc = useThemeColors()
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
+  const tc = useThemeColors();
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
   const strategies: StrategyPlan[] = [
     {
@@ -86,26 +86,26 @@ export function MarketingStrategyPage() {
       ],
       aiScore: 85,
     },
-  ]
+  ];
 
   const getStatusConfig = (status: StrategyPlan['status']) => {
     switch (status) {
       case 'draft':
-        return { label: '草稿', color: tc.textMuted, icon: FileText }
+        return { label: '草稿', color: tc.textMuted, icon: FileText };
       case 'approved':
-        return { label: '已批准', color: tc.success, icon: CheckCircle2 }
+        return { label: '已批准', color: tc.success, icon: CheckCircle2 };
       case 'active':
-        return { label: '执行中', color: tc.primary, icon: Clock }
+        return { label: '执行中', color: tc.primary, icon: Clock };
       case 'completed':
-        return { label: '已完成', color: tc.secondary, icon: CheckCircle2 }
+        return { label: '已完成', color: tc.secondary, icon: CheckCircle2 };
     }
-  }
+  };
 
   const aiInsights = [
     { icon: Brain, text: '基于历史数据，建议提升抖音渠道投放比例至35%', score: 94 },
     { icon: TrendingUp, text: '周末投放CTR提升23%，建议增加预算配比', score: 88 },
     { icon: Users, text: '目标人群画像分析完成，精准定向可提升ROI 40%', score: 91 },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -126,13 +126,13 @@ export function MarketingStrategyPage() {
             color: tc.textPrimary,
             boxShadow: tc.shadowMd,
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = tc.hoverTransform
-            e.currentTarget.style.boxShadow = tc.shadowGlow
+          onMouseEnter={e => {
+            e.currentTarget.style.transform = tc.hoverTransform;
+            e.currentTarget.style.boxShadow = tc.shadowGlow;
           }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)'
-            e.currentTarget.style.boxShadow = tc.shadowMd
+          onMouseLeave={e => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = tc.shadowMd;
           }}
         >
           <Plus className="w-5 h-5" />
@@ -182,9 +182,9 @@ export function MarketingStrategyPage() {
 
       {/* 方案列表 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {strategies.map((plan) => {
-          const statusConfig = getStatusConfig(plan.status)
-          const StatusIcon = statusConfig.icon
+        {strategies.map(plan => {
+          const statusConfig = getStatusConfig(plan.status);
+          const StatusIcon = statusConfig.icon;
 
           return (
             <NeonCard
@@ -255,7 +255,7 @@ export function MarketingStrategyPage() {
                   推广渠道
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {plan.channels.map((channel) => (
+                  {plan.channels.map(channel => (
                     <span
                       key={channel}
                       className="px-2 py-1 rounded text-xs font-medium"
@@ -276,8 +276,8 @@ export function MarketingStrategyPage() {
                 <p className="text-xs mb-2" style={{ color: tc.textMuted }}>
                   KPI达成进度
                 </p>
-                {plan.kpis.slice(0, 2).map((kpi) => {
-                  const progress = plan.status === 'draft' ? 0 : (kpi.current / kpi.target) * 100
+                {plan.kpis.slice(0, 2).map(kpi => {
+                  const progress = plan.status === 'draft' ? 0 : (kpi.current / kpi.target) * 100;
                   return (
                     <div key={kpi.name}>
                       <div className="flex items-center justify-between mb-1">
@@ -302,7 +302,7 @@ export function MarketingStrategyPage() {
                         />
                       </div>
                     </div>
-                  )
+                  );
                 })}
               </div>
 
@@ -314,22 +314,22 @@ export function MarketingStrategyPage() {
                   color: tc.primary,
                   border: `1px solid ${tc.borderSubtle}`,
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = tc.alpha(tc.primary, 0.2)
-                  e.currentTarget.style.borderColor = tc.primary
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = tc.alpha(tc.primary, 0.2);
+                  e.currentTarget.style.borderColor = tc.primary;
                 }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = tc.alpha(tc.primary, 0.1)
-                  e.currentTarget.style.borderColor = tc.borderSubtle
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = tc.alpha(tc.primary, 0.1);
+                  e.currentTarget.style.borderColor = tc.borderSubtle;
                 }}
               >
                 查看详情
                 <ArrowRight className="w-4 h-4" />
               </button>
             </NeonCard>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

@@ -1,16 +1,7 @@
-import {
-  Brain,
-  Pause,
-  Play,
-  Rocket,
-  Sparkles,
-  TrendingUp,
-  Users,
-  Zap,
-} from 'lucide-react'
+import { Brain, Pause, Play, Rocket, Sparkles, TrendingUp, Users, Zap } from 'lucide-react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 智能营销引擎 - Smart Marketing Engine
@@ -18,14 +9,14 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 export function SmartMarketingEnginePage() {
-  const tc = useThemeColors()
+  const tc = useThemeColors();
 
   const engineStats = [
     { label: '自动化任务', value: '128', change: '+32', icon: Rocket, color: tc.primary },
     { label: '优化建议', value: '45', change: '+12', icon: Brain, color: tc.secondary },
     { label: 'ROI提升', value: '+42%', change: '+8%', icon: TrendingUp, color: tc.success },
     { label: '覆盖用户', value: '2.8M', change: '+18%', icon: Users, color: tc.accent },
-  ]
+  ];
 
   const automationTasks = [
     {
@@ -60,7 +51,7 @@ export function SmartMarketingEnginePage() {
       target: 0,
       reached: 0,
     },
-  ]
+  ];
 
   const aiRecommendations = [
     {
@@ -81,7 +72,7 @@ export function SmartMarketingEnginePage() {
       description: '晚间20:00-22:00转化率提升40%，建议增加预算',
       expectedROI: '+22%',
     },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -104,8 +95,8 @@ export function SmartMarketingEnginePage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {engineStats.map((stat) => {
-          const Icon = stat.icon
+        {engineStats.map(stat => {
+          const Icon = stat.icon;
           return (
             <NeonCard key={stat.label} className="p-6">
               <div className="flex items-start justify-between mb-4">
@@ -124,7 +115,7 @@ export function SmartMarketingEnginePage() {
                 {stat.value}
               </p>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
@@ -181,7 +172,7 @@ export function SmartMarketingEnginePage() {
           自动化任务
         </h2>
         <div className="space-y-4">
-          {automationTasks.map((task) => (
+          {automationTasks.map(task => (
             <div
               key={task.id}
               className="p-4 rounded-lg"
@@ -248,5 +239,5 @@ export function SmartMarketingEnginePage() {
         </div>
       </NeonCard>
     </div>
-  )
+  );
 }

@@ -1,3 +1,4 @@
+import type { LucideIcon } from 'lucide-react';
 import {
   BookOpen,
   Brain,
@@ -26,15 +27,12 @@ import {
   UserPlus,
   Users,
   X,
-} from 'lucide-react'
-import { memo, useCallback, useMemo, useState } from 'react'
-
-import { useApp } from '../../context/app-context'
-import { type SharedContact, useContacts } from '../../context/contacts-context'
-import { useI18n } from '../../context/i18n-context'
-import { useThemeColors } from '../../hooks/use-theme-colors'
-
-import type { LucideIcon } from 'lucide-react'
+} from 'lucide-react';
+import { memo, useCallback, useMemo, useState } from 'react';
+import { useApp } from '../../context/app-context';
+import { type SharedContact, useContacts } from '../../context/contacts-context';
+import { useI18n } from '../../context/i18n-context';
+import type { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 号码簿 — Contact Book
@@ -44,19 +42,23 @@ import type { LucideIcon } from 'lucide-react'
 
 // Re-export Contact type alias for backward compat
 /** Type alias re-exporting {@link SharedContact} for backward compatibility. */
-export type Contact = SharedContact
+export type Contact = SharedContact;
 
 // Theme-aware stage metadata - colors are now token keys
 const _STAGE_META_KEYS: Record<
   string,
-  { icon: LucideIcon; colorKey: keyof ReturnType<typeof useThemeColors>; sublabel: string }
+  {
+    icon: LucideIcon;
+    colorKey: keyof ReturnType<typeof useThemeColors>;
+    sublabel: string;
+  }
 > = {
   获客: { icon: Megaphone, colorKey: 'primary', sublabel: 'Acquisition' },
   转化: { icon: Target, colorKey: 'secondary', sublabel: 'Conversion' },
   成交: { icon: Handshake, colorKey: 'accent', sublabel: 'Closing' },
   服务: { icon: HeartHandshake, colorKey: 'success', sublabel: 'Service' },
   忠诚: { icon: Crown, colorKey: 'muted', sublabel: 'Loyalty' },
-}
+};
 
 // Legacy static colors for backward compatibility (will be mapped by theme)
 const STAGE_META: Record<string, { icon: LucideIcon; color: string; sublabel: string }> = {
@@ -65,7 +67,7 @@ const STAGE_META: Record<string, { icon: LucideIcon; color: string; sublabel: st
   成交: { icon: Handshake, color: '#00ffcc', sublabel: 'Closing' },
   服务: { icon: HeartHandshake, color: '#00ffc8', sublabel: 'Service' },
   忠诚: { icon: Crown, color: '#008b9d', sublabel: 'Loyalty' },
-}
+};
 
 const TAG_COLORS: Record<string, string> = {
   VIP: '#00d4ff',
@@ -77,20 +79,20 @@ const TAG_COLORS: Record<string, string> = {
   决策人: '#41ffdd',
   技术对接: '#00b4d8',
   战略合作: '#80ffea',
-}
+};
 
-const ALL_TAGS = Object.keys(TAG_COLORS)
+const ALL_TAGS = Object.keys(TAG_COLORS);
 
 // ---- AI Score Badge ----
 const AIScoreBadge = memo(function AIScoreBadge({
   score,
   t,
 }: {
-  score: number
-  t: (k: string) => string
+  score: number;
+  t: (k: string) => string;
 }) {
   const color =
-    score >= 90 ? '#00ffc8' : score >= 70 ? '#00ffcc' : score >= 50 ? '#008b9d' : '#005f73'
+    score >= 90 ? '#00ffc8' : score >= 70 ? '#00ffcc' : score >= 50 ? '#008b9d' : '#005f73';
   const label =
     score >= 90
       ? t('cb.excellent')
@@ -98,7 +100,7 @@ const AIScoreBadge = memo(function AIScoreBadge({
         ? t('cb.good')
         : score >= 50
           ? t('cb.average')
-          : t('cb.needImprovement')
+          : t('cb.needImprovement');
   return (
     <div className="flex items-center gap-1.5">
       <div className="relative w-8 h-8">
@@ -129,8 +131,8 @@ const AIScoreBadge = memo(function AIScoreBadge({
         {label}
       </span>
     </div>
-  )
-})
+  );
+});
 
 // ---- Risk Badge ----
 function RiskBadge({ level, t }: { level: string; t: (k: string) => string }) {
@@ -138,16 +140,20 @@ function RiskBadge({ level, t }: { level: string; t: (k: string) => string }) {
     low: { labelKey: 'cb.riskLow', color: '#00ffc8' },
     medium: { labelKey: 'cb.riskMedium', color: '#00ffcc' },
     high: { labelKey: 'cb.riskHigh', color: '#005f73' },
-  }
-  const m = meta[level] || meta.low
+  };
+  const m = meta[level] || meta.low;
   return (
     <span
       className="text-[9px] px-1.5 py-0.5 rounded-full"
-      style={{ background: `${m.color}15`, color: m.color, border: `1px solid ${m.color}30` }}
+      style={{
+        background: `${m.color}15`,
+        color: m.color,
+        border: `1px solid ${m.color}30`,
+      }}
     >
       {t(m.labelKey)}
     </span>
-  )
+  );
 }
 
 // ---- Add/Edit Contact Modal ----
@@ -157,12 +163,12 @@ function ContactFormModal({
   onClose,
   t,
 }: {
-  contact: SharedContact | null
-  onSave: (c: SharedContact) => void
-  onClose: () => void
-  t: (k: string) => string
+  contact: SharedContact | null;
+  onSave: (c: SharedContact) => void;
+  onClose: () => void;
+  t: (k: string) => string;
 }) {
-  const isEdit = !!contact
+  const isEdit = !!contact;
   const [form, setForm] = useState<SharedContact>(
     contact || {
       id: `c${Date.now()}`,
@@ -185,17 +191,17 @@ function ContactFormModal({
       notes: '',
       riskLevel: 'medium',
     },
-  )
+  );
 
   const updateField = (key: keyof SharedContact, value: string | number | string[]) =>
-    setForm((prev) => ({ ...prev, [key]: value }))
+    setForm(prev => ({ ...prev, [key]: value }));
 
   const toggleTag = (tag: string) => {
-    setForm((prev) => ({
+    setForm(prev => ({
       ...prev,
-      tags: prev.tags.includes(tag) ? prev.tags.filter((t) => t !== tag) : [...prev.tags, tag],
-    }))
-  }
+      tags: prev.tags.includes(tag) ? prev.tags.filter(t => t !== tag) : [...prev.tags, tag],
+    }));
+  };
 
   return (
     <div
@@ -220,12 +226,19 @@ function ContactFormModal({
         <div className="flex items-center justify-between mb-5">
           <h3
             className="text-sm tracking-wider"
-            style={{ color: '#00f0ff', textShadow: '0 0 10px rgba(0,240,255,0.5)' }}
+            style={{
+              color: '#00f0ff',
+              textShadow: '0 0 10px rgba(0,240,255,0.5)',
+            }}
           >
             <UserPlus className="w-4 h-4 inline mr-2" />
             {isEdit ? t('cb.editContact') : t('cb.addContact')}
           </h3>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/5 transition-colors">
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 rounded-lg hover:bg-white/5 transition-colors"
+          >
             <X className="w-4 h-4 text-white/30" />
           </button>
         </div>
@@ -237,14 +250,14 @@ function ContactFormModal({
               <label className="text-[10px] text-white/30 mb-1 block">{t('cb.name')} *</label>
               <input
                 value={form.name}
-                onChange={(e) => updateField('name', e.target.value)}
+                onChange={e => updateField('name', e.target.value)}
                 className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none transition-all"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(0,240,255,0.15)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+                onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
                 placeholder={t('cb.name')}
               />
             </div>
@@ -252,14 +265,14 @@ function ContactFormModal({
               <label className="text-[10px] text-white/30 mb-1 block">{t('cb.phone')} *</label>
               <input
                 value={form.phone}
-                onChange={(e) => updateField('phone', e.target.value)}
+                onChange={e => updateField('phone', e.target.value)}
                 className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none transition-all"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(0,240,255,0.15)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+                onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
                 placeholder="138-0000-0000"
               />
             </div>
@@ -271,14 +284,14 @@ function ContactFormModal({
               <label className="text-[10px] text-white/30 mb-1 block">{t('cb.email')}</label>
               <input
                 value={form.email}
-                onChange={(e) => updateField('email', e.target.value)}
+                onChange={e => updateField('email', e.target.value)}
                 className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none transition-all"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(0,240,255,0.15)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+                onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
                 placeholder="email@example.com"
               />
             </div>
@@ -286,14 +299,14 @@ function ContactFormModal({
               <label className="text-[10px] text-white/30 mb-1 block">{t('cb.company')}</label>
               <input
                 value={form.company}
-                onChange={(e) => updateField('company', e.target.value)}
+                onChange={e => updateField('company', e.target.value)}
                 className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none transition-all"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(0,240,255,0.15)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+                onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
                 placeholder={t('cb.company')}
               />
             </div>
@@ -305,14 +318,14 @@ function ContactFormModal({
               <label className="text-[10px] text-white/30 mb-1 block">{t('cb.position')}</label>
               <input
                 value={form.position}
-                onChange={(e) => updateField('position', e.target.value)}
+                onChange={e => updateField('position', e.target.value)}
                 className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none transition-all"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(0,240,255,0.15)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+                onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
                 placeholder={t('cb.position')}
               />
             </div>
@@ -320,7 +333,7 @@ function ContactFormModal({
               <label className="text-[10px] text-white/30 mb-1 block">{t('cb.source')}</label>
               <select
                 value={form.source}
-                onChange={(e) => updateField('source', e.target.value)}
+                onChange={e => updateField('source', e.target.value)}
                 className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none transition-all"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
@@ -337,7 +350,7 @@ function ContactFormModal({
                   '合作伙伴',
                   '行业会议',
                   '线下活动',
-                ].map((s) => (
+                ].map(s => (
                   <option key={s} value={s} style={{ background: '#0a0a0a' }}>
                     {s}
                   </option>
@@ -350,9 +363,9 @@ function ContactFormModal({
           <div>
             <label className="text-[10px] text-white/30 mb-2 block">{t('cb.lifecycleStage')}</label>
             <div className="flex gap-2">
-              {(['获客', '转化', '成交', '服务', '忠诚'] as const).map((stage) => {
-                const meta = STAGE_META[stage]
-                const active = form.stage === stage
+              {(['获客', '转化', '成交', '服务', '忠诚'] as const).map(stage => {
+                const meta = STAGE_META[stage];
+                const active = form.stage === stage;
                 return (
                   <button
                     key={stage}
@@ -367,7 +380,7 @@ function ContactFormModal({
                   >
                     {stage}
                   </button>
-                )
+                );
               })}
             </div>
           </div>
@@ -376,9 +389,9 @@ function ContactFormModal({
           <div>
             <label className="text-[10px] text-white/30 mb-2 block">{t('cb.tags')}</label>
             <div className="flex flex-wrap gap-1.5">
-              {ALL_TAGS.map((tag) => {
-                const active = form.tags.includes(tag)
-                const color = TAG_COLORS[tag] || '#00f0ff'
+              {ALL_TAGS.map(tag => {
+                const active = form.tags.includes(tag);
+                const color = TAG_COLORS[tag] || '#00f0ff';
                 return (
                   <button
                     key={tag}
@@ -393,7 +406,7 @@ function ContactFormModal({
                     {active && <Check className="w-2.5 h-2.5 inline mr-0.5" />}
                     {tag}
                   </button>
-                )
+                );
               })}
             </div>
           </div>
@@ -403,14 +416,14 @@ function ContactFormModal({
             <label className="text-[10px] text-white/30 mb-1 block">{t('cb.address')}</label>
             <input
               value={form.address}
-              onChange={(e) => updateField('address', e.target.value)}
+              onChange={e => updateField('address', e.target.value)}
               className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none transition-all"
               style={{
                 background: 'rgba(255,255,255,0.04)',
                 border: '1px solid rgba(0,240,255,0.15)',
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-              onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+              onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+              onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
               placeholder={t('cb.address')}
             />
           </div>
@@ -420,15 +433,15 @@ function ContactFormModal({
             <label className="text-[10px] text-white/30 mb-1 block">{t('cb.notes')}</label>
             <textarea
               value={form.notes}
-              onChange={(e) => updateField('notes', e.target.value)}
+              onChange={e => updateField('notes', e.target.value)}
               rows={2}
               className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none resize-none transition-all"
               style={{
                 background: 'rgba(255,255,255,0.04)',
                 border: '1px solid rgba(0,240,255,0.15)',
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-              onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+              onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+              onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
               placeholder={t('cb.notes')}
             />
           </div>
@@ -448,7 +461,7 @@ function ContactFormModal({
           </button>
           <button
             onClick={() => {
-              if (form.name && form.phone) onSave(form)
+              if (form.name && form.phone) onSave(form);
             }}
             className="px-5 py-2 rounded-xl text-xs transition-all duration-300"
             style={{
@@ -465,7 +478,7 @@ function ContactFormModal({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ---- Contact Detail Panel ----
@@ -478,15 +491,15 @@ function ContactDetailPanel({
   onStageChange,
   t,
 }: {
-  contact: SharedContact
-  onClose: () => void
-  onEdit: () => void
-  onCall: () => void
-  onAIEnhance: () => void
-  onStageChange: (stage: SharedContact['stage']) => void
-  t: (k: string) => string
+  contact: SharedContact;
+  onClose: () => void;
+  onEdit: () => void;
+  onCall: () => void;
+  onAIEnhance: () => void;
+  onStageChange: (stage: SharedContact['stage']) => void;
+  t: (k: string) => string;
 }) {
-  const stageMeta = STAGE_META[contact.stage]
+  const stageMeta = STAGE_META[contact.stage];
 
   return (
     <div
@@ -565,7 +578,10 @@ function ContactDetailPanel({
           <button
             onClick={onAIEnhance}
             className="text-[9px] px-2 py-0.5 rounded-full transition-all hover:bg-[#00d4ff]/10"
-            style={{ color: '#00d4ff', border: '1px solid rgba(0,212,255,0.3)' }}
+            style={{
+              color: '#00d4ff',
+              border: '1px solid rgba(0,212,255,0.3)',
+            }}
           >
             <Sparkles className="w-2.5 h-2.5 inline mr-0.5" />
             {t('cb.aiEnhance')}
@@ -613,13 +629,13 @@ function ContactDetailPanel({
             { icon: Building2, label: contact.company, color: '#00d4ff' },
             { icon: MapPin, label: contact.address, color: '#00ffc8' },
           ].map((item, i) => {
-            const Icon = item.icon
+            const Icon = item.icon;
             return (
               <div key={i} className="flex items-center gap-2.5">
                 <Icon className="w-3.5 h-3.5 shrink-0" style={{ color: `${item.color}60` }} />
                 <span className="text-[11px] text-white/50 truncate">{item.label || '-'}</span>
               </div>
-            )
+            );
           })}
         </div>
       </div>
@@ -631,14 +647,26 @@ function ContactDetailPanel({
         </h4>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { label: t('cb.callCount'), value: contact.totalCalls.toString(), color: '#00ffcc' },
+            {
+              label: t('cb.callCount'),
+              value: contact.totalCalls.toString(),
+              color: '#00ffcc',
+            },
             {
               label: t('cb.customerValue'),
               value: `¥${(contact.totalValue / 1000).toFixed(0)}K`,
               color: '#00ffc8',
             },
-            { label: t('cb.lastContact'), value: contact.lastContact, color: '#00f0ff' },
-            { label: t('cb.createdDate'), value: contact.createdAt, color: '#00d4ff' },
+            {
+              label: t('cb.lastContact'),
+              value: contact.lastContact,
+              color: '#00f0ff',
+            },
+            {
+              label: t('cb.createdDate'),
+              value: contact.createdAt,
+              color: '#00d4ff',
+            },
           ].map((s, i) => (
             <div
               key={i}
@@ -661,7 +689,7 @@ function ContactDetailPanel({
       <div className="p-5 border-b" style={{ borderColor: 'rgba(0,240,255,0.08)' }}>
         <h4 className="text-[10px] text-white/30 uppercase tracking-wider mb-3">{t('cb.tags')}</h4>
         <div className="flex flex-wrap gap-1.5">
-          {contact.tags.map((tag) => (
+          {contact.tags.map(tag => (
             <span
               key={tag}
               className="text-[9px] px-2 py-0.5 rounded-full"
@@ -684,10 +712,10 @@ function ContactDetailPanel({
         </h4>
         <div className="flex gap-1">
           {(['获客', '转化', '成交', '服务', '忠诚'] as const).map((stage, i) => {
-            const meta = STAGE_META[stage]
-            const isActive = contact.stage === stage
-            const stageIdx = ['获客', '转化', '成交', '服务', '忠诚'].indexOf(contact.stage)
-            const isPast = i < stageIdx
+            const meta = STAGE_META[stage];
+            const isActive = contact.stage === stage;
+            const stageIdx = ['获客', '转化', '成交', '服务', '忠诚'].indexOf(contact.stage);
+            const isPast = i < stageIdx;
             return (
               <button
                 key={stage}
@@ -710,7 +738,7 @@ function ContactDetailPanel({
               >
                 {stage}
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -723,7 +751,7 @@ function ContactDetailPanel({
         </p>
       </div>
     </div>
-  )
+  );
 }
 
 // ---- Main Page ----
@@ -733,174 +761,176 @@ function ContactDetailPanel({
  * customer cards, health scores, and stage transition controls.
  */
 export function ContactBookPage() {
-  const { setActivePage } = useApp()
-  const { t } = useI18n()
+  const { setActivePage } = useApp();
+  const { t } = useI18n();
   const { contacts, addContact, updateContact, deleteContact, toggleStar, updateStage } =
-    useContacts()
+    useContacts();
 
-  const [searchQuery, setSearchQuery] = useState('')
-  const [filterStage, setFilterStage] = useState<string | null>(null)
-  const [filterTag, setFilterTag] = useState<string | null>(null)
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [showAddModal, setShowAddModal] = useState(false)
-  const [editContact, setEditContact] = useState<SharedContact | null>(null)
-  const [showFilters, setShowFilters] = useState(false)
-  const [sortBy, setSortBy] = useState<'name' | 'aiScore' | 'lastContact' | 'totalValue'>('aiScore')
-  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
-  const [aiEnhancing, setAiEnhancing] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStage, setFilterStage] = useState<string | null>(null);
+  const [filterTag, setFilterTag] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editContact, setEditContact] = useState<SharedContact | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState<'name' | 'aiScore' | 'lastContact' | 'totalValue'>(
+    'aiScore',
+  );
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+  const [aiEnhancing, setAiEnhancing] = useState<string | null>(null);
 
   const selectedContact = useMemo(
-    () => contacts.find((c) => c.id === selectedId) || null,
+    () => contacts.find(c => c.id === selectedId) || null,
     [contacts, selectedId],
-  )
+  );
 
   // Filtered + sorted contacts
   const filteredContacts = useMemo(() => {
-    let result = contacts
+    let result = contacts;
     if (searchQuery) {
-      const q = searchQuery.toLowerCase()
+      const q = searchQuery.toLowerCase();
       result = result.filter(
-        (c) =>
+        c =>
           c.name.toLowerCase().includes(q) ||
           c.company.toLowerCase().includes(q) ||
           c.phone.includes(q) ||
           c.email.toLowerCase().includes(q) ||
-          c.tags.some((t) => t.toLowerCase().includes(q)),
-      )
+          c.tags.some(t => t.toLowerCase().includes(q)),
+      );
     }
-    if (filterStage) result = result.filter((c) => c.stage === filterStage)
-    if (filterTag) result = result.filter((c) => c.tags.includes(filterTag))
+    if (filterStage) result = result.filter(c => c.stage === filterStage);
+    if (filterTag) result = result.filter(c => c.tags.includes(filterTag));
 
     result = [...result].sort((a, b) => {
-      let va: number, vb: number
+      let va: number, vb: number;
       switch (sortBy) {
         case 'aiScore':
-          va = a.aiScore
-          vb = b.aiScore
-          break
+          va = a.aiScore;
+          vb = b.aiScore;
+          break;
         case 'totalValue':
-          va = a.totalValue
-          vb = b.totalValue
-          break
+          va = a.totalValue;
+          vb = b.totalValue;
+          break;
         case 'name':
-          return sortDir === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+          return sortDir === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
         default:
-          va = a.aiScore
-          vb = b.aiScore
+          va = a.aiScore;
+          vb = b.aiScore;
       }
-      return sortDir === 'asc' ? va - vb : vb - va
-    })
-    return result
-  }, [contacts, searchQuery, filterStage, filterTag, sortBy, sortDir])
+      return sortDir === 'asc' ? va - vb : vb - va;
+    });
+    return result;
+  }, [contacts, searchQuery, filterStage, filterTag, sortBy, sortDir]);
 
   // Stats
   const stats = useMemo(() => {
-    const total = contacts.length
-    const starred = contacts.filter((c) => c.starred).length
-    const avgAI = total > 0 ? Math.round(contacts.reduce((s, c) => s + c.aiScore, 0) / total) : 0
-    const totalValue = contacts.reduce((s, c) => s + c.totalValue, 0)
+    const total = contacts.length;
+    const starred = contacts.filter(c => c.starred).length;
+    const avgAI = total > 0 ? Math.round(contacts.reduce((s, c) => s + c.aiScore, 0) / total) : 0;
+    const totalValue = contacts.reduce((s, c) => s + c.totalValue, 0);
     const stageCount = Object.fromEntries(
-      (['获客', '转化', '成交', '服务', '忠诚'] as const).map((s) => [
+      (['获客', '转化', '成交', '服务', '忠诚'] as const).map(s => [
         s,
-        contacts.filter((c) => c.stage === s).length,
+        contacts.filter(c => c.stage === s).length,
       ]),
-    )
-    return { total, starred, avgAI, totalValue, stageCount }
-  }, [contacts])
+    );
+    return { total, starred, avgAI, totalValue, stageCount };
+  }, [contacts]);
 
   // Actions — now using shared context
   const handleSave = useCallback(
     (c: SharedContact) => {
-      const exists = contacts.find((p) => p.id === c.id)
+      const exists = contacts.find(p => p.id === c.id);
       if (exists) {
-        updateContact(c.id, c)
+        updateContact(c.id, c);
       } else {
-        addContact(c)
+        addContact(c);
       }
-      setShowAddModal(false)
-      setEditContact(null)
+      setShowAddModal(false);
+      setEditContact(null);
     },
     [contacts, addContact, updateContact],
-  )
+  );
 
   const handleDelete = useCallback(
     (id: string) => {
-      deleteContact(id)
-      if (selectedId === id) setSelectedId(null)
+      deleteContact(id);
+      if (selectedId === id) setSelectedId(null);
     },
     [selectedId, deleteContact],
-  )
+  );
 
   const handleToggleStar = useCallback(
     (id: string) => {
-      toggleStar(id)
+      toggleStar(id);
     },
     [toggleStar],
-  )
+  );
 
   const handleAIEnhance = useCallback(
     (id: string) => {
-      setAiEnhancing(id)
+      setAiEnhancing(id);
       setTimeout(() => {
-        const c = contacts.find((c) => c.id === id)
+        const c = contacts.find(c => c.id === id);
         if (c) {
-          const boost = Math.min(100, c.aiScore + Math.floor(Math.random() * 8) + 3)
+          const boost = Math.min(100, c.aiScore + Math.floor(Math.random() * 8) + 3);
           const newInsights = [
             ...c.aiInsights,
             `[AI提档] 综合评分提升至 ${boost}`,
             `[AI分析] ${new Date().toLocaleDateString('zh-CN')} 画像更新`,
-          ].slice(-4)
-          updateContact(id, { aiScore: boost, aiInsights: newInsights })
+          ].slice(-4);
+          updateContact(id, { aiScore: boost, aiInsights: newInsights });
         }
-        setAiEnhancing(null)
-      }, 1500)
+        setAiEnhancing(null);
+      }, 1500);
     },
     [contacts, updateContact],
-  )
+  );
 
   const handleStageChange = useCallback(
     (id: string, stage: SharedContact['stage']) => {
-      updateStage(id, stage)
+      updateStage(id, stage);
     },
     [updateStage],
-  )
+  );
 
   const handleExport = useCallback(() => {
-    const json = JSON.stringify(contacts, null, 2)
-    const blob = new Blob([json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `yyc3_contacts_${new Date().toISOString().slice(0, 10)}.json`
-    a.click()
-    URL.revokeObjectURL(url)
-  }, [contacts])
+    const json = JSON.stringify(contacts, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `yyc3_contacts_${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [contacts]);
 
   const handleImport = useCallback(() => {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = '.json'
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
     input.onchange = (e: Event) => {
-      const file = (e.target as HTMLInputElement)?.files?.[0]
-      if (!file) return
-      const reader = new FileReader()
-      reader.onload = (ev) => {
+      const file = (e.target as HTMLInputElement)?.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
         try {
-          const data = JSON.parse(ev.target?.result as string)
+          const data = JSON.parse(ev.target?.result as string);
           if (Array.isArray(data)) {
-            const ids = new Set(contacts.map((c) => c.id))
+            const ids = new Set(contacts.map(c => c.id));
             data
               .filter((c: Record<string, unknown>) => c.id && c.name && !ids.has(c.id as string))
-              .forEach((c: SharedContact) => addContact(c))
+              .forEach((c: SharedContact) => addContact(c));
           }
         } catch {
           /* */
         }
-      }
-      reader.readAsText(file)
-    }
-    input.click()
-  }, [contacts, addContact])
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  }, [contacts, addContact]);
 
   return (
     <div className="h-full flex" style={{ animation: 'spring-in 0.4s var(--spring-easing) both' }}>
@@ -912,7 +942,10 @@ export function ContactBookPage() {
             <div>
               <h2
                 className="tracking-wider flex items-center gap-3"
-                style={{ color: '#00f0ff', textShadow: '0 0 15px rgba(0,240,255,0.5)' }}
+                style={{
+                  color: '#00f0ff',
+                  textShadow: '0 0 15px rgba(0,240,255,0.5)',
+                }}
               >
                 <BookOpen className="w-6 h-6" />
                 {t('cb.title')}
@@ -944,8 +977,8 @@ export function ContactBookPage() {
               </button>
               <button
                 onClick={() => {
-                  setEditContact(null)
-                  setShowAddModal(true)
+                  setEditContact(null);
+                  setShowAddModal(true);
                 }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] transition-all duration-300"
                 style={{
@@ -988,32 +1021,41 @@ export function ContactBookPage() {
                 color: '#00ffc8',
               },
             ].map((m, i) => {
-              const Icon = m.icon
+              const Icon = m.icon;
               return (
                 <div
                   key={i}
                   className="rounded-xl p-3 border transition-all duration-300"
-                  style={{ background: 'rgba(10,10,10,0.5)', borderColor: `${m.color}20` }}
+                  style={{
+                    background: 'rgba(10,10,10,0.5)',
+                    borderColor: `${m.color}20`,
+                  }}
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-[9px] text-white/20 uppercase tracking-wider">{m.label}</p>
                       <p
                         className="text-lg tabular-nums mt-0.5"
-                        style={{ color: m.color, textShadow: `0 0 8px ${m.color}40` }}
+                        style={{
+                          color: m.color,
+                          textShadow: `0 0 8px ${m.color}40`,
+                        }}
                       >
                         {m.value}
                       </p>
                     </div>
                     <div
                       className="w-8 h-8 rounded-lg flex items-center justify-center"
-                      style={{ background: `${m.color}10`, border: `1px solid ${m.color}20` }}
+                      style={{
+                        background: `${m.color}10`,
+                        border: `1px solid ${m.color}20`,
+                      }}
                     >
                       <Icon className="w-4 h-4" style={{ color: `${m.color}70` }} />
                     </div>
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
 
@@ -1023,14 +1065,14 @@ export function ContactBookPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
               <input
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={e => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-2.5 rounded-xl text-sm text-white/70 outline-none transition-all"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(0,240,255,0.12)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.3)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.12)')}
+                onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.3)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.12)')}
                 placeholder={t('cb.searchPlaceholder')}
               />
             </div>
@@ -1053,10 +1095,10 @@ export function ContactBookPage() {
             {/* Sort */}
             <select
               value={`${sortBy}-${sortDir}`}
-              onChange={(e) => {
-                const [by, dir] = e.target.value.split('-')
-                setSortBy(by as any)
-                setSortDir(dir as any)
+              onChange={e => {
+                const [by, dir] = e.target.value.split('-');
+                setSortBy(by as unknown as typeof sortBy);
+                setSortDir(dir as unknown as typeof sortDir);
               }}
               className="px-3 py-2.5 rounded-xl text-[11px] text-white/40 outline-none"
               style={{
@@ -1102,8 +1144,8 @@ export function ContactBookPage() {
                 {(filterStage || filterTag) && (
                   <button
                     onClick={() => {
-                      setFilterStage(null)
-                      setFilterTag(null)
+                      setFilterStage(null);
+                      setFilterTag(null);
                     }}
                     className="text-[9px] text-[#00d4ff]/60 hover:text-[#00d4ff] transition-colors"
                   >
@@ -1115,9 +1157,9 @@ export function ContactBookPage() {
               <div className="mb-3">
                 <p className="text-[9px] text-white/20 mb-2">{t('cb.lifecycleStage')}</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {(['获客', '转化', '成交', '服务', '忠诚'] as const).map((stage) => {
-                    const meta = STAGE_META[stage]
-                    const active = filterStage === stage
+                  {(['获客', '转化', '成交', '服务', '忠诚'] as const).map(stage => {
+                    const meta = STAGE_META[stage];
+                    const active = filterStage === stage;
                     return (
                       <button
                         key={stage}
@@ -1134,7 +1176,7 @@ export function ContactBookPage() {
                           ({stats.stageCount[stage] || 0})
                         </span>
                       </button>
-                    )
+                    );
                   })}
                 </div>
               </div>
@@ -1142,9 +1184,9 @@ export function ContactBookPage() {
               <div>
                 <p className="text-[9px] text-white/20 mb-2">{t('cb.tags')}</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {ALL_TAGS.map((tag) => {
-                    const active = filterTag === tag
-                    const color = TAG_COLORS[tag]
+                  {ALL_TAGS.map(tag => {
+                    const active = filterTag === tag;
+                    const color = TAG_COLORS[tag];
                     return (
                       <button
                         key={tag}
@@ -1158,7 +1200,7 @@ export function ContactBookPage() {
                       >
                         {tag}
                       </button>
-                    )
+                    );
                   })}
                 </div>
               </div>
@@ -1173,9 +1215,9 @@ export function ContactBookPage() {
           </div>
           <div className="space-y-1.5">
             {filteredContacts.map((contact, i) => {
-              const stageMeta = STAGE_META[contact.stage]
-              const isSelected = selectedId === contact.id
-              const isEnhancing = aiEnhancing === contact.id
+              const stageMeta = STAGE_META[contact.stage];
+              const isSelected = selectedId === contact.id;
+              const isEnhancing = aiEnhancing === contact.id;
               return (
                 <div
                   key={contact.id}
@@ -1187,31 +1229,33 @@ export function ContactBookPage() {
                     boxShadow: isSelected ? '0 0 15px rgba(0,240,255,0.1)' : 'none',
                     animation: `spring-in 0.3s var(--spring-easing) ${i * 0.03}s both`,
                   }}
-                  onMouseEnter={(e) => {
+                  onMouseEnter={e => {
                     if (!isSelected) {
-                      e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)'
-                      e.currentTarget.style.background = 'rgba(0,240,255,0.03)'
+                      e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)';
+                      e.currentTarget.style.background = 'rgba(0,240,255,0.03)';
                     }
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={e => {
                     if (!isSelected) {
-                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.04)'
-                      e.currentTarget.style.background = 'rgba(10,10,10,0.4)'
+                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.04)';
+                      e.currentTarget.style.background = 'rgba(10,10,10,0.4)';
                     }
                   }}
                 >
                   {/* Star */}
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleToggleStar(contact.id)
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleToggleStar(contact.id);
                     }}
                     className="shrink-0 p-0.5 transition-colors"
                   >
                     {contact.starred ? (
                       <Star
                         className="w-4 h-4 text-[#00ffcc] fill-[#00ffcc]"
-                        style={{ filter: 'drop-shadow(0 0 4px rgba(0,255,204,0.4))' }}
+                        style={{
+                          filter: 'drop-shadow(0 0 4px rgba(0,255,204,0.4))',
+                        }}
                       />
                     ) : (
                       <StarOff className="w-4 h-4 text-white/10 group-hover:text-white/20 transition-colors" />
@@ -1233,7 +1277,7 @@ export function ContactBookPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="text-sm text-white/80 truncate">{contact.name}</p>
-                      {contact.tags.slice(0, 2).map((tag) => (
+                      {contact.tags.slice(0, 2).map(tag => (
                         <span
                           key={tag}
                           className="text-[8px] px-1.5 py-0.5 rounded-full hidden lg:inline-block"
@@ -1293,9 +1337,9 @@ export function ContactBookPage() {
                   {/* Actions */}
                   <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleAIEnhance(contact.id)
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleAIEnhance(contact.id);
                       }}
                       className="p-1.5 rounded-lg hover:bg-[#00d4ff]/10 transition-colors"
                       title={t('cb.aiEnhance')}
@@ -1307,10 +1351,10 @@ export function ContactBookPage() {
                       )}
                     </button>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setEditContact(contact)
-                        setShowAddModal(true)
+                      onClick={e => {
+                        e.stopPropagation();
+                        setEditContact(contact);
+                        setShowAddModal(true);
                       }}
                       className="p-1.5 rounded-lg hover:bg-white/5 transition-colors"
                       title={t('common.edit')}
@@ -1318,9 +1362,9 @@ export function ContactBookPage() {
                       <Edit3 className="w-3.5 h-3.5 text-white/20" />
                     </button>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleDelete(contact.id)
+                      onClick={e => {
+                        e.stopPropagation();
+                        handleDelete(contact.id);
                       }}
                       className="p-1.5 rounded-lg hover:bg-[#005f73]/10 transition-colors"
                       title={t('common.delete')}
@@ -1329,7 +1373,7 @@ export function ContactBookPage() {
                     </button>
                   </div>
                 </div>
-              )
+              );
             })}
 
             {filteredContacts.length === 0 && (
@@ -1350,12 +1394,12 @@ export function ContactBookPage() {
             contact={selectedContact}
             onClose={() => setSelectedId(null)}
             onEdit={() => {
-              setEditContact(selectedContact)
-              setShowAddModal(true)
+              setEditContact(selectedContact);
+              setShowAddModal(true);
             }}
             onCall={() => setActivePage('aicall')}
             onAIEnhance={() => handleAIEnhance(selectedContact.id)}
-            onStageChange={(stage) => handleStageChange(selectedContact.id, stage)}
+            onStageChange={stage => handleStageChange(selectedContact.id, stage)}
             t={t}
           />
         </div>
@@ -1367,12 +1411,12 @@ export function ContactBookPage() {
           contact={editContact}
           onSave={handleSave}
           onClose={() => {
-            setShowAddModal(false)
-            setEditContact(null)
+            setShowAddModal(false);
+            setEditContact(null);
           }}
           t={t}
         />
       )}
     </div>
-  )
+  );
 }

@@ -31,30 +31,30 @@ import {
   Sparkles,
   Trash2,
   X,
-} from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import type { ThemeColors } from '../hooks/use-theme-colors'
+import type { ThemeColors } from '../hooks/use-theme-colors';
 
 // ==========================================
 // Types
 // ==========================================
 
-type TaskStatus = 'todo' | 'in-progress' | 'review' | 'done' | 'blocked'
-type TaskPriority = 'critical' | 'high' | 'medium' | 'low'
+type TaskStatus = 'todo' | 'in-progress' | 'review' | 'done' | 'blocked';
+type TaskPriority = 'critical' | 'high' | 'medium' | 'low';
 
 interface MiniTask {
-  id: string
-  title: string
-  description?: string
-  status: TaskStatus
-  priority: TaskPriority
-  dueDate?: number
-  source?: string
-  isArchived?: boolean
-  createdAt: number
-  tags?: string[]
+  id: string;
+  title: string;
+  description?: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  dueDate?: number;
+  source?: string;
+  isArchived?: boolean;
+  createdAt: number;
+  tags?: string[];
 }
 
 // ==========================================
@@ -70,71 +70,71 @@ const STATUS_CFG: Record<
   review: { label: '审查', icon: Eye, color: '#8b5cf6', next: 'done' },
   done: { label: '完成', icon: CheckCircle2, color: '#22c55e', next: 'todo' },
   blocked: { label: '阻塞', icon: Ban, color: '#ef4444', next: 'todo' },
-}
+};
 
 const PRIORITY_CFG: Record<TaskPriority, { label: string; color: string; icon: typeof ArrowUp }> = {
   critical: { label: '紧急', color: '#ef4444', icon: AlertTriangle },
   high: { label: '高', color: '#f97316', icon: ArrowUp },
   medium: { label: '中', color: '#eab308', icon: ChevronRight },
   low: { label: '低', color: '#22c55e', icon: ArrowDown },
-}
+};
 
-const STORAGE_KEY = 'yyc3-task-board-storage'
+const STORAGE_KEY = 'yyc3-task-board-storage';
 
 // ==========================================
 // Component
 // ==========================================
 
 export function TaskManagerPanel({ tc }: { tc: ThemeColors }) {
-  const [tasks, setTasks] = useState<MiniTask[]>([])
-  const [filter, setFilter] = useState<string>('all')
-  const [showCreate, setShowCreate] = useState(false)
-  const [newTitle, setNewTitle] = useState('')
-  const [newPriority, setNewPriority] = useState<TaskPriority>('medium')
-  const [newDueDate, setNewDueDate] = useState('')
-  const [expandedTask, setExpandedTask] = useState<string | null>(null)
+  const [tasks, setTasks] = useState<MiniTask[]>([]);
+  const [filter, setFilter] = useState<string>('all');
+  const [showCreate, setShowCreate] = useState(false);
+  const [newTitle, setNewTitle] = useState('');
+  const [newPriority, setNewPriority] = useState<TaskPriority>('medium');
+  const [newDueDate, setNewDueDate] = useState('');
+  const [expandedTask, setExpandedTask] = useState<string | null>(null);
 
   // Sync from localStorage (cross-store with TaskBoardPage)
   const syncTasks = useCallback(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY)
+      const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw)
-        setTasks(parsed.state?.tasks ?? [])
+        const parsed = JSON.parse(raw);
+        setTasks(parsed.state?.tasks ?? []);
       }
     } catch {
       /* ignore */
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    syncTasks()
-    const handler = () => syncTasks()
-    window.addEventListener('storage', handler)
+    syncTasks();
+    const handler = () => syncTasks();
+    window.addEventListener('storage', handler);
     // Also poll periodically for same-tab updates
-    const interval = setInterval(syncTasks, 2000)
+    const interval = setInterval(syncTasks, 2000);
     return () => {
-      window.removeEventListener('storage', handler)
-      clearInterval(interval)
-    }
-  }, [syncTasks])
+      window.removeEventListener('storage', handler);
+      clearInterval(interval);
+    };
+  }, [syncTasks]);
 
   // Write back to localStorage
   const persistTasks = useCallback((updatedTasks: MiniTask[]) => {
-    setTasks(updatedTasks)
+    setTasks(updatedTasks);
     try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      const parsed = raw ? JSON.parse(raw) : { state: {} }
-      parsed.state = { ...parsed.state, tasks: updatedTasks }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed))
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : { state: {} };
+      parsed.state = { ...parsed.state, tasks: updatedTasks };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
     } catch {
       /* ignore */
     }
-  }, [])
+  }, []);
 
   // Create task
   const handleCreate = useCallback(() => {
-    if (!newTitle.trim()) return
+    if (!newTitle.trim()) return;
     const newTask: MiniTask = {
       id: crypto.randomUUID(),
       title: newTitle.trim(),
@@ -143,35 +143,35 @@ export function TaskManagerPanel({ tc }: { tc: ThemeColors }) {
       dueDate: newDueDate ? new Date(newDueDate).getTime() : undefined,
       source: 'workspace-panel',
       createdAt: Date.now(),
-    }
-    persistTasks([newTask, ...tasks])
-    setNewTitle('')
-    setNewDueDate('')
-    setShowCreate(false)
-  }, [newTitle, newPriority, newDueDate, tasks, persistTasks])
+    };
+    persistTasks([newTask, ...tasks]);
+    setNewTitle('');
+    setNewDueDate('');
+    setShowCreate(false);
+  }, [newTitle, newPriority, newDueDate, tasks, persistTasks]);
 
   // Toggle status
   const handleToggleStatus = useCallback(
     (taskId: string) => {
-      const updated = tasks.map((t) => {
+      const updated = tasks.map(t => {
         if (t.id === taskId) {
-          const cfg = STATUS_CFG[t.status]
-          return { ...t, status: cfg.next }
+          const cfg = STATUS_CFG[t.status];
+          return { ...t, status: cfg.next };
         }
-        return t
-      })
-      persistTasks(updated)
+        return t;
+      });
+      persistTasks(updated);
     },
     [tasks, persistTasks],
-  )
+  );
 
   // Delete task
   const handleDelete = useCallback(
     (taskId: string) => {
-      persistTasks(tasks.filter((t) => t.id !== taskId))
+      persistTasks(tasks.filter(t => t.id !== taskId));
     },
     [tasks, persistTasks],
-  )
+  );
 
   // AI Quick Infer — create mock tasks from context
   const handleAIInfer = useCallback(() => {
@@ -203,25 +203,25 @@ export function TaskManagerPanel({ tc }: { tc: ThemeColors }) {
         createdAt: Date.now(),
         tags: ['performance'],
       },
-    ]
-    persistTasks([...aiTasks, ...tasks])
-  }, [tasks, persistTasks])
+    ];
+    persistTasks([...aiTasks, ...tasks]);
+  }, [tasks, persistTasks]);
 
-  const activeTasks = useMemo(() => tasks.filter((t) => !t.isArchived), [tasks])
+  const activeTasks = useMemo(() => tasks.filter(t => !t.isArchived), [tasks]);
 
   const filtered = useMemo(() => {
-    let result = activeTasks
-    if (filter !== 'all') result = result.filter((t) => t.status === filter)
-    return result.slice(0, 30)
-  }, [activeTasks, filter])
+    let result = activeTasks;
+    if (filter !== 'all') result = result.filter(t => t.status === filter);
+    return result.slice(0, 30);
+  }, [activeTasks, filter]);
 
   const statusCounts = useMemo(() => {
-    const counts: Record<string, number> = {}
-    activeTasks.forEach((t) => {
-      counts[t.status] = (counts[t.status] ?? 0) + 1
-    })
-    return counts
-  }, [activeTasks])
+    const counts: Record<string, number> = {};
+    activeTasks.forEach(t => {
+      counts[t.status] = (counts[t.status] ?? 0) + 1;
+    });
+    return counts;
+  }, [activeTasks]);
 
   return (
     <div className="flex flex-col h-full">
@@ -275,12 +275,11 @@ export function TaskManagerPanel({ tc }: { tc: ThemeColors }) {
               <input
                 type="text"
                 value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
+                onChange={e => setNewTitle(e.target.value)}
                 placeholder="任务标题..."
-                autoFocus
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleCreate()
-                  if (e.key === 'Escape') setShowCreate(false)
+                onKeyDown={e => {
+                  if (e.key === 'Enter') handleCreate();
+                  if (e.key === 'Escape') setShowCreate(false);
                 }}
                 className="w-full text-[11px] px-2 py-1.5 rounded-lg border outline-none transition-all"
                 style={{
@@ -288,17 +287,17 @@ export function TaskManagerPanel({ tc }: { tc: ThemeColors }) {
                   borderColor: tc.borderDefault,
                   color: tc.textPrimary,
                 }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = `${tc.primary}50`
+                onFocus={e => {
+                  e.currentTarget.style.borderColor = `${tc.primary}50`;
                 }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = tc.borderDefault
+                onBlur={e => {
+                  e.currentTarget.style.borderColor = tc.borderDefault;
                 }}
               />
               <div className="flex items-center gap-2">
                 <select
                   value={newPriority}
-                  onChange={(e) => setNewPriority(e.target.value as TaskPriority)}
+                  onChange={e => setNewPriority(e.target.value as TaskPriority)}
                   className="text-[9px] px-1.5 py-1 rounded-lg border outline-none"
                   style={{
                     background: tc.bgInput,
@@ -317,7 +316,7 @@ export function TaskManagerPanel({ tc }: { tc: ThemeColors }) {
                 <input
                   type="date"
                   value={newDueDate}
-                  onChange={(e) => setNewDueDate(e.target.value)}
+                  onChange={e => setNewDueDate(e.target.value)}
                   className="text-[9px] px-1.5 py-1 rounded-lg border outline-none flex-1"
                   style={{
                     background: tc.bgInput,
@@ -379,12 +378,12 @@ export function TaskManagerPanel({ tc }: { tc: ThemeColors }) {
 
       {/* Task list */}
       <div className="flex-1 overflow-y-auto">
-        {filtered.map((task) => {
-          const sCfg = STATUS_CFG[task.status] ?? STATUS_CFG['todo']
-          const pCfg = PRIORITY_CFG[task.priority] ?? PRIORITY_CFG['medium']
-          const SIcon = sCfg.icon
-          const isOverdue = task.dueDate && task.dueDate < Date.now() && task.status !== 'done'
-          const isExpanded = expandedTask === task.id
+        {filtered.map(task => {
+          const sCfg = STATUS_CFG[task.status] ?? STATUS_CFG.todo;
+          const pCfg = PRIORITY_CFG[task.priority] ?? PRIORITY_CFG.medium;
+          const SIcon = sCfg.icon;
+          const isOverdue = task.dueDate && task.dueDate < Date.now() && task.status !== 'done';
+          const isExpanded = expandedTask === task.id;
           return (
             <div
               key={task.id}
@@ -488,10 +487,10 @@ export function TaskManagerPanel({ tc }: { tc: ThemeColors }) {
                             <button
                               key={key}
                               onClick={() => {
-                                const updated = tasks.map((t) =>
+                                const updated = tasks.map(t =>
                                   t.id === task.id ? { ...t, status: key as TaskStatus } : t,
-                                )
-                                persistTasks(updated)
+                                );
+                                persistTasks(updated);
                               }}
                               className="text-[8px] px-1.5 py-0.5 rounded transition-all"
                               style={{
@@ -510,7 +509,7 @@ export function TaskManagerPanel({ tc }: { tc: ThemeColors }) {
                 )}
               </AnimatePresence>
             </div>
-          )
+          );
         })}
         {filtered.length === 0 && (
           <div className="flex flex-col items-center justify-center py-8 opacity-40">
@@ -530,5 +529,5 @@ export function TaskManagerPanel({ tc }: { tc: ThemeColors }) {
         )}
       </div>
     </div>
-  )
+  );
 }

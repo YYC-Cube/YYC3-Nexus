@@ -24,15 +24,13 @@ import {
   Plus,
   RefreshCw,
   Trash2,
-} from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useEffect, useRef, useState } from 'react'
-
-import { formatFileSize, getFileIcon, getGitStatusStyle, MOCK_FILE_TREE } from './panel-helpers'
-import { usePanelStore } from './panel-store'
-
-import type { FileNode } from './panel-types'
-import type { ThemeColors } from '../hooks/use-theme-colors'
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { ThemeColors } from '../hooks/use-theme-colors';
+import { formatFileSize, getFileIcon, getGitStatusStyle, MOCK_FILE_TREE } from './panel-helpers';
+import { usePanelStore } from './panel-store';
+import type { FileNode } from './panel-types';
 
 export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
   const {
@@ -48,40 +46,40 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
     addFileNode,
     deleteFileNode,
     renameFileNode,
-  } = usePanelStore()
+  } = usePanelStore();
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number; node: FileNode } | null>(
     null,
-  )
-  const menuRef = useRef<HTMLDivElement>(null)
+  );
+  const menuRef = useRef<HTMLDivElement>(null);
   const [newItemDialog, setNewItemDialog] = useState<{
-    parentPath: string
-    type: 'file' | 'directory'
-  } | null>(null)
-  const [newItemName, setNewItemName] = useState('')
-  const [renamingPath, setRenamingPath] = useState<string | null>(null)
-  const [renameValue, setRenameValue] = useState('')
-  const [deleteConfirm, setDeleteConfirm] = useState<FileNode | null>(null)
+    parentPath: string;
+    type: 'file' | 'directory';
+  } | null>(null);
+  const [newItemName, setNewItemName] = useState('');
+  const [renamingPath, setRenamingPath] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState('');
+  const [deleteConfirm, setDeleteConfirm] = useState<FileNode | null>(null);
 
   useEffect(() => {
-    if (fileTree.length === 0) setFileTree(MOCK_FILE_TREE)
-  }, [fileTree.length, setFileTree])
+    if (fileTree.length === 0) setFileTree(MOCK_FILE_TREE);
+  }, [fileTree.length, setFileTree]);
 
-  const activeTree = fileTree.length > 0 ? fileTree : MOCK_FILE_TREE
+  const activeTree = fileTree.length > 0 ? fileTree : MOCK_FILE_TREE;
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setContextMenu(null)
-    }
-    if (contextMenu) document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [contextMenu])
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setContextMenu(null);
+    };
+    if (contextMenu) document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [contextMenu]);
 
   const handleFileClick = useCallback(
     (node: FileNode) => {
       if (node.type === 'directory') {
-        toggleFolder(node.id)
+        toggleFolder(node.id);
       } else {
-        selectFile(node.path)
+        selectFile(node.path);
         addRecentFile({
           id: node.id,
           name: node.name,
@@ -89,31 +87,31 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
           type: 'recent',
           lastAccessed: Date.now(),
           language: node.language,
-        })
+        });
       }
     },
     [toggleFolder, selectFile, addRecentFile],
-  )
+  );
 
   const handleContextMenu = useCallback((e: React.MouseEvent, node: FileNode) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setContextMenu({ x: e.clientX, y: e.clientY, node })
-  }, [])
+    e.preventDefault();
+    e.stopPropagation();
+    setContextMenu({ x: e.clientX, y: e.clientY, node });
+  }, []);
 
   const isFavorite = useCallback(
-    (path: string) => favoriteFiles.some((f) => f.path === path),
+    (path: string) => favoriteFiles.some(f => f.path === path),
     [favoriteFiles],
-  )
+  );
 
   const renderNode = useCallback(
     (node: FileNode, depth: number = 0): React.ReactNode => {
-      const isExpanded = expandedFolders.includes(node.id)
-      const isSelected = selectedFile === node.path
-      const gitStyle = getGitStatusStyle(node.gitStatus)
-      const fileIcon = node.type === 'file' ? getFileIcon(node.name) : null
-      const FolderIcon = isExpanded ? FolderOpen : Folder
-      const FileIconComp = fileIcon?.icon ?? File
+      const isExpanded = expandedFolders.includes(node.id);
+      const isSelected = selectedFile === node.path;
+      const gitStyle = getGitStatusStyle(node.gitStatus);
+      const fileIcon = node.type === 'file' ? getFileIcon(node.name) : null;
+      const FolderIcon = isExpanded ? FolderOpen : Folder;
+      const FileIconComp = fileIcon?.icon ?? File;
 
       return (
         <div key={node.id}>
@@ -125,7 +123,7 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
               color: isSelected ? tc.textPrimary : tc.textSecondary,
             }}
             onClick={() => handleFileClick(node)}
-            onContextMenu={(e) => handleContextMenu(e, node)}
+            onContextMenu={e => handleContextMenu(e, node)}
           >
             {node.type === 'directory' ? (
               <ChevronRight
@@ -148,24 +146,23 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
             )}
             {renamingPath === node.path ? (
               <input
-                autoFocus
                 value={renameValue}
-                onChange={(e) => setRenameValue(e.target.value)}
-                onKeyDown={(e) => {
+                onChange={e => setRenameValue(e.target.value)}
+                onKeyDown={e => {
                   if (e.key === 'Enter' && renameValue.trim()) {
-                    renameFileNode(node.path, renameValue.trim())
-                    setRenamingPath(null)
+                    renameFileNode(node.path, renameValue.trim());
+                    setRenamingPath(null);
                   }
-                  if (e.key === 'Escape') setRenamingPath(null)
+                  if (e.key === 'Escape') setRenamingPath(null);
                 }}
                 onBlur={() => {
                   if (renameValue.trim() && renameValue !== node.name)
-                    renameFileNode(node.path, renameValue.trim())
-                  setRenamingPath(null)
+                    renameFileNode(node.path, renameValue.trim());
+                  setRenamingPath(null);
                 }}
                 className="text-[11px] flex-1 px-1 py-0 rounded border outline-none min-w-0"
                 style={{ background: tc.bgInput, borderColor: tc.primary, color: tc.textPrimary }}
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
               />
             ) : (
               <span
@@ -197,10 +194,10 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
             )}
           </div>
           {node.type === 'directory' && isExpanded && node.children && (
-            <div>{node.children.map((child) => renderNode(child, depth + 1))}</div>
+            <div>{node.children.map(child => renderNode(child, depth + 1))}</div>
           )}
         </div>
-      )
+      );
     },
     [
       expandedFolders,
@@ -212,7 +209,7 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
       renameValue,
       renameFileNode,
     ],
-  )
+  );
 
   return (
     <div className="flex flex-col h-full">
@@ -226,8 +223,8 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
         <div className="flex items-center gap-1">
           <button
             onClick={() => {
-              setNewItemDialog({ parentPath: '/', type: 'file' })
-              setNewItemName('')
+              setNewItemDialog({ parentPath: '/', type: 'file' });
+              setNewItemName('');
             }}
             className="w-5 h-5 flex items-center justify-center rounded hover:bg-white/5 transition-colors"
             title="新建文件"
@@ -236,8 +233,8 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
           </button>
           <button
             onClick={() => {
-              setFileTree([])
-              setTimeout(() => setFileTree(MOCK_FILE_TREE), 100)
+              setFileTree([]);
+              setTimeout(() => setFileTree(MOCK_FILE_TREE), 100);
             }}
             className="w-5 h-5 flex items-center justify-center rounded hover:bg-white/5 transition-colors"
             title="刷新"
@@ -246,9 +243,7 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
           </button>
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto py-1">
-        {activeTree.map((node) => renderNode(node))}
-      </div>
+      <div className="flex-1 overflow-y-auto py-1">{activeTree.map(node => renderNode(node))}</div>
 
       {/* New File/Folder Dialog */}
       <AnimatePresence>
@@ -270,20 +265,19 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
                 borderColor: tc.borderDefault,
                 boxShadow: tc.shadowLg,
               }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               <p className="text-[12px] mb-2" style={{ color: tc.textPrimary }}>
                 {newItemDialog.type === 'file' ? '新建文件' : '新建文件夹'}
               </p>
               <input
-                autoFocus
                 value={newItemName}
-                onChange={(e) => setNewItemName(e.target.value)}
+                onChange={e => setNewItemName(e.target.value)}
                 placeholder={newItemDialog.type === 'file' ? 'filename.tsx' : 'folder-name'}
-                onKeyDown={(e) => {
+                onKeyDown={e => {
                   if (e.key === 'Enter' && newItemName.trim()) {
-                    const path = `${newItemDialog.parentPath}/${newItemName.trim()}`
-                    const ext = newItemName.split('.').pop()?.toLowerCase() ?? ''
+                    const path = `${newItemDialog.parentPath}/${newItemName.trim()}`;
+                    const ext = newItemName.split('.').pop()?.toLowerCase() ?? '';
                     addFileNode(newItemDialog.parentPath, {
                       id: path,
                       type: newItemDialog.type,
@@ -297,11 +291,11 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
                             gitStatus: 'added' as const,
                           }
                         : { children: [] }),
-                    })
-                    if (newItemDialog.type === 'directory') toggleFolder(path)
-                    setNewItemDialog(null)
+                    });
+                    if (newItemDialog.type === 'directory') toggleFolder(path);
+                    setNewItemDialog(null);
                   }
-                  if (e.key === 'Escape') setNewItemDialog(null)
+                  if (e.key === 'Escape') setNewItemDialog(null);
                 }}
                 className="w-full text-[11px] px-2.5 py-1.5 rounded-lg border outline-none mb-2"
                 style={{
@@ -320,9 +314,9 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
                 </button>
                 <button
                   onClick={() => {
-                    if (!newItemName.trim()) return
-                    const path = `${newItemDialog.parentPath}/${newItemName.trim()}`
-                    const ext = newItemName.split('.').pop()?.toLowerCase() ?? ''
+                    if (!newItemName.trim()) return;
+                    const path = `${newItemDialog.parentPath}/${newItemName.trim()}`;
+                    const ext = newItemName.split('.').pop()?.toLowerCase() ?? '';
                     addFileNode(newItemDialog.parentPath, {
                       id: path,
                       type: newItemDialog.type,
@@ -336,8 +330,8 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
                             gitStatus: 'added' as const,
                           }
                         : { children: [] }),
-                    })
-                    setNewItemDialog(null)
+                    });
+                    setNewItemDialog(null);
                   }}
                   className="text-[10px] px-3 py-1 rounded-lg border"
                   style={{
@@ -374,7 +368,7 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
                 borderColor: tc.borderDefault,
                 boxShadow: tc.shadowLg,
               }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               <p className="text-[12px] mb-1" style={{ color: tc.textPrimary }}>
                 删除 "{deleteConfirm.name}"？
@@ -394,8 +388,8 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
                 </button>
                 <button
                   onClick={() => {
-                    deleteFileNode(deleteConfirm.path)
-                    setDeleteConfirm(null)
+                    deleteFileNode(deleteConfirm.path);
+                    setDeleteConfirm(null);
                   }}
                   className="text-[10px] px-3 py-1 rounded-lg border"
                   style={{
@@ -434,8 +428,8 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
                 label: '打开',
                 icon: ExternalLink,
                 action: () => {
-                  handleFileClick(contextMenu.node)
-                  setContextMenu(null)
+                  handleFileClick(contextMenu.node);
+                  setContextMenu(null);
                 },
               },
               ...(contextMenu.node.type === 'directory'
@@ -447,9 +441,9 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
                         setNewItemDialog({
                           parentPath: contextMenu.node.path,
                           type: 'file' as const,
-                        })
-                        setNewItemName('')
-                        setContextMenu(null)
+                        });
+                        setNewItemName('');
+                        setContextMenu(null);
                       },
                     },
                     {
@@ -459,9 +453,9 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
                         setNewItemDialog({
                           parentPath: contextMenu.node.path,
                           type: 'directory' as const,
-                        })
-                        setNewItemName('')
-                        setContextMenu(null)
+                        });
+                        setNewItemName('');
+                        setContextMenu(null);
                       },
                     },
                   ]
@@ -477,50 +471,52 @@ export function FileExplorerPanel({ tc }: { tc: ThemeColors }) {
                     type: 'favorite',
                     lastAccessed: Date.now(),
                     language: contextMenu.node.language,
-                  })
-                  setContextMenu(null)
+                  });
+                  setContextMenu(null);
                 },
               },
               {
                 label: '复制路径',
                 icon: Copy,
                 action: () => {
-                  navigator.clipboard?.writeText(contextMenu.node.path)
-                  setContextMenu(null)
+                  navigator.clipboard?.writeText(contextMenu.node.path);
+                  setContextMenu(null);
                 },
               },
               {
                 label: '重命名',
                 icon: Edit3,
                 action: () => {
-                  setRenamingPath(contextMenu.node.path)
-                  setRenameValue(contextMenu.node.name)
-                  setContextMenu(null)
+                  setRenamingPath(contextMenu.node.path);
+                  setRenameValue(contextMenu.node.name);
+                  setContextMenu(null);
                 },
               },
               {
                 label: '删除',
                 icon: Trash2,
                 action: () => {
-                  setDeleteConfirm(contextMenu.node)
-                  setContextMenu(null)
+                  setDeleteConfirm(contextMenu.node);
+                  setContextMenu(null);
                 },
                 color: '#ef4444',
               },
-            ].map((item) => (
-              <button
-                key={item.label}
-                onClick={item.action}
-                className="w-full flex items-center gap-2 px-3 py-1.5 text-[11px] transition-colors hover:bg-white/5"
-                style={{ color: (item as any).color ?? tc.textSecondary }}
-              >
-                <item.icon className="w-3.5 h-3.5" />
-                {item.label}
-              </button>
-            ))}
+            ].map(
+              (item: { label: string; icon: typeof Copy; action: () => void; color?: string }) => (
+                <button
+                  key={item.label}
+                  onClick={item.action}
+                  className="w-full flex items-center gap-2 px-3 py-1.5 text-[11px] transition-colors hover:bg-white/5"
+                  style={{ color: item.color ?? tc.textSecondary }}
+                >
+                  <item.icon className="w-3.5 h-3.5" />
+                  {item.label}
+                </button>
+              ),
+            )}
           </motion.div>
         )}
       </AnimatePresence>
     </div>
-  )
+  );
 }

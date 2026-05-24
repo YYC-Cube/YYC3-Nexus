@@ -1,68 +1,68 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 // ==========================================
 // Types
 // ==========================================
 
-export type TaskStatus = 'todo' | 'in-progress' | 'review' | 'done' | 'blocked'
-export type TaskPriority = 'critical' | 'high' | 'medium' | 'low'
-export type TaskType = 'feature' | 'bug' | 'refactor' | 'test' | 'documentation' | 'other'
-export type ReminderType = 'deadline' | 'dependency' | 'blocking' | 'progress' | 'custom'
-export type ViewMode = 'kanban' | 'list' | 'stats'
+export type TaskStatus = 'todo' | 'in-progress' | 'review' | 'done' | 'blocked';
+export type TaskPriority = 'critical' | 'high' | 'medium' | 'low';
+export type TaskType = 'feature' | 'bug' | 'refactor' | 'test' | 'documentation' | 'other';
+export type ReminderType = 'deadline' | 'dependency' | 'blocking' | 'progress' | 'custom';
+export type ViewMode = 'kanban' | 'list' | 'stats';
 
 export interface SubTask {
-  id: string
-  title: string
-  isCompleted: boolean
-  createdAt: number
+  id: string;
+  title: string;
+  isCompleted: boolean;
+  createdAt: number;
 }
 
 export interface Task {
-  id: string
-  title: string
-  description?: string
-  status: TaskStatus
-  priority: TaskPriority
-  type: TaskType
-  createdAt: number
-  updatedAt: number
-  dueDate?: number
-  estimatedHours?: number
-  actualHours?: number
-  relatedMessageId?: string
-  relatedFiles?: string[]
-  tags?: string[]
-  subtasks?: SubTask[]
-  dependencies?: string[]
-  blocking?: string[]
-  assigneeId?: string
-  isArchived: boolean
-  source: 'manual' | 'ai-inferred' | 'imported'
-  confidence?: number
+  id: string;
+  title: string;
+  description?: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  type: TaskType;
+  createdAt: number;
+  updatedAt: number;
+  dueDate?: number;
+  estimatedHours?: number;
+  actualHours?: number;
+  relatedMessageId?: string;
+  relatedFiles?: string[];
+  tags?: string[];
+  subtasks?: SubTask[];
+  dependencies?: string[];
+  blocking?: string[];
+  assigneeId?: string;
+  isArchived: boolean;
+  source: 'manual' | 'ai-inferred' | 'imported';
+  confidence?: number;
 }
 
 export interface Reminder {
-  id: string
-  taskId: string
-  type: ReminderType
-  message: string
-  remindAt: number
-  isTriggered: boolean
-  isRead: boolean
-  createdAt: number
+  id: string;
+  taskId: string;
+  type: ReminderType;
+  message: string;
+  remindAt: number;
+  isTriggered: boolean;
+  isRead: boolean;
+  createdAt: number;
 }
 
 export interface TaskInferenceResult {
-  title: string
-  description: string
-  type: TaskType
-  priority: TaskPriority
-  confidence: number
-  reasoning: string
-  tags: string[]
-  estimatedHours?: number
-  relatedFiles?: string[]
+  title: string;
+  description: string;
+  type: TaskType;
+  priority: TaskPriority;
+  confidence: number;
+  reasoning: string;
+  tags: string[];
+  estimatedHours?: number;
+  relatedFiles?: string[];
 }
 
 // ==========================================
@@ -70,7 +70,7 @@ export interface TaskInferenceResult {
 // ==========================================
 
 export const INITIAL_TASKS: Task[] = (() => {
-  const now = Date.now()
+  const now = Date.now();
   return [
     {
       id: 't1',
@@ -87,8 +87,18 @@ export const INITIAL_TASKS: Task[] = (() => {
       relatedFiles: ['src/auth/provider.ts', 'src/middleware/jwt.ts'],
       tags: ['auth', 'security', 'P0'],
       subtasks: [
-        { id: 'st1', title: 'JWT Token 签发/验证', isCompleted: true, createdAt: now - 86400000 * 3 },
-        { id: 'st2', title: 'OAuth2.0 Provider 集成', isCompleted: true, createdAt: now - 86400000 * 3 },
+        {
+          id: 'st1',
+          title: 'JWT Token 签发/验证',
+          isCompleted: true,
+          createdAt: now - 86400000 * 3,
+        },
+        {
+          id: 'st2',
+          title: 'OAuth2.0 Provider 集成',
+          isCompleted: true,
+          createdAt: now - 86400000 * 3,
+        },
         { id: 'st3', title: '微信扫码登录适配', isCompleted: false, createdAt: now - 86400000 * 2 },
         { id: 'st4', title: 'Token 刷新机制', isCompleted: false, createdAt: now - 86400000 * 2 },
       ],
@@ -129,7 +139,12 @@ export const INITIAL_TASKS: Task[] = (() => {
       tags: ['performance', 'AI', 'cache'],
       subtasks: [
         { id: 'st5', title: '设计 LRU 缓存模块', isCompleted: true, createdAt: now - 86400000 * 5 },
-        { id: 'st6', title: '集成到 Provider Manager', isCompleted: true, createdAt: now - 86400000 * 4 },
+        {
+          id: 'st6',
+          title: '集成到 Provider Manager',
+          isCompleted: true,
+          createdAt: now - 86400000 * 4,
+        },
         { id: 'st7', title: '编写性能测试', isCompleted: false, createdAt: now - 86400000 * 3 },
       ],
       isArchived: false,
@@ -246,11 +261,11 @@ export const INITIAL_TASKS: Task[] = (() => {
       isArchived: false,
       source: 'manual' as const,
     },
-  ]
-})()
+  ];
+})();
 
 export const INITIAL_REMINDERS: Reminder[] = (() => {
-  const now = Date.now()
+  const now = Date.now();
   return [
     {
       id: 'r1',
@@ -292,37 +307,37 @@ export const INITIAL_REMINDERS: Reminder[] = (() => {
       isRead: true,
       createdAt: now - 14400000,
     },
-  ]
-})()
+  ];
+})();
 
 // ==========================================
 // Zustand Task Store
 // ==========================================
 
 export interface TaskStoreState {
-  tasks: Task[]
-  reminders: Reminder[]
-  _hydrated: boolean
+  tasks: Task[];
+  reminders: Reminder[];
+  _hydrated: boolean;
 }
 
 export interface TaskStoreActions {
   addTask: (
     task: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'isArchived'> & { source?: Task['source'] },
-  ) => string
-  updateTask: (taskId: string, updates: Partial<Task>) => void
-  deleteTask: (taskId: string) => void
-  archiveTask: (taskId: string) => void
-  duplicateTask: (taskId: string) => void
-  moveTask: (taskId: string, newStatus: TaskStatus) => void
-  reorderInColumn: (taskId: string, targetId: string, position: 'before' | 'after') => void
-  addSubtask: (taskId: string, title: string) => void
-  toggleSubtask: (taskId: string, subtaskId: string) => void
-  deleteSubtask: (taskId: string, subtaskId: string) => void
-  batchUpdateStatus: (taskIds: string[], status: TaskStatus) => void
-  batchDelete: (taskIds: string[]) => void
-  addReminder: (reminder: Omit<Reminder, 'id' | 'createdAt' | 'isTriggered' | 'isRead'>) => void
-  dismissReminder: (reminderId: string) => void
-  seedIfEmpty: () => void
+  ) => string;
+  updateTask: (taskId: string, updates: Partial<Task>) => void;
+  deleteTask: (taskId: string) => void;
+  archiveTask: (taskId: string) => void;
+  duplicateTask: (taskId: string) => void;
+  moveTask: (taskId: string, newStatus: TaskStatus) => void;
+  reorderInColumn: (taskId: string, targetId: string, position: 'before' | 'after') => void;
+  addSubtask: (taskId: string, title: string) => void;
+  toggleSubtask: (taskId: string, subtaskId: string) => void;
+  deleteSubtask: (taskId: string, subtaskId: string) => void;
+  batchUpdateStatus: (taskIds: string[], status: TaskStatus) => void;
+  batchDelete: (taskIds: string[]) => void;
+  addReminder: (reminder: Omit<Reminder, 'id' | 'createdAt' | 'isTriggered' | 'isRead'>) => void;
+  dismissReminder: (reminderId: string) => void;
+  seedIfEmpty: () => void;
 }
 
 export const useTaskStore = create<TaskStoreState & TaskStoreActions>()(
@@ -332,8 +347,8 @@ export const useTaskStore = create<TaskStoreState & TaskStoreActions>()(
       reminders: [],
       _hydrated: false,
 
-      addTask: (taskData) => {
-        const id = crypto.randomUUID()
+      addTask: taskData => {
+        const id = crypto.randomUUID();
         const newTask: Task = {
           ...taskData,
           id,
@@ -341,37 +356,37 @@ export const useTaskStore = create<TaskStoreState & TaskStoreActions>()(
           updatedAt: Date.now(),
           isArchived: false,
           source: taskData.source ?? 'manual',
-        }
-        set((s) => ({ tasks: [...s.tasks, newTask] }))
-        return id
+        };
+        set(s => ({ tasks: [...s.tasks, newTask] }));
+        return id;
       },
 
       updateTask: (taskId, updates) => {
-        set((s) => ({
-          tasks: s.tasks.map((t) =>
+        set(s => ({
+          tasks: s.tasks.map(t =>
             t.id === taskId ? { ...t, ...updates, updatedAt: Date.now() } : t,
           ),
-        }))
+        }));
       },
 
-      deleteTask: (taskId) => {
-        set((s) => ({
-          tasks: s.tasks.filter((t) => t.id !== taskId),
-          reminders: s.reminders.filter((r) => r.taskId !== taskId),
-        }))
+      deleteTask: taskId => {
+        set(s => ({
+          tasks: s.tasks.filter(t => t.id !== taskId),
+          reminders: s.reminders.filter(r => r.taskId !== taskId),
+        }));
       },
 
-      archiveTask: (taskId) => {
-        set((s) => ({
-          tasks: s.tasks.map((t) =>
+      archiveTask: taskId => {
+        set(s => ({
+          tasks: s.tasks.map(t =>
             t.id === taskId ? { ...t, isArchived: true, updatedAt: Date.now() } : t,
           ),
-        }))
+        }));
       },
 
-      duplicateTask: (taskId) => {
-        const src = get().tasks.find((t) => t.id === taskId)
-        if (!src) return
+      duplicateTask: taskId => {
+        const src = get().tasks.find(t => t.id === taskId);
+        if (!src) return;
         const dup: Task = {
           ...src,
           id: crypto.randomUUID(),
@@ -381,42 +396,42 @@ export const useTaskStore = create<TaskStoreState & TaskStoreActions>()(
           updatedAt: Date.now(),
           isArchived: false,
           source: 'manual',
-          subtasks: src.subtasks?.map((st) => ({
+          subtasks: src.subtasks?.map(st => ({
             ...st,
             id: crypto.randomUUID(),
             isCompleted: false,
           })),
-        }
-        set((s) => ({ tasks: [...s.tasks, dup] }))
+        };
+        set(s => ({ tasks: [...s.tasks, dup] }));
       },
 
       moveTask: (taskId, newStatus) => {
-        const task = get().tasks.find((t) => t.id === taskId)
-        set((s) => ({
-          tasks: s.tasks.map((t) =>
+        const task = get().tasks.find(t => t.id === taskId);
+        set(s => ({
+          tasks: s.tasks.map(t =>
             t.id === taskId ? { ...t, status: newStatus, updatedAt: Date.now() } : t,
           ),
-        }))
+        }));
         if (task) {
           window.dispatchEvent(
             new CustomEvent('yyc3-task-moved', {
               detail: { taskId, taskTitle: task.title, from: task.status, to: newStatus },
             }),
-          )
+          );
         }
       },
 
       reorderInColumn: (taskId, targetId, position) => {
-        set((s) => {
-          const tasks = [...s.tasks]
-          const srcIdx = tasks.findIndex((t) => t.id === taskId)
-          const tgtIdx = tasks.findIndex((t) => t.id === targetId)
-          if (srcIdx === -1 || tgtIdx === -1 || srcIdx === tgtIdx) return s
-          const [moved] = tasks.splice(srcIdx, 1)
-          const insertIdx = tasks.findIndex((t) => t.id === targetId)
-          tasks.splice(position === 'before' ? insertIdx : insertIdx + 1, 0, moved)
-          return { tasks }
-        })
+        set(s => {
+          const tasks = [...s.tasks];
+          const srcIdx = tasks.findIndex(t => t.id === taskId);
+          const tgtIdx = tasks.findIndex(t => t.id === targetId);
+          if (srcIdx === -1 || tgtIdx === -1 || srcIdx === tgtIdx) return s;
+          const [moved] = tasks.splice(srcIdx, 1);
+          const insertIdx = tasks.findIndex(t => t.id === targetId);
+          tasks.splice(position === 'before' ? insertIdx : insertIdx + 1, 0, moved);
+          return { tasks };
+        });
       },
 
       addSubtask: (taskId, title) => {
@@ -425,94 +440,94 @@ export const useTaskStore = create<TaskStoreState & TaskStoreActions>()(
           title,
           isCompleted: false,
           createdAt: Date.now(),
-        }
-        set((s) => ({
-          tasks: s.tasks.map((t) =>
+        };
+        set(s => ({
+          tasks: s.tasks.map(t =>
             t.id === taskId
               ? { ...t, subtasks: [...(t.subtasks ?? []), st], updatedAt: Date.now() }
               : t,
           ),
-        }))
+        }));
       },
 
       toggleSubtask: (taskId, subtaskId) => {
-        set((s) => ({
-          tasks: s.tasks.map((t) => {
-            if (t.id !== taskId) return t
+        set(s => ({
+          tasks: s.tasks.map(t => {
+            if (t.id !== taskId) return t;
             return {
               ...t,
-              subtasks: t.subtasks?.map((st) =>
+              subtasks: t.subtasks?.map(st =>
                 st.id === subtaskId ? { ...st, isCompleted: !st.isCompleted } : st,
               ),
               updatedAt: Date.now(),
-            }
+            };
           }),
-        }))
+        }));
       },
 
       deleteSubtask: (taskId, subtaskId) => {
-        set((s) => ({
-          tasks: s.tasks.map((t) => {
-            if (t.id !== taskId) return t
+        set(s => ({
+          tasks: s.tasks.map(t => {
+            if (t.id !== taskId) return t;
             return {
               ...t,
-              subtasks: t.subtasks?.filter((st) => st.id !== subtaskId),
+              subtasks: t.subtasks?.filter(st => st.id !== subtaskId),
               updatedAt: Date.now(),
-            }
+            };
           }),
-        }))
+        }));
       },
 
       batchUpdateStatus: (taskIds, status) => {
-        set((s) => ({
-          tasks: s.tasks.map((t) =>
+        set(s => ({
+          tasks: s.tasks.map(t =>
             taskIds.includes(t.id) ? { ...t, status, updatedAt: Date.now() } : t,
           ),
-        }))
+        }));
       },
 
-      batchDelete: (taskIds) => {
-        set((s) => ({
-          tasks: s.tasks.filter((t) => !taskIds.includes(t.id)),
-          reminders: s.reminders.filter((r) => !taskIds.includes(r.taskId)),
-        }))
+      batchDelete: taskIds => {
+        set(s => ({
+          tasks: s.tasks.filter(t => !taskIds.includes(t.id)),
+          reminders: s.reminders.filter(r => !taskIds.includes(r.taskId)),
+        }));
       },
 
-      addReminder: (data) => {
+      addReminder: data => {
         const r: Reminder = {
           ...data,
           id: crypto.randomUUID(),
           createdAt: Date.now(),
           isTriggered: false,
           isRead: false,
-        }
-        set((s) => ({ reminders: [...s.reminders, r] }))
+        };
+        set(s => ({ reminders: [...s.reminders, r] }));
       },
 
-      dismissReminder: (reminderId) => {
-        set((s) => ({
-          reminders: s.reminders.map((r) => (r.id === reminderId ? { ...r, isRead: true } : r)),
-        }))
+      dismissReminder: reminderId => {
+        set(s => ({
+          reminders: s.reminders.map(r => (r.id === reminderId ? { ...r, isRead: true } : r)),
+        }));
       },
 
       seedIfEmpty: () => {
-        const { tasks, reminders: _reminders } = get()
+        const { tasks, reminders: _reminders } = get();
         if (tasks.length === 0) {
-          set({ tasks: INITIAL_TASKS, reminders: INITIAL_REMINDERS, _hydrated: true })
+          set({ tasks: INITIAL_TASKS, reminders: INITIAL_REMINDERS, _hydrated: true });
         } else {
-          set({ _hydrated: true })
+          set({ _hydrated: true });
         }
       },
     }),
     {
       name: 'yyc3-task-board-storage',
-      partialize: (state) => ({
+      partialize: state => ({
         tasks: state.tasks,
         reminders: state.reminders,
       }),
-      onRehydrateStorage: () => (state) => {
-        state?.seedIfEmpty()
+      onRehydrateStorage: () => state => {
+        state?.seedIfEmpty();
       },
     },
   ),
-)
+);

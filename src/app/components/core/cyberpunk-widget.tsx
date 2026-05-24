@@ -12,12 +12,12 @@ import {
   Users,
   Wrench,
   X,
-} from 'lucide-react'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+} from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { ChatInterface } from '../pages/ai/chat-interface'
+import { ChatInterface } from '../pages/ai/chat-interface';
 
-type WidgetTab = 'chat' | 'clm' | 'aicall' | 'tools' | 'workflow' | 'insights'
+type WidgetTab = 'chat' | 'clm' | 'aicall' | 'tools' | 'workflow' | 'insights';
 
 const tabs = [
   { id: 'chat' as WidgetTab, label: '聊天', icon: MessageCircle, color: '#00f0ff' },
@@ -26,7 +26,7 @@ const tabs = [
   { id: 'tools' as WidgetTab, label: '工具', icon: Wrench, color: '#00ffc8' },
   { id: 'workflow' as WidgetTab, label: '工作流', icon: GitBranch, color: '#00d4ff' },
   { id: 'insights' as WidgetTab, label: '洞察', icon: BarChart3, color: '#00f0ff' },
-]
+];
 
 /**
  * Compact floating widget mode for the AI assistant.
@@ -36,102 +36,102 @@ const tabs = [
  * @param onSwitchMode - Callback to switch to standalone (full-screen) mode.
  */
 export function CyberpunkWidget({ onSwitchMode }: { onSwitchMode: () => void }) {
-  const [minimized, setMinimized] = useState(false)
-  const [maximized, setMaximized] = useState(false)
-  const [activeTab, setActiveTab] = useState<WidgetTab>('chat')
-  const [position, setPosition] = useState({ x: 0, y: 0 })
-  const [size, setSize] = useState({ w: 420, h: 620 })
-  const [isDragging, setIsDragging] = useState(false)
-  const [isResizing, setIsResizing] = useState(false)
-  const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 })
-  const resizeRef = useRef({ startX: 0, startY: 0, startW: 0, startH: 0 })
-  const widgetRef = useRef<HTMLDivElement>(null)
+  const [minimized, setMinimized] = useState(false);
+  const [maximized, setMaximized] = useState(false);
+  const [activeTab, setActiveTab] = useState<WidgetTab>('chat');
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [size, setSize] = useState({ w: 420, h: 620 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const dragRef = useRef({ startX: 0, startY: 0, startPosX: 0, startPosY: 0 });
+  const resizeRef = useRef({ startX: 0, startY: 0, startW: 0, startH: 0 });
+  const widgetRef = useRef<HTMLDivElement>(null);
 
   // Initialize position
   useEffect(() => {
     setPosition({
       x: window.innerWidth - size.w - 24,
       y: window.innerHeight - size.h - 24,
-    })
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [size.w, size.h]);
 
   // Drag handlers
   const onDragStart = useCallback(
     (e: React.MouseEvent) => {
-      if (maximized) return
-      setIsDragging(true)
+      if (maximized) return;
+      setIsDragging(true);
       dragRef.current = {
         startX: e.clientX,
         startY: e.clientY,
         startPosX: position.x,
         startPosY: position.y,
-      }
+      };
     },
     [position, maximized],
-  )
+  );
 
   useEffect(() => {
-    if (!isDragging) return
+    if (!isDragging) return;
     const onMove = (e: MouseEvent) => {
-      const dx = e.clientX - dragRef.current.startX
-      const dy = e.clientY - dragRef.current.startY
+      const dx = e.clientX - dragRef.current.startX;
+      const dy = e.clientY - dragRef.current.startY;
       setPosition({
         x: Math.max(0, Math.min(window.innerWidth - size.w, dragRef.current.startPosX + dx)),
         y: Math.max(0, Math.min(window.innerHeight - size.h, dragRef.current.startPosY + dy)),
-      })
-    }
-    const onUp = () => setIsDragging(false)
-    window.addEventListener('mousemove', onMove)
-    window.addEventListener('mouseup', onUp)
+      });
+    };
+    const onUp = () => setIsDragging(false);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
     return () => {
-      window.removeEventListener('mousemove', onMove)
-      window.removeEventListener('mouseup', onUp)
-    }
-  }, [isDragging, size])
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+  }, [isDragging, size]);
 
   // Resize handlers
   const onResizeStart = useCallback(
     (e: React.MouseEvent) => {
-      e.stopPropagation()
-      if (maximized) return
-      setIsResizing(true)
+      e.stopPropagation();
+      if (maximized) return;
+      setIsResizing(true);
       resizeRef.current = {
         startX: e.clientX,
         startY: e.clientY,
         startW: size.w,
         startH: size.h,
-      }
+      };
     },
     [size, maximized],
-  )
+  );
 
   useEffect(() => {
-    if (!isResizing) return
+    if (!isResizing) return;
     const onMove = (e: MouseEvent) => {
-      const dw = e.clientX - resizeRef.current.startX
-      const dh = e.clientY - resizeRef.current.startY
+      const dw = e.clientX - resizeRef.current.startX;
+      const dh = e.clientY - resizeRef.current.startY;
       setSize({
         w: Math.max(320, Math.min(800, resizeRef.current.startW + dw)),
         h: Math.max(400, Math.min(900, resizeRef.current.startH + dh)),
-      })
-    }
-    const onUp = () => setIsResizing(false)
-    window.addEventListener('mousemove', onMove)
-    window.addEventListener('mouseup', onUp)
+      });
+    };
+    const onUp = () => setIsResizing(false);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
     return () => {
-      window.removeEventListener('mousemove', onMove)
-      window.removeEventListener('mouseup', onUp)
-    }
-  }, [isResizing])
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+  }, [isResizing]);
 
   const toggleMaximize = () => {
     if (maximized) {
-      setMaximized(false)
+      setMaximized(false);
     } else {
-      setMaximized(true)
+      setMaximized(true);
     }
-  }
+  };
 
   // Minimized FAB
   if (minimized) {
@@ -157,7 +157,7 @@ export function CyberpunkWidget({ onSwitchMode }: { onSwitchMode: () => void }) 
           }}
         />
       </div>
-    )
+    );
   }
 
   return (
@@ -321,9 +321,9 @@ export function CyberpunkWidget({ onSwitchMode }: { onSwitchMode: () => void }) 
           className="relative z-20 flex items-center gap-1 px-3 py-2 shrink-0"
           style={{ borderBottom: '1px solid rgba(0,240,255,0.08)', background: 'rgba(0,0,0,0.15)' }}
         >
-          {tabs.map((tab) => {
-            const Icon = tab.icon
-            const active = activeTab === tab.id
+          {tabs.map(tab => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
@@ -339,7 +339,7 @@ export function CyberpunkWidget({ onSwitchMode }: { onSwitchMode: () => void }) 
                 <Icon className="w-3.5 h-3.5" />
                 <span>{tab.label}</span>
               </button>
-            )
+            );
           })}
         </div>
 
@@ -403,7 +403,7 @@ export function CyberpunkWidget({ onSwitchMode }: { onSwitchMode: () => void }) 
         )}
       </div>
     </>
-  )
+  );
 }
 
 /* Mini tool list for widget */
@@ -414,7 +414,7 @@ function WidgetTools() {
     { name: '安全防护盾', icon: '🛡️', color: '#00ffcc' },
     { name: '知识图谱', icon: '🧠', color: '#00ffc8' },
     { name: '性能优化器', icon: '⚡', color: '#005f73' },
-  ]
+  ];
   return (
     <div
       className="p-3 space-y-2 overflow-y-auto h-full"
@@ -429,13 +429,13 @@ function WidgetTools() {
             borderColor: `${tool.color}20`,
             backdropFilter: 'blur(10px)',
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = `${tool.color}50`
-            e.currentTarget.style.boxShadow = `0 0 12px ${tool.color}30`
+          onMouseEnter={e => {
+            e.currentTarget.style.borderColor = `${tool.color}50`;
+            e.currentTarget.style.boxShadow = `0 0 12px ${tool.color}30`;
           }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = `${tool.color}20`
-            e.currentTarget.style.boxShadow = 'none'
+          onMouseLeave={e => {
+            e.currentTarget.style.borderColor = `${tool.color}20`;
+            e.currentTarget.style.boxShadow = 'none';
           }}
         >
           <span className="text-lg">{tool.icon}</span>
@@ -449,7 +449,7 @@ function WidgetTools() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 function WidgetWorkflow() {
@@ -458,7 +458,7 @@ function WidgetWorkflow() {
     { label: '识别', status: 'done', emoji: '🧠' },
     { label: '执行', status: 'active', emoji: '⚡' },
     { label: '优化', status: 'pending', emoji: '🔧' },
-  ]
+  ];
   return (
     <div
       className="p-4 h-full overflow-y-auto"
@@ -509,7 +509,7 @@ function WidgetWorkflow() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 function WidgetInsights() {
@@ -517,7 +517,7 @@ function WidgetInsights() {
     { label: '响应', value: '12ms', color: '#00f0ff' },
     { label: '成功率', value: '98.7%', color: '#00ffc8' },
     { label: '负载', value: '42%', color: '#00d4ff' },
-  ]
+  ];
   return (
     <div
       className="p-4 h-full overflow-y-auto"
@@ -557,7 +557,7 @@ function WidgetInsights() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 function WidgetCLM() {
@@ -567,14 +567,14 @@ function WidgetCLM() {
     { name: '王建华', stage: '获客', health: 65, color: '#00ffcc' },
     { name: '陈雅文', stage: '服务', health: 95, color: '#00ffc8' },
     { name: '赵鹏飞', stage: '忠诚', health: 98, color: '#00ffc8' },
-  ]
+  ];
   const stageColors: Record<string, string> = {
     获客: '#00f0ff',
     转化: '#00d4ff',
     成交: '#00ffcc',
     服务: '#00ffc8',
     忠诚: '#008b9d',
-  }
+  };
   return (
     <div
       className="p-3 space-y-2 overflow-y-auto h-full"
@@ -583,7 +583,7 @@ function WidgetCLM() {
       <p className="text-[10px] text-white/30 tracking-wider mb-3 uppercase">客户生命周期 · CLM</p>
       {/* Mini funnel */}
       <div className="flex gap-1 mb-3">
-        {['获客', '转化', '成交', '服务', '忠诚'].map((s) => (
+        {['获客', '转化', '成交', '服务', '忠诚'].map(s => (
           <div
             key={s}
             className="flex-1 text-center py-1.5 rounded-lg text-[9px]"
@@ -625,7 +625,7 @@ function WidgetCLM() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 function WidgetAICall() {
@@ -634,7 +634,7 @@ function WidgetAICall() {
     { name: '李思琪', type: 'AI跟进', status: '等待中', color: '#00ffcc' },
     { name: '王建华', type: '人工转接', status: '排队中', color: '#008b9d' },
     { name: '陈雅文', type: 'AI回访', status: '已完成', color: '#00f0ff' },
-  ]
+  ];
   return (
     <div
       className="p-3 space-y-2 overflow-y-auto h-full"
@@ -694,5 +694,5 @@ function WidgetAICall() {
         </div>
       ))}
     </div>
-  )
+  );
 }

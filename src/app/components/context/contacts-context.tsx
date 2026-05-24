@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react'
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 
 // ==========================================
 // YYC³ 共享联系人状态 — Contacts Context
@@ -10,30 +10,30 @@ import { createContext, type ReactNode, useCallback, useContext, useEffect, useS
  * Contains CRM fields, AI scoring, lifecycle stage, and risk assessment.
  */
 export interface SharedContact {
-  id: string
-  name: string
-  phone: string
-  email: string
-  company: string
-  position: string
-  stage: '获客' | '转化' | '成交' | '服务' | '忠诚'
-  tags: string[]
-  aiScore: number
-  aiInsights: string[]
-  starred: boolean
-  avatar?: string
-  address: string
-  source: string
-  createdAt: string
-  lastContact: string
-  totalCalls: number
-  totalValue: number
-  notes: string
-  riskLevel: 'low' | 'medium' | 'high'
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  company: string;
+  position: string;
+  stage: '获客' | '转化' | '成交' | '服务' | '忠诚';
+  tags: string[];
+  aiScore: number;
+  aiInsights: string[];
+  starred: boolean;
+  avatar?: string;
+  address: string;
+  source: string;
+  createdAt: string;
+  lastContact: string;
+  totalCalls: number;
+  totalValue: number;
+  notes: string;
+  riskLevel: 'low' | 'medium' | 'high';
 }
 
-const STORAGE_KEY = 'yyc3_contacts'
-const DELETED_STORAGE_KEY = 'yyc3_contacts_deleted'
+const STORAGE_KEY = 'yyc3_contacts';
+const DELETED_STORAGE_KEY = 'yyc3_contacts_deleted';
 
 // Mock Data (canonical source)
 const MOCK_CONTACTS: SharedContact[] = [
@@ -247,45 +247,45 @@ const MOCK_CONTACTS: SharedContact[] = [
     notes: '初次电话咨询',
     riskLevel: 'high',
   },
-]
+];
 
 /**
  * Wrapper for a soft-deleted contact, preserving the original data and deletion timestamp.
  * Used by the recovery/undo feature in the contacts management UI.
  */
 export interface DeletedContact {
-  contact: SharedContact
-  deletedAt: string
+  contact: SharedContact;
+  deletedAt: string;
 }
 
 interface ContactsContextType {
-  contacts: SharedContact[]
-  deletedContacts: DeletedContact[]
-  addContact: (contact: SharedContact) => void
-  updateContact: (id: string, updates: Partial<SharedContact>) => void
-  deleteContact: (id: string) => void
-  batchDeleteContacts: (ids: string[]) => void
-  recoverContact: (id: string) => void
-  recoverAllContacts: () => void
-  clearDeletedContacts: () => void
-  toggleStar: (id: string) => void
-  updateStage: (id: string, stage: SharedContact['stage']) => void
-  setContacts: React.Dispatch<React.SetStateAction<SharedContact[]>>
+  contacts: SharedContact[];
+  deletedContacts: DeletedContact[];
+  addContact: (contact: SharedContact) => void;
+  updateContact: (id: string, updates: Partial<SharedContact>) => void;
+  deleteContact: (id: string) => void;
+  batchDeleteContacts: (ids: string[]) => void;
+  recoverContact: (id: string) => void;
+  recoverAllContacts: () => void;
+  clearDeletedContacts: () => void;
+  toggleStar: (id: string) => void;
+  updateStage: (id: string, stage: SharedContact['stage']) => void;
+  setContacts: React.Dispatch<React.SetStateAction<SharedContact[]>>;
 }
 
 function loadContacts(): SharedContact[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return JSON.parse(raw)
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
   } catch {
     /* fallback */
   }
-  return MOCK_CONTACTS
+  return MOCK_CONTACTS;
 }
 
 function saveContacts(contacts: SharedContact[]) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(contacts));
   } catch {
     /* */
   }
@@ -293,23 +293,23 @@ function saveContacts(contacts: SharedContact[]) {
 
 function loadDeletedContacts(): DeletedContact[] {
   try {
-    const raw = localStorage.getItem(DELETED_STORAGE_KEY)
-    if (raw) return JSON.parse(raw)
+    const raw = localStorage.getItem(DELETED_STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
   } catch {
     /* */
   }
-  return []
+  return [];
 }
 
 function saveDeletedContacts(deleted: DeletedContact[]) {
   try {
-    localStorage.setItem(DELETED_STORAGE_KEY, JSON.stringify(deleted))
+    localStorage.setItem(DELETED_STORAGE_KEY, JSON.stringify(deleted));
   } catch {
     /* */
   }
 }
 
-const ContactsContext = createContext<ContactsContextType | null>(null)
+const ContactsContext = createContext<ContactsContextType | null>(null);
 
 /**
  * Shared contacts state provider.
@@ -317,30 +317,30 @@ const ContactsContext = createContext<ContactsContextType | null>(null)
  * starring, and lifecycle stage updates. Auto-persists to `localStorage`.
  */
 export function ContactsProvider({ children }: { children: ReactNode }) {
-  const [contacts, setContacts] = useState<SharedContact[]>(loadContacts)
-  const [deletedContacts, setDeletedContacts] = useState<DeletedContact[]>(loadDeletedContacts)
+  const [contacts, setContacts] = useState<SharedContact[]>(loadContacts);
+  const [deletedContacts, setDeletedContacts] = useState<DeletedContact[]>(loadDeletedContacts);
 
   // Persist contacts
   useEffect(() => {
-    saveContacts(contacts)
-  }, [contacts])
+    saveContacts(contacts);
+  }, [contacts]);
   useEffect(() => {
-    saveDeletedContacts(deletedContacts)
-  }, [deletedContacts])
+    saveDeletedContacts(deletedContacts);
+  }, [deletedContacts]);
 
   const addContact = useCallback((contact: SharedContact) => {
-    setContacts((prev) => [contact, ...prev])
-  }, [])
+    setContacts(prev => [contact, ...prev]);
+  }, []);
 
   const updateContact = useCallback((id: string, updates: Partial<SharedContact>) => {
-    setContacts((prev) => prev.map((c) => (c.id === id ? { ...c, ...updates } : c)))
-  }, [])
+    setContacts(prev => prev.map(c => (c.id === id ? { ...c, ...updates } : c)));
+  }, []);
 
   const deleteContact = useCallback((id: string) => {
-    setContacts((prev) => {
-      const target = prev.find((c) => c.id === id)
+    setContacts(prev => {
+      const target = prev.find(c => c.id === id);
       if (target) {
-        setDeletedContacts((del) =>
+        setDeletedContacts(del =>
           [
             {
               contact: target,
@@ -348,57 +348,57 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
             },
             ...del,
           ].slice(0, 50),
-        ) // keep max 50 deleted
+        ); // keep max 50 deleted
       }
-      return prev.filter((c) => c.id !== id)
-    })
-  }, [])
+      return prev.filter(c => c.id !== id);
+    });
+  }, []);
 
   const batchDeleteContacts = useCallback((ids: string[]) => {
-    setContacts((prev) => {
-      const toDelete = prev.filter((c) => ids.includes(c.id))
+    setContacts(prev => {
+      const toDelete = prev.filter(c => ids.includes(c.id));
       if (toDelete.length) {
-        setDeletedContacts((del) =>
+        setDeletedContacts(del =>
           [
-            ...toDelete.map((c) => ({ contact: c, deletedAt: new Date().toISOString() })),
+            ...toDelete.map(c => ({ contact: c, deletedAt: new Date().toISOString() })),
             ...del,
           ].slice(0, 50),
-        )
+        );
       }
-      return prev.filter((c) => !ids.includes(c.id))
-    })
-  }, [])
+      return prev.filter(c => !ids.includes(c.id));
+    });
+  }, []);
 
   const recoverContact = useCallback((id: string) => {
-    setDeletedContacts((prev) => {
-      const target = prev.find((d) => d.contact.id === id)
+    setDeletedContacts(prev => {
+      const target = prev.find(d => d.contact.id === id);
       if (target) {
-        setContacts((c) => [target.contact, ...c])
+        setContacts(c => [target.contact, ...c]);
       }
-      return prev.filter((d) => d.contact.id !== id)
-    })
-  }, [])
+      return prev.filter(d => d.contact.id !== id);
+    });
+  }, []);
 
   const recoverAllContacts = useCallback(() => {
-    setDeletedContacts((prev) => {
+    setDeletedContacts(prev => {
       if (prev.length) {
-        setContacts((c) => [...prev.map((d) => d.contact), ...c])
+        setContacts(c => [...prev.map(d => d.contact), ...c]);
       }
-      return []
-    })
-  }, [])
+      return [];
+    });
+  }, []);
 
   const clearDeletedContacts = useCallback(() => {
-    setDeletedContacts([])
-  }, [])
+    setDeletedContacts([]);
+  }, []);
 
   const toggleStar = useCallback((id: string) => {
-    setContacts((prev) => prev.map((c) => (c.id === id ? { ...c, starred: !c.starred } : c)))
-  }, [])
+    setContacts(prev => prev.map(c => (c.id === id ? { ...c, starred: !c.starred } : c)));
+  }, []);
 
   const updateStage = useCallback((id: string, stage: SharedContact['stage']) => {
-    setContacts((prev) => prev.map((c) => (c.id === id ? { ...c, stage } : c)))
-  }, [])
+    setContacts(prev => prev.map(c => (c.id === id ? { ...c, stage } : c)));
+  }, []);
 
   return (
     <ContactsContext.Provider
@@ -419,7 +419,7 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
     >
       {children}
     </ContactsContext.Provider>
-  )
+  );
 }
 
 /**
@@ -429,7 +429,7 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
  * @throws Error if called outside of `ContactsProvider`.
  */
 export function useContacts() {
-  const ctx = useContext(ContactsContext)
-  if (!ctx) throw new Error('useContacts must be used within ContactsProvider')
-  return ctx
+  const ctx = useContext(ContactsContext);
+  if (!ctx) throw new Error('useContacts must be used within ContactsProvider');
+  return ctx;
 }

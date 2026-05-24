@@ -12,11 +12,11 @@ import {
   Settings,
   Target,
   Users,
-} from 'lucide-react'
-import { useState } from 'react'
+} from 'lucide-react';
+import { useState } from 'react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 推广活动执行 - Campaign Execution
@@ -24,23 +24,23 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 interface Campaign {
-  id: string
-  name: string
-  status: 'scheduled' | 'running' | 'paused' | 'completed'
-  channel: string
-  progress: number
-  reach: number
-  engagement: number
-  conversion: number
-  startTime: string
-  endTime: string
-  budget: number
-  spent: number
+  id: string;
+  name: string;
+  status: 'scheduled' | 'running' | 'paused' | 'completed';
+  channel: string;
+  progress: number;
+  reach: number;
+  engagement: number;
+  conversion: number;
+  startTime: string;
+  endTime: string;
+  budget: number;
+  spent: number;
 }
 
 export function CampaignExecutionPage() {
-  const tc = useThemeColors()
-  const [filter, setFilter] = useState<'all' | 'running' | 'scheduled'>('all')
+  const tc = useThemeColors();
+  const [filter, setFilter] = useState<'all' | 'running' | 'scheduled'>('all');
 
   const campaigns: Campaign[] = [
     {
@@ -99,35 +99,35 @@ export function CampaignExecutionPage() {
       budget: 25000,
       spent: 7200,
     },
-  ]
+  ];
 
-  const filteredCampaigns = campaigns.filter((c) => {
-    if (filter === 'all') return true
-    return c.status === filter
-  })
+  const filteredCampaigns = campaigns.filter(c => {
+    if (filter === 'all') return true;
+    return c.status === filter;
+  });
 
   const getStatusConfig = (status: Campaign['status']) => {
     switch (status) {
       case 'scheduled':
-        return { label: '待执行', color: tc.textMuted, icon: Clock, bgGlow: 'none' }
+        return { label: '待执行', color: tc.textMuted, icon: Clock, bgGlow: 'none' };
       case 'running':
         return {
           label: '执行中',
           color: tc.primary,
           icon: Play,
           bgGlow: tc.neonGlow(tc.primary, 0.3),
-        }
+        };
       case 'paused':
-        return { label: '已暂停', color: tc.warning, icon: Pause, bgGlow: 'none' }
+        return { label: '已暂停', color: tc.warning, icon: Pause, bgGlow: 'none' };
       case 'completed':
-        return { label: '已完成', color: tc.success, icon: CheckCircle2, bgGlow: 'none' }
+        return { label: '已完成', color: tc.success, icon: CheckCircle2, bgGlow: 'none' };
     }
-  }
+  };
 
   const stats = [
     {
       label: '进行中活动',
-      value: campaigns.filter((c) => c.status === 'running').length,
+      value: campaigns.filter(c => c.status === 'running').length,
       icon: Activity,
       color: tc.primary,
       change: '+2',
@@ -153,7 +153,7 @@ export function CampaignExecutionPage() {
       color: tc.success,
       change: '+15.2%',
     },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -195,7 +195,7 @@ export function CampaignExecutionPage() {
 
       {/* 统计卡片 */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {stats.map((stat) => (
+        {stats.map(stat => (
           <NeonCard key={stat.label} className="p-6">
             <div className="flex items-start justify-between mb-4">
               <stat.icon className="w-8 h-8" style={{ color: stat.color }} />
@@ -221,7 +221,7 @@ export function CampaignExecutionPage() {
 
       {/* 筛选器 */}
       <div className="flex items-center gap-3">
-        {(['all', 'running', 'scheduled'] as const).map((f) => (
+        {(['all', 'running', 'scheduled'] as const).map(f => (
           <button
             key={f}
             onClick={() => setFilter(f)}
@@ -240,10 +240,10 @@ export function CampaignExecutionPage() {
 
       {/* 活动列表 */}
       <div className="space-y-4">
-        {filteredCampaigns.map((campaign) => {
-          const statusConfig = getStatusConfig(campaign.status)
-          const StatusIcon = statusConfig.icon
-          const budgetUsage = (campaign.spent / campaign.budget) * 100
+        {filteredCampaigns.map(campaign => {
+          const statusConfig = getStatusConfig(campaign.status);
+          const StatusIcon = statusConfig.icon;
+          const budgetUsage = (campaign.spent / campaign.budget) * 100;
 
           return (
             <NeonCard key={campaign.id} className="p-6">
@@ -401,9 +401,9 @@ export function CampaignExecutionPage() {
                 </div>
               </div>
             </NeonCard>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

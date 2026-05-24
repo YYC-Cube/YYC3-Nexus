@@ -49,14 +49,14 @@ import {
   Timer,
   Trash2,
   X,
-} from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { DndProvider, useDrag, useDrop } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import { useI18n } from '../../context/i18n-context'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { useI18n } from '../../context/i18n-context';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 import {
   type ReminderType,
   type Task,
@@ -66,9 +66,9 @@ import {
   type TaskType,
   useTaskStore,
   type ViewMode,
-} from '../tasks/task-store'
+} from '../tasks/task-store';
 
-const DND_ITEM_TYPE = 'TASK_CARD'
+const DND_ITEM_TYPE = 'TASK_CARD';
 
 const STATUS_CONFIG: Record<
   TaskStatus,
@@ -109,7 +109,7 @@ const STATUS_CONFIG: Record<
     color: '#ef4444',
     bgColor: 'rgba(239,68,68,0.12)',
   },
-}
+};
 
 const PRIORITY_CONFIG: Record<
   TaskPriority,
@@ -119,7 +119,7 @@ const PRIORITY_CONFIG: Record<
   high: { label: 'High', labelZh: '高', color: '#f97316', icon: '!' },
   medium: { label: 'Medium', labelZh: '中', color: '#eab308', icon: '-' },
   low: { label: 'Low', labelZh: '低', color: '#22c55e', icon: '~' },
-}
+};
 
 const TYPE_CONFIG: Record<TaskType, { label: string; labelZh: string; color: string }> = {
   feature: { label: 'Feature', labelZh: '功能', color: '#3b82f6' },
@@ -128,9 +128,9 @@ const TYPE_CONFIG: Record<TaskType, { label: string; labelZh: string; color: str
   test: { label: 'Test', labelZh: '测试', color: '#f97316' },
   documentation: { label: 'Docs', labelZh: '文档', color: '#06b6d4' },
   other: { label: 'Other', labelZh: '其他', color: '#6b7280' },
-}
+};
 
-const KANBAN_COLUMNS: TaskStatus[] = ['todo', 'in-progress', 'review', 'done', 'blocked']
+const KANBAN_COLUMNS: TaskStatus[] = ['todo', 'in-progress', 'review', 'done', 'blocked'];
 
 // ==========================================
 // AI Task Inference Engine (Simulated)
@@ -173,7 +173,7 @@ const CONVERSATION_INFERENCE_POOL: TaskInferenceResult[] = [
     tags: ['bug', 'session', 'concurrency'],
     estimatedHours: 8,
   },
-]
+];
 
 const CODE_INFERENCE_POOL: TaskInferenceResult[] = [
   {
@@ -219,7 +219,7 @@ const CODE_INFERENCE_POOL: TaskInferenceResult[] = [
     estimatedHours: 4,
     relatedFiles: ['src/utils/transform.ts', 'src/utils/__tests__/transform.test.ts'],
   },
-]
+];
 
 const DESCRIPTION_INFERENCE_POOL: TaskInferenceResult[] = [
   {
@@ -245,55 +245,55 @@ const DESCRIPTION_INFERENCE_POOL: TaskInferenceResult[] = [
     estimatedHours: 8,
     relatedFiles: ['src/app/App.tsx', 'src/app/routes.ts'],
   },
-]
+];
 
 /** Simulated AI inference engine */
 class AIInferenceSimulator {
   private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms))
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   async inferFromConversation(_text: string): Promise<TaskInferenceResult[]> {
-    await this.delay(1500 + Math.random() * 1500)
-    const count = 1 + Math.floor(Math.random() * 2)
-    const results: TaskInferenceResult[] = []
-    const pool = [...CONVERSATION_INFERENCE_POOL]
+    await this.delay(1500 + Math.random() * 1500);
+    const count = 1 + Math.floor(Math.random() * 2);
+    const results: TaskInferenceResult[] = [];
+    const pool = [...CONVERSATION_INFERENCE_POOL];
     for (let i = 0; i < count && pool.length > 0; i++) {
-      const idx = Math.floor(Math.random() * pool.length)
-      results.push({ ...pool[idx], confidence: 0.8 + Math.random() * 0.18 })
-      pool.splice(idx, 1)
+      const idx = Math.floor(Math.random() * pool.length);
+      results.push({ ...pool[idx], confidence: 0.8 + Math.random() * 0.18 });
+      pool.splice(idx, 1);
     }
-    return results
+    return results;
   }
 
   async inferFromCode(_code: string): Promise<TaskInferenceResult[]> {
-    await this.delay(2000 + Math.random() * 1000)
-    const count = 2 + Math.floor(Math.random() * 2)
-    const results: TaskInferenceResult[] = []
-    const pool = [...CODE_INFERENCE_POOL]
+    await this.delay(2000 + Math.random() * 1000);
+    const count = 2 + Math.floor(Math.random() * 2);
+    const results: TaskInferenceResult[] = [];
+    const pool = [...CODE_INFERENCE_POOL];
     for (let i = 0; i < count && pool.length > 0; i++) {
-      const idx = Math.floor(Math.random() * pool.length)
-      results.push({ ...pool[idx], confidence: 0.85 + Math.random() * 0.14 })
-      pool.splice(idx, 1)
+      const idx = Math.floor(Math.random() * pool.length);
+      results.push({ ...pool[idx], confidence: 0.85 + Math.random() * 0.14 });
+      pool.splice(idx, 1);
     }
-    return results
+    return results;
   }
 
   async inferFromDescription(_desc: string): Promise<TaskInferenceResult[]> {
-    await this.delay(1000 + Math.random() * 1000)
-    const pool = [...DESCRIPTION_INFERENCE_POOL]
-    const count = 1 + Math.floor(Math.random() * pool.length)
-    const results: TaskInferenceResult[] = []
+    await this.delay(1000 + Math.random() * 1000);
+    const pool = [...DESCRIPTION_INFERENCE_POOL];
+    const count = 1 + Math.floor(Math.random() * pool.length);
+    const results: TaskInferenceResult[] = [];
     for (let i = 0; i < count && pool.length > 0; i++) {
-      const idx = Math.floor(Math.random() * pool.length)
-      results.push({ ...pool[idx], confidence: 0.82 + Math.random() * 0.16 })
-      pool.splice(idx, 1)
+      const idx = Math.floor(Math.random() * pool.length);
+      results.push({ ...pool[idx], confidence: 0.82 + Math.random() * 0.16 });
+      pool.splice(idx, 1);
     }
-    return results
+    return results;
   }
 }
 
-const aiInference = new AIInferenceSimulator()
+const aiInference = new AIInferenceSimulator();
 
 // ==========================================
 // Drag & Drop Task Card
@@ -309,25 +309,25 @@ function DraggableTaskCard({
   onArchive,
   onDuplicate,
 }: {
-  task: Task
-  tc: ReturnType<typeof useThemeColors>
-  isSelected: boolean
-  onSelect: (id: string) => void
-  onEdit: (task: Task) => void
-  onDelete: (id: string) => void
-  onArchive: (id: string) => void
-  onDuplicate: (id: string) => void
+  task: Task;
+  tc: ReturnType<typeof useThemeColors>;
+  isSelected: boolean;
+  onSelect: (id: string) => void;
+  onEdit: (task: Task) => void;
+  onDelete: (id: string) => void;
+  onArchive: (id: string) => void;
+  onDuplicate: (id: string) => void;
 }) {
-  const moveTask = useTaskStore((s) => s.moveTask)
-  const reorderInColumn = useTaskStore((s) => s.reorderInColumn)
-  const [showMenu, setShowMenu] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
+  const moveTask = useTaskStore(s => s.moveTask);
+  const reorderInColumn = useTaskStore(s => s.reorderInColumn);
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag, preview] = useDrag({
     type: DND_ITEM_TYPE,
     item: () => ({ id: task.id, status: task.status }),
-    collect: (monitor) => ({ isDragging: monitor.isDragging() }),
-  })
+    collect: monitor => ({ isDragging: monitor.isDragging() }),
+  });
 
   // Intra-column reorder drop target
   const [{ isOverReorder }, reorderDrop] = useDrop({
@@ -336,33 +336,33 @@ function DraggableTaskCard({
       item.id !== task.id && item.status === task.status,
     drop: (item: { id: string; status: TaskStatus }) => {
       if (item.id !== task.id && item.status === task.status) {
-        reorderInColumn(item.id, task.id, 'before')
+        reorderInColumn(item.id, task.id, 'before');
       }
     },
-    collect: (monitor) => ({
+    collect: monitor => ({
       isOverReorder: monitor.isOver({ shallow: true }) && monitor.canDrop(),
     }),
-  })
+  });
 
-  const pCfg = PRIORITY_CONFIG[task.priority]
-  const tCfg = TYPE_CONFIG[task.type]
-  const completedSubs = task.subtasks?.filter((s) => s.isCompleted).length ?? 0
-  const totalSubs = task.subtasks?.length ?? 0
-  const subProgress = totalSubs > 0 ? (completedSubs / totalSubs) * 100 : 0
-  const isOverdue = task.dueDate && task.dueDate < Date.now() && task.status !== 'done'
+  const pCfg = PRIORITY_CONFIG[task.priority];
+  const tCfg = TYPE_CONFIG[task.type];
+  const completedSubs = task.subtasks?.filter(s => s.isCompleted).length ?? 0;
+  const totalSubs = task.subtasks?.length ?? 0;
+  const subProgress = totalSubs > 0 ? (completedSubs / totalSubs) * 100 : 0;
+  const isOverdue = task.dueDate && task.dueDate < Date.now() && task.status !== 'done';
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setShowMenu(false)
-    }
-    if (showMenu) document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [showMenu])
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setShowMenu(false);
+    };
+    if (showMenu) document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showMenu]);
 
   return (
     <div
-      ref={(node) => {
-        preview(reorderDrop(node))
+      ref={node => {
+        preview(reorderDrop(node));
       }}
       className="rounded-xl border p-3 cursor-grab group relative transition-all"
       style={{
@@ -430,9 +430,9 @@ function DraggableTaskCard({
         </div>
         <div className="relative" ref={menuRef}>
           <button
-            onClick={(e) => {
-              e.stopPropagation()
-              setShowMenu(!showMenu)
+            onClick={e => {
+              e.stopPropagation();
+              setShowMenu(!showMenu);
             }}
             className="w-6 h-6 flex items-center justify-center rounded-md opacity-0 group-hover:opacity-100 transition-all"
             style={{ background: 'rgba(255,255,255,0.06)' }}
@@ -458,8 +458,8 @@ function DraggableTaskCard({
                     icon: Edit3,
                     color: tc.textSecondary,
                     action: () => {
-                      onEdit(task)
-                      setShowMenu(false)
+                      onEdit(task);
+                      setShowMenu(false);
                     },
                   },
                   {
@@ -467,8 +467,8 @@ function DraggableTaskCard({
                     icon: Copy,
                     color: tc.textSecondary,
                     action: () => {
-                      onDuplicate(task.id)
-                      setShowMenu(false)
+                      onDuplicate(task.id);
+                      setShowMenu(false);
                     },
                   },
                   {
@@ -476,8 +476,8 @@ function DraggableTaskCard({
                     icon: Archive,
                     color: '#f97316',
                     action: () => {
-                      onArchive(task.id)
-                      setShowMenu(false)
+                      onArchive(task.id);
+                      setShowMenu(false);
                     },
                   },
                   {
@@ -485,16 +485,16 @@ function DraggableTaskCard({
                     icon: Trash2,
                     color: '#ef4444',
                     action: () => {
-                      onDelete(task.id)
-                      setShowMenu(false)
+                      onDelete(task.id);
+                      setShowMenu(false);
                     },
                   },
-                ].map((item) => (
+                ].map(item => (
                   <button
                     key={item.label}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      item.action()
+                    onClick={e => {
+                      e.stopPropagation();
+                      item.action();
                     }}
                     className="w-full flex items-center gap-2 px-3 py-1.5 text-[11px] transition-colors hover:bg-white/5"
                     style={{ color: item.color }}
@@ -509,13 +509,13 @@ function DraggableTaskCard({
                     Move to:
                   </p>
                   <div className="flex flex-wrap gap-1">
-                    {KANBAN_COLUMNS.filter((s) => s !== task.status).map((s) => (
+                    {KANBAN_COLUMNS.filter(s => s !== task.status).map(s => (
                       <button
                         key={s}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          moveTask(task.id, s)
-                          setShowMenu(false)
+                        onClick={e => {
+                          e.stopPropagation();
+                          moveTask(task.id, s);
+                          setShowMenu(false);
                         }}
                         className="text-[9px] px-1.5 py-0.5 rounded border transition-colors hover:bg-white/5"
                         style={{
@@ -578,7 +578,7 @@ function DraggableTaskCard({
       {/* Tags */}
       {task.tags && task.tags.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-2 pl-3">
-          {task.tags.slice(0, 3).map((tag) => (
+          {task.tags.slice(0, 3).map(tag => (
             <span
               key={tag}
               className="text-[8px] px-1.5 py-0.5 rounded"
@@ -633,13 +633,13 @@ function DraggableTaskCard({
           {(task.dependencies?.length ?? 0) > 0 && (
             <span className="flex items-center gap-0.5 text-[9px]" style={{ color: '#f97316' }}>
               <Layers className="w-3 h-3" />
-              {task.dependencies!.length}
+              {task.dependencies?.length}
             </span>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ==========================================
@@ -657,35 +657,35 @@ function DroppableKanbanColumn({
   onArchive,
   onDuplicate,
 }: {
-  status: TaskStatus
-  tasks: Task[]
-  tc: ReturnType<typeof useThemeColors>
-  selectedIds: Set<string>
-  onSelect: (id: string) => void
-  onEdit: (task: Task) => void
-  onDelete: (id: string) => void
-  onArchive: (id: string) => void
-  onDuplicate: (id: string) => void
+  status: TaskStatus;
+  tasks: Task[];
+  tc: ReturnType<typeof useThemeColors>;
+  selectedIds: Set<string>;
+  onSelect: (id: string) => void;
+  onEdit: (task: Task) => void;
+  onDelete: (id: string) => void;
+  onArchive: (id: string) => void;
+  onDuplicate: (id: string) => void;
 }) {
-  const moveTask = useTaskStore((s) => s.moveTask)
-  const cfg = STATUS_CONFIG[status]
-  const Icon = cfg.icon
+  const moveTask = useTaskStore(s => s.moveTask);
+  const cfg = STATUS_CONFIG[status];
+  const Icon = cfg.icon;
 
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: DND_ITEM_TYPE,
     drop: (item: { id: string; status: TaskStatus }) => {
       if (item.status !== status) {
-        moveTask(item.id, status)
+        moveTask(item.id, status);
       }
     },
     canDrop: (item: { id: string; status: TaskStatus }) => item.status !== status,
-    collect: (monitor) => ({
+    collect: monitor => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
-  })
+  });
 
-  const isActive = isOver && canDrop
+  const isActive = isOver && canDrop;
 
   return (
     <div className="flex flex-col min-w-[260px] max-w-[300px] flex-1">
@@ -721,7 +721,7 @@ function DroppableKanbanColumn({
           transform: isActive ? 'scale(1.01)' : 'scale(1)',
         }}
       >
-        {tasks.map((task) => (
+        {tasks.map(task => (
           <DraggableTaskCard
             key={task.id}
             task={task}
@@ -755,7 +755,7 @@ function DroppableKanbanColumn({
         )}
       </div>
     </div>
-  )
+  );
 }
 
 // ==========================================
@@ -768,29 +768,29 @@ function TaskModal({
   onSave,
   onClose,
 }: {
-  tc: ReturnType<typeof useThemeColors>
-  task: Task | null
-  onSave: (data: Partial<Task>) => void
-  onClose: () => void
+  tc: ReturnType<typeof useThemeColors>;
+  task: Task | null;
+  onSave: (data: Partial<Task>) => void;
+  onClose: () => void;
 }) {
-  const isEdit = !!task
-  const [title, setTitle] = useState(task?.title ?? '')
-  const [description, setDescription] = useState(task?.description ?? '')
-  const [priority, setPriority] = useState<TaskPriority>(task?.priority ?? 'medium')
-  const [type, setType] = useState<TaskType>(task?.type ?? 'feature')
-  const [status, setStatus] = useState<TaskStatus>(task?.status ?? 'todo')
-  const [tagsInput, setTagsInput] = useState(task?.tags?.join(', ') ?? '')
-  const [estimatedHours, setEstimatedHours] = useState(task?.estimatedHours?.toString() ?? '')
+  const isEdit = !!task;
+  const [title, setTitle] = useState(task?.title ?? '');
+  const [description, setDescription] = useState(task?.description ?? '');
+  const [priority, setPriority] = useState<TaskPriority>(task?.priority ?? 'medium');
+  const [type, setType] = useState<TaskType>(task?.type ?? 'feature');
+  const [status, setStatus] = useState<TaskStatus>(task?.status ?? 'todo');
+  const [tagsInput, setTagsInput] = useState(task?.tags?.join(', ') ?? '');
+  const [estimatedHours, setEstimatedHours] = useState(task?.estimatedHours?.toString() ?? '');
   const [dueDate, setDueDate] = useState(
     task?.dueDate ? new Date(task.dueDate).toISOString().slice(0, 10) : '',
-  )
+  );
 
   const handleSubmit = () => {
-    if (!title.trim()) return
+    if (!title.trim()) return;
     const tags = tagsInput
       .split(',')
-      .map((t) => t.trim())
-      .filter(Boolean)
+      .map(t => t.trim())
+      .filter(Boolean);
     onSave({
       ...(task ? { id: task.id } : {}),
       title: title.trim(),
@@ -801,22 +801,22 @@ function TaskModal({
       tags: tags.length > 0 ? tags : undefined,
       estimatedHours: estimatedHours ? parseFloat(estimatedHours) : undefined,
       dueDate: dueDate ? new Date(dueDate).getTime() : undefined,
-    })
-  }
+    });
+  };
 
   const inputStyle = {
     background: tc.bgInput,
     borderColor: tc.borderDefault,
     color: tc.textPrimary,
-  }
+  };
   const focusStyle = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    e.currentTarget.style.borderColor = `${tc.primary}50`
-    e.currentTarget.style.boxShadow = `0 0 0 3px ${tc.primary}15`
-  }
+    e.currentTarget.style.borderColor = `${tc.primary}50`;
+    e.currentTarget.style.boxShadow = `0 0 0 3px ${tc.primary}15`;
+  };
   const blurStyle = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    e.currentTarget.style.borderColor = tc.borderDefault
-    e.currentTarget.style.boxShadow = 'none'
-  }
+    e.currentTarget.style.borderColor = tc.borderDefault;
+    e.currentTarget.style.boxShadow = 'none';
+  };
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
@@ -865,7 +865,7 @@ function TaskModal({
             </label>
             <input
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={e => setTitle(e.target.value)}
               placeholder="Task title..."
               className="w-full px-3 py-2 text-[13px] rounded-xl border outline-none transition-all"
               style={inputStyle}
@@ -882,7 +882,7 @@ function TaskModal({
             </label>
             <textarea
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={e => setDescription(e.target.value)}
               placeholder="Describe the task..."
               rows={3}
               className="w-full px-3 py-2 text-[12px] rounded-xl border outline-none transition-all resize-none"
@@ -900,7 +900,7 @@ function TaskModal({
                 Priority
               </label>
               <div className="flex flex-col gap-1">
-                {(Object.keys(PRIORITY_CONFIG) as TaskPriority[]).map((p) => (
+                {(Object.keys(PRIORITY_CONFIG) as TaskPriority[]).map(p => (
                   <button
                     key={p}
                     onClick={() => setPriority(p)}
@@ -925,7 +925,7 @@ function TaskModal({
                 Type
               </label>
               <div className="flex flex-col gap-1">
-                {(Object.keys(TYPE_CONFIG) as TaskType[]).map((tp) => (
+                {(Object.keys(TYPE_CONFIG) as TaskType[]).map(tp => (
                   <button
                     key={tp}
                     onClick={() => setType(tp)}
@@ -949,8 +949,8 @@ function TaskModal({
                 Status
               </label>
               <div className="flex flex-col gap-1">
-                {KANBAN_COLUMNS.map((s) => {
-                  const SIcon = STATUS_CONFIG[s].icon
+                {KANBAN_COLUMNS.map(s => {
+                  const SIcon = STATUS_CONFIG[s].icon;
                   return (
                     <button
                       key={s}
@@ -965,7 +965,7 @@ function TaskModal({
                       <SIcon className="w-3 h-3" />
                       {STATUS_CONFIG[s].label}
                     </button>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -981,7 +981,7 @@ function TaskModal({
               <input
                 type="date"
                 value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
+                onChange={e => setDueDate(e.target.value)}
                 className="w-full px-3 py-2 text-[12px] rounded-xl border outline-none"
                 style={inputStyle}
               />
@@ -998,7 +998,7 @@ function TaskModal({
                 min="0"
                 step="0.5"
                 value={estimatedHours}
-                onChange={(e) => setEstimatedHours(e.target.value)}
+                onChange={e => setEstimatedHours(e.target.value)}
                 placeholder="0"
                 className="w-full px-3 py-2 text-[12px] rounded-xl border outline-none"
                 style={inputStyle}
@@ -1014,7 +1014,7 @@ function TaskModal({
             </label>
             <input
               value={tagsInput}
-              onChange={(e) => setTagsInput(e.target.value)}
+              onChange={e => setTagsInput(e.target.value)}
               placeholder="auth, security, P0"
               className="w-full px-3 py-2 text-[12px] rounded-xl border outline-none"
               style={inputStyle}
@@ -1049,7 +1049,7 @@ function TaskModal({
         </div>
       </motion.div>
     </div>
-  )
+  );
 }
 
 // ==========================================
@@ -1057,11 +1057,11 @@ function TaskModal({
 // ==========================================
 
 function AIInferencePanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
-  const addTask = useTaskStore((s) => s.addTask)
-  const [mode, setMode] = useState<'conversation' | 'code' | 'description'>('conversation')
-  const [input, setInput] = useState('')
-  const [inferring, setInferring] = useState(false)
-  const [results, setResults] = useState<TaskInferenceResult[]>([])
+  const addTask = useTaskStore(s => s.addTask);
+  const [mode, setMode] = useState<'conversation' | 'code' | 'description'>('conversation');
+  const [input, setInput] = useState('');
+  const [inferring, setInferring] = useState(false);
+  const [results, setResults] = useState<TaskInferenceResult[]>([]);
 
   const placeholders: Record<string, string> = {
     conversation:
@@ -1069,23 +1069,23 @@ function AIInferencePanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
     code: 'Paste code with TODO/FIXME comments... e.g.\n// TODO: implement retry logic\n// FIXME: memory leak in useEffect',
     description:
       'Describe the work to be done... e.g. "Optimize the first load performance, implement code splitting with React.lazy"',
-  }
+  };
 
   const handleInfer = async () => {
-    if (!input.trim() && results.length === 0) return
-    setInferring(true)
-    setResults([])
+    if (!input.trim() && results.length === 0) return;
+    setInferring(true);
+    setResults([]);
     try {
-      let res: TaskInferenceResult[]
-      if (mode === 'conversation') res = await aiInference.inferFromConversation(input)
-      else if (mode === 'code') res = await aiInference.inferFromCode(input)
-      else res = await aiInference.inferFromDescription(input)
-      setResults(res)
+      let res: TaskInferenceResult[];
+      if (mode === 'conversation') res = await aiInference.inferFromConversation(input);
+      else if (mode === 'code') res = await aiInference.inferFromCode(input);
+      else res = await aiInference.inferFromDescription(input);
+      setResults(res);
     } catch {
       // ignore
     }
-    setInferring(false)
-  }
+    setInferring(false);
+  };
 
   const handleAccept = (r: TaskInferenceResult) => {
     addTask({
@@ -1099,15 +1099,15 @@ function AIInferencePanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
       relatedFiles: r.relatedFiles,
       source: 'ai-inferred',
       confidence: r.confidence,
-    })
-    setResults((prev) => prev.filter((x) => x !== r))
-  }
+    });
+    setResults(prev => prev.filter(x => x !== r));
+  };
 
   const modeConfig = [
     { id: 'conversation' as const, label: 'Conversation', icon: MessageSquare, color: '#3b82f6' },
     { id: 'code' as const, label: 'Code Scan', icon: Code, color: '#22c55e' },
     { id: 'description' as const, label: 'Description', icon: Edit3, color: '#f97316' },
-  ]
+  ];
 
   return (
     <div
@@ -1125,12 +1125,12 @@ function AIInferencePanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
 
       {/* Mode switcher */}
       <div className="flex gap-1">
-        {modeConfig.map((m) => (
+        {modeConfig.map(m => (
           <button
             key={m.id}
             onClick={() => {
-              setMode(m.id)
-              setResults([])
+              setMode(m.id);
+              setResults([]);
             }}
             className="flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-lg border transition-all"
             style={{
@@ -1148,18 +1148,18 @@ function AIInferencePanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
       {/* Input area */}
       <textarea
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={e => setInput(e.target.value)}
         placeholder={placeholders[mode]}
         rows={3}
         className="w-full px-3 py-2 text-[11px] rounded-xl border outline-none resize-none transition-all"
         style={{ background: tc.bgInput, borderColor: tc.borderDefault, color: tc.textPrimary }}
-        onFocus={(e) => {
-          e.currentTarget.style.borderColor = '#a78bfa50'
-          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(167,139,250,0.1)'
+        onFocus={e => {
+          e.currentTarget.style.borderColor = '#a78bfa50';
+          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(167,139,250,0.1)';
         }}
-        onBlur={(e) => {
-          e.currentTarget.style.borderColor = tc.borderDefault
-          e.currentTarget.style.boxShadow = 'none'
+        onBlur={e => {
+          e.currentTarget.style.borderColor = tc.borderDefault;
+          e.currentTarget.style.boxShadow = 'none';
         }}
       />
 
@@ -1183,7 +1183,7 @@ function AIInferencePanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
         )}
         {inferring
           ? 'AI Analyzing...'
-          : `Infer Tasks from ${modeConfig.find((m) => m.id === mode)?.label}`}
+          : `Infer Tasks from ${modeConfig.find(m => m.id === mode)?.label}`}
       </button>
 
       {/* Results */}
@@ -1257,7 +1257,7 @@ function AIInferencePanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
                   Accept
                 </button>
                 <button
-                  onClick={() => setResults((prev) => prev.filter((_, i) => i !== idx))}
+                  onClick={() => setResults(prev => prev.filter((_, i) => i !== idx))}
                   className="text-[9px] px-2 py-1 rounded-lg border transition-all hover:bg-white/5"
                   style={{ borderColor: 'rgba(239,68,68,0.3)', color: '#ef4444' }}
                 >
@@ -1282,7 +1282,7 @@ function AIInferencePanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
         ))}
       </AnimatePresence>
     </div>
-  )
+  );
 }
 
 // ==========================================
@@ -1290,20 +1290,20 @@ function AIInferencePanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
 // ==========================================
 
 function RemindersPanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
-  const reminders = useTaskStore((s) => s.reminders)
-  const tasks = useTaskStore((s) => s.tasks)
-  const dismissReminder = useTaskStore((s) => s.dismissReminder)
+  const reminders = useTaskStore(s => s.reminders);
+  const tasks = useTaskStore(s => s.tasks);
+  const dismissReminder = useTaskStore(s => s.dismissReminder);
 
-  const unread = reminders.filter((r) => !r.isRead)
+  const unread = reminders.filter(r => !r.isRead);
   const typeColors: Record<ReminderType, string> = {
     deadline: '#ef4444',
     dependency: '#f97316',
     blocking: '#eab308',
     progress: '#22c55e',
     custom: '#8b5cf6',
-  }
+  };
 
-  if (unread.length === 0) return null
+  if (unread.length === 0) return null;
 
   return (
     <motion.div
@@ -1321,8 +1321,8 @@ function RemindersPanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
           Reminders ({unread.length})
         </span>
       </div>
-      {unread.slice(0, 3).map((r) => {
-        const task = tasks.find((t) => t.id === r.taskId)
+      {unread.slice(0, 3).map(r => {
+        const task = tasks.find(t => t.id === r.taskId);
         return (
           <div
             key={r.id}
@@ -1352,10 +1352,10 @@ function RemindersPanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
               <X className="w-3 h-3" style={{ color: tc.textMuted }} />
             </button>
           </div>
-        )
+        );
       })}
     </motion.div>
-  )
+  );
 }
 
 // ==========================================
@@ -1363,32 +1363,32 @@ function RemindersPanel({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
 // ==========================================
 
 function TaskStats({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
-  const tasks = useTaskStore((s) => s.tasks)
-  const active = tasks.filter((t) => !t.isArchived)
-  const total = active.length
+  const tasks = useTaskStore(s => s.tasks);
+  const active = tasks.filter(t => !t.isArchived);
+  const total = active.length;
   const overdue = active.filter(
-    (t) => t.dueDate && t.dueDate < Date.now() && t.status !== 'done',
-  ).length
-  const aiInferred = active.filter((t) => t.source === 'ai-inferred').length
-  const totalEstHours = active.reduce((s, t) => s + (t.estimatedHours ?? 0), 0)
+    t => t.dueDate && t.dueDate < Date.now() && t.status !== 'done',
+  ).length;
+  const aiInferred = active.filter(t => t.source === 'ai-inferred').length;
+  const totalEstHours = active.reduce((s, t) => s + (t.estimatedHours ?? 0), 0);
 
-  const byStatus = KANBAN_COLUMNS.map((s) => ({
+  const byStatus = KANBAN_COLUMNS.map(s => ({
     status: s,
-    count: active.filter((t) => t.status === s).length,
+    count: active.filter(t => t.status === s).length,
     ...STATUS_CONFIG[s],
-  }))
+  }));
   const stats = [
     { label: 'Total Tasks', value: total.toString(), icon: ClipboardList, color: tc.primary },
     { label: 'Overdue', value: overdue.toString(), icon: AlertTriangle, color: '#ef4444' },
     { label: 'AI Inferred', value: aiInferred.toString(), icon: Brain, color: '#a78bfa' },
     { label: 'Est. Hours', value: `${totalEstHours}h`, icon: Timer, color: '#f97316' },
-  ]
+  ];
 
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {stats.map((s, i) => {
-          const Icon = s.icon
+          const Icon = s.icon;
           return (
             <motion.div
               key={s.label}
@@ -1413,7 +1413,7 @@ function TaskStats({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
                 </p>
               </div>
             </motion.div>
-          )
+          );
         })}
       </div>
 
@@ -1425,8 +1425,8 @@ function TaskStats({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
           Status Distribution
         </p>
         <div className="space-y-2">
-          {byStatus.map((s) => {
-            const pct = total > 0 ? (s.count / total) * 100 : 0
+          {byStatus.map(s => {
+            const pct = total > 0 ? (s.count / total) * 100 : 0;
             return (
               <div key={s.status} className="flex items-center gap-3">
                 <span className="text-[11px] w-20 shrink-0" style={{ color: s.color }}>
@@ -1448,7 +1448,7 @@ function TaskStats({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
                   {s.count}
                 </span>
               </div>
-            )
+            );
           })}
         </div>
       </div>
@@ -1461,9 +1461,9 @@ function TaskStats({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
           Priority Breakdown
         </p>
         <div className="grid grid-cols-4 gap-2">
-          {(Object.keys(PRIORITY_CONFIG) as TaskPriority[]).map((p) => {
-            const count = active.filter((t) => t.priority === p).length
-            const cfg = PRIORITY_CONFIG[p]
+          {(Object.keys(PRIORITY_CONFIG) as TaskPriority[]).map(p => {
+            const count = active.filter(t => t.priority === p).length;
+            const cfg = PRIORITY_CONFIG[p];
             return (
               <div
                 key={p}
@@ -1477,12 +1477,12 @@ function TaskStats({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
                   {cfg.label}
                 </p>
               </div>
-            )
+            );
           })}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ==========================================
@@ -1497,12 +1497,12 @@ function ListView({
   onEdit,
   onDelete,
 }: {
-  tasks: Task[]
-  tc: ReturnType<typeof useThemeColors>
-  selectedIds: Set<string>
-  onSelect: (id: string) => void
-  onEdit: (task: Task) => void
-  onDelete: (id: string) => void
+  tasks: Task[];
+  tc: ReturnType<typeof useThemeColors>;
+  selectedIds: Set<string>;
+  onSelect: (id: string) => void;
+  onEdit: (task: Task) => void;
+  onDelete: (id: string) => void;
 }) {
   return (
     <div
@@ -1524,11 +1524,11 @@ function ListView({
         <span className="col-span-1"></span>
       </div>
       {tasks.map((task, _idx) => {
-        const sCfg = STATUS_CONFIG[task.status]
-        const pCfg = PRIORITY_CONFIG[task.priority]
-        const tCfg = TYPE_CONFIG[task.type]
-        const isOverdue = task.dueDate && task.dueDate < Date.now() && task.status !== 'done'
-        const SIcon = sCfg.icon
+        const sCfg = STATUS_CONFIG[task.status];
+        const pCfg = PRIORITY_CONFIG[task.priority];
+        const tCfg = TYPE_CONFIG[task.type];
+        const isOverdue = task.dueDate && task.dueDate < Date.now() && task.status !== 'done';
+        const SIcon = sCfg.icon;
         return (
           <div
             key={task.id}
@@ -1546,7 +1546,7 @@ function ListView({
                 onChange={() => onSelect(task.id)}
                 className="w-3.5 h-3.5 rounded border"
                 style={{ accentColor: tc.primary }}
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
               />
             </div>
             <div className="col-span-4">
@@ -1555,7 +1555,7 @@ function ListView({
               </p>
               {task.tags && task.tags.length > 0 && (
                 <div className="flex gap-1 mt-0.5">
-                  {task.tags.slice(0, 2).map((tag) => (
+                  {task.tags.slice(0, 2).map(tag => (
                     <span
                       key={tag}
                       className="text-[8px] px-1 py-0.5 rounded"
@@ -1617,18 +1617,18 @@ function ListView({
             </div>
             <div className="col-span-1 flex items-center justify-end gap-1">
               <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onEdit(task)
+                onClick={e => {
+                  e.stopPropagation();
+                  onEdit(task);
                 }}
                 className="w-5 h-5 flex items-center justify-center rounded opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/10"
               >
                 <Edit3 className="w-3 h-3" style={{ color: tc.textMuted }} />
               </button>
               <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onDelete(task.id)
+                onClick={e => {
+                  e.stopPropagation();
+                  onDelete(task.id);
                 }}
                 className="w-5 h-5 flex items-center justify-center rounded opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/10"
               >
@@ -1636,7 +1636,7 @@ function ListView({
               </button>
             </div>
           </div>
-        )
+        );
       })}
       {tasks.length === 0 && (
         <div className="text-center py-12" style={{ color: tc.textMuted }}>
@@ -1645,7 +1645,7 @@ function ListView({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // ==========================================
@@ -1653,29 +1653,29 @@ function ListView({
 // ==========================================
 
 export function TaskBoardPage() {
-  const tc = useThemeColors()
-  const { t } = useI18n()
+  const tc = useThemeColors();
+  const { t } = useI18n();
 
   // Zustand store selectors
-  const tasks = useTaskStore((s) => s.tasks)
-  const addTask = useTaskStore((s) => s.addTask)
-  const updateTask = useTaskStore((s) => s.updateTask)
-  const deleteTask = useTaskStore((s) => s.deleteTask)
-  const archiveTask = useTaskStore((s) => s.archiveTask)
-  const duplicateTask = useTaskStore((s) => s.duplicateTask)
-  const batchUpdateStatus = useTaskStore((s) => s.batchUpdateStatus)
-  const batchDelete = useTaskStore((s) => s.batchDelete)
-  const seedIfEmpty = useTaskStore((s) => s.seedIfEmpty)
+  const tasks = useTaskStore(s => s.tasks);
+  const addTask = useTaskStore(s => s.addTask);
+  const updateTask = useTaskStore(s => s.updateTask);
+  const deleteTask = useTaskStore(s => s.deleteTask);
+  const archiveTask = useTaskStore(s => s.archiveTask);
+  const duplicateTask = useTaskStore(s => s.duplicateTask);
+  const batchUpdateStatus = useTaskStore(s => s.batchUpdateStatus);
+  const batchDelete = useTaskStore(s => s.batchDelete);
+  const seedIfEmpty = useTaskStore(s => s.seedIfEmpty);
 
   // Seed on mount if empty
   useEffect(() => {
-    seedIfEmpty()
-  }, [seedIfEmpty])
+    seedIfEmpty();
+  }, [seedIfEmpty]);
 
   // Browser Notification API — listen for task move events via window.dispatchEvent
   useEffect(() => {
     if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission()
+      Notification.requestPermission();
     }
     const STATUS_LABELS: Record<string, string> = {
       todo: 'To Do',
@@ -1683,103 +1683,104 @@ export function TaskBoardPage() {
       review: 'Review',
       done: 'Done',
       blocked: 'Blocked',
-    }
+    };
     const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as { taskTitle: string; from: string; to: string }
-      if (!detail) return
-      const body = `"${detail.taskTitle}" → ${STATUS_LABELS[detail.to] ?? detail.to}`
+      const detail = (e as CustomEvent).detail as { taskTitle: string; from: string; to: string };
+      if (!detail) return;
+      const body = `"${detail.taskTitle}" → ${STATUS_LABELS[detail.to] ?? detail.to}`;
       if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('YYC³ Task Board', {
           body,
           icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>",
-        })
+        });
       }
-    }
-    window.addEventListener('yyc3-task-moved', handler)
-    return () => window.removeEventListener('yyc3-task-moved', handler)
-  }, [])
+    };
+    window.addEventListener('yyc3-task-moved', handler);
+    return () => window.removeEventListener('yyc3-task-moved', handler);
+  }, []);
 
   // Local UI state
-  const [viewMode, setViewMode] = useState<ViewMode>('kanban')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [filterStatus, setFilterStatus] = useState<TaskStatus | undefined>()
-  const [filterPriority, setFilterPriority] = useState<TaskPriority | undefined>()
-  const [filterType, setFilterType] = useState<TaskType | undefined>()
-  const [showArchived, setShowArchived] = useState(false)
-  const [sortBy, setSortBy] = useState<'priority' | 'dueDate' | 'createdAt'>('priority')
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
-  const [modalTask, setModalTask] = useState<Task | null | 'new'>(null)
-  const [showFilters, setShowFilters] = useState(false)
+  const [viewMode, setViewMode] = useState<ViewMode>('kanban');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState<TaskStatus | undefined>();
+  const [filterPriority, setFilterPriority] = useState<TaskPriority | undefined>();
+  const [filterType, setFilterType] = useState<TaskType | undefined>();
+  const [showArchived, setShowArchived] = useState(false);
+  const [sortBy, setSortBy] = useState<'priority' | 'dueDate' | 'createdAt'>('priority');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [modalTask, setModalTask] = useState<Task | null | 'new'>(null);
+  const [showFilters, setShowFilters] = useState(false);
 
   const handleSelect = useCallback((id: string) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }, [])
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
 
   const handleSave = useCallback(
     (data: Partial<Task>) => {
       if (data.id) {
-        updateTask(data.id, data)
+        updateTask(data.id, data);
       } else {
         addTask({
           title: data.title ?? '',
           description: data.description,
-          status: data.status ?? 'todo',
-          priority: data.priority ?? 'medium',
-          type: data.type ?? 'feature',
+          status: (data.status ?? 'todo') as TaskStatus,
+          priority: (data.priority ?? 'medium') as TaskPriority,
+          type: (data.type ?? 'feature') as TaskType,
           dueDate: data.dueDate,
           estimatedHours: data.estimatedHours,
           tags: data.tags,
-        } as any)
+          source: 'manual',
+        });
       }
-      setModalTask(null)
+      setModalTask(null);
     },
     [addTask, updateTask],
-  )
+  );
 
   const handleBatchDelete = useCallback(() => {
-    batchDelete(Array.from(selectedIds))
-    setSelectedIds(new Set())
-  }, [selectedIds, batchDelete])
+    batchDelete(Array.from(selectedIds));
+    setSelectedIds(new Set());
+  }, [selectedIds, batchDelete]);
 
   const handleBatchStatus = useCallback(
     (status: TaskStatus) => {
-      batchUpdateStatus(Array.from(selectedIds), status)
-      setSelectedIds(new Set())
+      batchUpdateStatus(Array.from(selectedIds), status);
+      setSelectedIds(new Set());
     },
     [selectedIds, batchUpdateStatus],
-  )
+  );
 
   // Filtered & sorted tasks
   const filteredTasks = useMemo(() => {
-    let result = tasks.filter((t) => (showArchived ? true : !t.isArchived))
+    let result = tasks.filter(t => (showArchived ? true : !t.isArchived));
     if (searchQuery) {
-      const q = searchQuery.toLowerCase()
+      const q = searchQuery.toLowerCase();
       result = result.filter(
-        (t) =>
+        t =>
           t.title.toLowerCase().includes(q) ||
           t.description?.toLowerCase().includes(q) ||
-          t.tags?.some((tag) => tag.toLowerCase().includes(q)),
-      )
+          t.tags?.some(tag => tag.toLowerCase().includes(q)),
+      );
     }
-    if (filterStatus) result = result.filter((t) => t.status === filterStatus)
-    if (filterPriority) result = result.filter((t) => t.priority === filterPriority)
-    if (filterType) result = result.filter((t) => t.type === filterType)
+    if (filterStatus) result = result.filter(t => t.status === filterStatus);
+    if (filterPriority) result = result.filter(t => t.priority === filterPriority);
+    if (filterType) result = result.filter(t => t.type === filterType);
 
-    const priorityOrder: Record<TaskPriority, number> = { critical: 0, high: 1, medium: 2, low: 3 }
+    const priorityOrder: Record<TaskPriority, number> = { critical: 0, high: 1, medium: 2, low: 3 };
     result.sort((a, b) => {
-      let cmp = 0
-      if (sortBy === 'priority') cmp = priorityOrder[a.priority] - priorityOrder[b.priority]
-      else if (sortBy === 'dueDate') cmp = (a.dueDate ?? Infinity) - (b.dueDate ?? Infinity)
-      else cmp = a.createdAt - b.createdAt
-      return sortOrder === 'asc' ? cmp : -cmp
-    })
-    return result
+      let cmp = 0;
+      if (sortBy === 'priority') cmp = priorityOrder[a.priority] - priorityOrder[b.priority];
+      else if (sortBy === 'dueDate') cmp = (a.dueDate ?? Infinity) - (b.dueDate ?? Infinity);
+      else cmp = a.createdAt - b.createdAt;
+      return sortOrder === 'asc' ? cmp : -cmp;
+    });
+    return result;
   }, [
     tasks,
     searchQuery,
@@ -1789,7 +1790,7 @@ export function TaskBoardPage() {
     showArchived,
     sortBy,
     sortOrder,
-  ])
+  ]);
 
   const tasksByStatus = useMemo(() => {
     const map: Record<TaskStatus, Task[]> = {
@@ -1798,10 +1799,10 @@ export function TaskBoardPage() {
       review: [],
       done: [],
       blocked: [],
-    }
-    for (const t of filteredTasks) if (map[t.status]) map[t.status].push(t)
-    return map
-  }, [filteredTasks])
+    };
+    for (const t of filteredTasks) if (map[t.status]) map[t.status].push(t);
+    return map;
+  }, [filteredTasks]);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -1857,7 +1858,7 @@ export function TaskBoardPage() {
                   { mode: 'kanban' as ViewMode, icon: LayoutGrid, label: 'Kanban' },
                   { mode: 'list' as ViewMode, icon: List, label: 'List' },
                   { mode: 'stats' as ViewMode, icon: BarChart3, label: 'Stats' },
-                ].map((v) => (
+                ].map(v => (
                   <button
                     key={v.mode}
                     onClick={() => setViewMode(v.mode)}
@@ -1905,20 +1906,20 @@ export function TaskBoardPage() {
               type="text"
               placeholder="Search tasks..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-4 py-2 text-[12px] rounded-xl border outline-none transition-all"
               style={{
                 background: tc.bgInput,
                 borderColor: tc.borderDefault,
                 color: tc.textPrimary,
               }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = `${tc.primary}50`
-                e.currentTarget.style.boxShadow = `0 0 0 3px ${tc.primary}15`
+              onFocus={e => {
+                e.currentTarget.style.borderColor = `${tc.primary}50`;
+                e.currentTarget.style.boxShadow = `0 0 0 3px ${tc.primary}15`;
               }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = tc.borderDefault
-                e.currentTarget.style.boxShadow = 'none'
+              onBlur={e => {
+                e.currentTarget.style.borderColor = tc.borderDefault;
+                e.currentTarget.style.boxShadow = 'none';
               }}
             />
           </div>
@@ -1936,7 +1937,7 @@ export function TaskBoardPage() {
               Filters
             </button>
             <button
-              onClick={() => setSortOrder((o) => (o === 'asc' ? 'desc' : 'asc'))}
+              onClick={() => setSortOrder(o => (o === 'asc' ? 'desc' : 'asc'))}
               className="flex items-center gap-1 text-[10px] px-2.5 py-1.5 rounded-lg border transition-all"
               style={{ borderColor: tc.borderDefault, color: tc.textMuted }}
             >
@@ -1947,7 +1948,7 @@ export function TaskBoardPage() {
               )}
               {sortBy === 'priority' ? 'Priority' : sortBy === 'dueDate' ? 'Due Date' : 'Created'}
             </button>
-            {(['priority', 'dueDate', 'createdAt'] as const).map((s) => (
+            {(['priority', 'dueDate', 'createdAt'] as const).map(s => (
               <button
                 key={s}
                 onClick={() => setSortBy(s)}
@@ -1969,7 +1970,7 @@ export function TaskBoardPage() {
                 <span className="text-[10px] mr-1" style={{ color: tc.textMuted }}>
                   {selectedIds.size} selected
                 </span>
-                {KANBAN_COLUMNS.map((s) => (
+                {KANBAN_COLUMNS.map(s => (
                   <button
                     key={s}
                     onClick={() => handleBatchStatus(s)}
@@ -2023,7 +2024,7 @@ export function TaskBoardPage() {
                   >
                     All
                   </button>
-                  {KANBAN_COLUMNS.map((s) => (
+                  {KANBAN_COLUMNS.map(s => (
                     <button
                       key={s}
                       onClick={() => setFilterStatus(filterStatus === s ? undefined : s)}
@@ -2055,7 +2056,7 @@ export function TaskBoardPage() {
                   >
                     All
                   </button>
-                  {(Object.keys(PRIORITY_CONFIG) as TaskPriority[]).map((p) => (
+                  {(Object.keys(PRIORITY_CONFIG) as TaskPriority[]).map(p => (
                     <button
                       key={p}
                       onClick={() => setFilterPriority(filterPriority === p ? undefined : p)}
@@ -2087,7 +2088,7 @@ export function TaskBoardPage() {
                   >
                     All
                   </button>
-                  {(Object.keys(TYPE_CONFIG) as TaskType[]).map((tp) => (
+                  {(Object.keys(TYPE_CONFIG) as TaskType[]).map(tp => (
                     <button
                       key={tp}
                       onClick={() => setFilterType(filterType === tp ? undefined : tp)}
@@ -2126,7 +2127,7 @@ export function TaskBoardPage() {
           <div className="xl:col-span-3">
             {viewMode === 'kanban' && (
               <div className="flex gap-3 overflow-x-auto pb-4">
-                {KANBAN_COLUMNS.map((status) => (
+                {KANBAN_COLUMNS.map(status => (
                   <DroppableKanbanColumn
                     key={status}
                     status={status}
@@ -2134,7 +2135,7 @@ export function TaskBoardPage() {
                     tc={tc}
                     selectedIds={selectedIds}
                     onSelect={handleSelect}
-                    onEdit={(t) => setModalTask(t)}
+                    onEdit={t => setModalTask(t)}
                     onDelete={deleteTask}
                     onArchive={archiveTask}
                     onDuplicate={duplicateTask}
@@ -2148,7 +2149,7 @@ export function TaskBoardPage() {
                 tc={tc}
                 selectedIds={selectedIds}
                 onSelect={handleSelect}
-                onEdit={(t) => setModalTask(t)}
+                onEdit={t => setModalTask(t)}
                 onDelete={deleteTask}
               />
             )}
@@ -2207,5 +2208,5 @@ export function TaskBoardPage() {
         </AnimatePresence>
       </div>
     </DndProvider>
-  )
+  );
 }

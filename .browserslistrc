@@ -1,0 +1,31 @@
+# YYC³ Browserslist Configuration
+# Target browser support for @yyc3/nexus project
+# Compatible with browserslist 4.28+ (strict alias validation)
+
+# Global market share > 1%, excluding dead browsers
+> 1%
+not dead
+
+# Last 2 major versions of each browser (safe, widely supported)
+last 2 versions
+
+# Specific browser support requirements (using only validated aliases)
+Chrome >= 90
+Firefox >= 88
+Safari >= 14
+Edge >= 90
+
+# iOS Safari support (for PWA/mobile)
+iOS >= 14
+
+# Android browser support (covers Samsung Internet users)
+# Note: Using 'android' instead of deprecated 'SamsungInternet' alias
+Android >= 5.0
+
+# Explicitly exclude IE11 - using ES2020+ features
+not ie 11
+not ie <= 11
+not dead
+
+# Node.js environments for SSR/SSG (if needed in future)
+maintained node versions

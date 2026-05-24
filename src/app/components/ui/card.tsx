@@ -1,6 +1,6 @@
-import * as React from 'react'
+import type * as React from 'react';
 
-import { cn } from './utils'
+import { cn } from './utils';
 
 function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -12,7 +12,7 @@ function Card({ className, ...props }: React.ComponentProps<'div'>) {
       )}
       {...props}
     />
-  )
+  );
 }
 
 function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
@@ -25,17 +25,17 @@ function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
       )}
       {...props}
     />
-  )
+  );
 }
 
 function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
-  return <h4 data-slot="card-title" className={cn('leading-none', className)} {...props} />
+  return <h4 data-slot="card-title" className={cn('leading-none', className)} {...props} />;
 }
 
 function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <p data-slot="card-description" className={cn('text-muted-foreground', className)} {...props} />
-  )
+  );
 }
 
 function CardAction({ className, ...props }: React.ComponentProps<'div'>) {
@@ -45,7 +45,7 @@ function CardAction({ className, ...props }: React.ComponentProps<'div'>) {
       className={cn('col-start-2 row-span-2 row-start-1 self-start justify-self-end', className)}
       {...props}
     />
-  )
+  );
 }
 
 function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
@@ -55,7 +55,7 @@ function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
       className={cn('px-6 [&:last-child]:pb-6', className)}
       {...props}
     />
-  )
+  );
 }
 
 function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
@@ -65,7 +65,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
       className={cn('flex items-center px-6 pb-6 [.border-t]:pt-6', className)}
       {...props}
     />
-  )
+  );
 }
 
-export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent }
+export { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle };

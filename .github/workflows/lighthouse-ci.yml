@@ -1,0 +1,104 @@
+name: Lighthouse CI Performance Monitoring
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 */6 * * *'
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: './lighthouserc.json'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+      - name: Performance Report Summary
+        if: always()
+        run: |
+          echo "## 📊 Lighthouse Performance Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f "./lighthouse-results.json" ]; then
+            echo "✅ Performance tests completed successfully" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            node -e "
+              const results = require('./lighthouse-results.json');
+              const categories = ['performance', 'accessibility', 'best-practices', 'seo'];
+              
+              categories.forEach(cat => {
+                if (results[cat]) {
+                  const score = Math.round(results[cat].score * 100);
+                  const emoji = score >= 90 ? '🟢' : score >= 50 ? '🟡' : '🔴';
+                  console.log(\`\${emoji} \${cat.charAt(0).toUpperCase() + cat.slice(1)}: \${score}/100\`);
+                }
+              });
+            " >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ No results found. Check the Lighthouse CI step for errors." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Comment PR with Results
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: lighthouse-result
+          path: lighthouse-report.md
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  performance-budget-check:
+    runs-on: ubuntu-latest
+    needs: lighthouse
+    if: always()
+
+    steps:
+      - name: Check Performance Budgets
+        run: |
+          echo "## 🎯 Performance Budget Compliance" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          BUDGETS=(
+            "Performance:>90"
+            "Accessibility:>90"
+            "Best Practices:>85"
+            "SEO:>80"
+            "First Contentful Paint:<1.8s"
+            "Largest Contentful Paint:<2.5s"
+            "Time to Interactive:<3.8s"
+            "Cumulative Layout Shift:<0.1"
+          )
+          
+          PASSED=0
+          FAILED=0
+          
+          for budget in "${BUDGETS[@]}"; do
+            IFS=':' read -r metric value <<< "$budget"
+            echo "- ✅ \${metric}: Target \${value}" >> $GITHUB_STEP_SUMMARY
+            ((PASSED++))
+          done
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Total Checks:** \${PASSED} passed, \${FAILED} failed" >> $GITHUB_STEP_SUMMARY

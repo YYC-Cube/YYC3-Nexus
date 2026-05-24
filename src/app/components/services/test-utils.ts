@@ -12,8 +12,8 @@
 // Mock Data Factories
 // ==========================================
 
-import type { AIProviderConfig, ChatMessage, ProxyResponse } from './ai-proxy-service'
-import type { GitBranchInfo, GitCommitInfo, GitConfig } from './git-api-service'
+import type { AIProviderConfig, ChatMessage, ProxyResponse } from './ai-proxy-service';
+import type { GitBranchInfo, GitCommitInfo, GitConfig } from './git-api-service';
 
 /** Create a mock AI provider config */
 export function createMockAIConfig(overrides?: Partial<AIProviderConfig>): AIProviderConfig {
@@ -24,7 +24,7 @@ export function createMockAIConfig(overrides?: Partial<AIProviderConfig>): AIPro
     temperature: 0.7,
     maxTokens: 4096,
     ...overrides,
-  }
+  };
 }
 
 /** Create a mock chat message */
@@ -33,7 +33,7 @@ export function createMockMessage(overrides?: Partial<ChatMessage>): ChatMessage
     role: 'user',
     content: 'Hello, YYC³ AI Assistant!',
     ...overrides,
-  }
+  };
 }
 
 /** Create a mock proxy response */
@@ -45,7 +45,7 @@ export function createMockProxyResponse(overrides?: Partial<ProxyResponse>): Pro
     cached: false,
     latencyMs: 450,
     ...overrides,
-  }
+  };
 }
 
 /** Create a mock Git config */
@@ -56,7 +56,7 @@ export function createMockGitConfig(overrides?: Partial<GitConfig>): GitConfig {
     repo: 'yyc3-cloudpivot',
     branch: 'feature/left-panel-v2',
     ...overrides,
-  }
+  };
 }
 
 /** Create a mock commit */
@@ -68,7 +68,7 @@ export function createMockCommit(overrides?: Partial<GitCommitInfo>): GitCommitI
     filesChanged: 3,
     url: 'https://github.com/YanYuCloudCube/yyc3/commit/a1b2c3d',
     ...overrides,
-  }
+  };
 }
 
 /** Create a mock branch */
@@ -79,7 +79,7 @@ export function createMockBranch(overrides?: Partial<GitBranchInfo>): GitBranchI
     protected: false,
     current: false,
     ...overrides,
-  }
+  };
 }
 
 /** Create a mock file tree node */
@@ -125,7 +125,7 @@ export function createMockFileTree() {
       type: 'file' as const,
       children: [],
     },
-  ]
+  ];
 }
 
 // ==========================================
@@ -135,9 +135,9 @@ export function createMockFileTree() {
 /** Assert that a value is defined and return it */
 export function assertDefined<T>(value: T | undefined | null, label = 'value'): T {
   if (value === undefined || value === null) {
-    throw new Error(`Expected ${label} to be defined, but got ${value}`)
+    throw new Error(`Expected ${label} to be defined, but got ${value}`);
   }
-  return value
+  return value;
 }
 
 /** Wait for a condition to become true (polling) */
@@ -146,18 +146,18 @@ export async function waitForCondition(
   timeout = 5000,
   interval = 100,
 ): Promise<void> {
-  const start = Date.now()
+  const start = Date.now();
   while (!condition()) {
     if (Date.now() - start > timeout) {
-      throw new Error(`waitForCondition timed out after ${timeout}ms`)
+      throw new Error(`waitForCondition timed out after ${timeout}ms`);
     }
-    await new Promise((r) => setTimeout(r, interval))
+    await new Promise(r => setTimeout(r, interval));
   }
 }
 
 /** Create a delay promise */
 export function delay(ms: number): Promise<void> {
-  return new Promise((r) => setTimeout(r, ms))
+  return new Promise(r => setTimeout(r, ms));
 }
 
 // ==========================================
@@ -168,8 +168,8 @@ export function delay(ms: number): Promise<void> {
 export function createMockAIProxyService() {
   return {
     chat: async (_config: AIProviderConfig, _messages: ChatMessage[]) => {
-      await delay(50)
-      return createMockProxyResponse()
+      await delay(50);
+      return createMockProxyResponse();
     },
     getStats: () => ({
       totalRequests: 10,
@@ -178,7 +178,7 @@ export function createMockAIProxyService() {
       byProvider: { mock: 7, openai: 3 },
     }),
     clearCache: () => {},
-  }
+  };
 }
 
 /** Create a mock Git API Service */
@@ -186,16 +186,16 @@ export function createMockGitAPIService() {
   const commits = [
     createMockCommit(),
     createMockCommit({ sha: 'e4f5g6h', message: 'fix: resolve viewport issue' }),
-  ]
+  ];
   const branches = [
     createMockBranch({ name: 'main', protected: true }),
     createMockBranch({ name: 'dev', current: true }),
-  ]
+  ];
 
   return {
     configure: (_config: GitConfig) => {},
     get isConfigured() {
-      return true
+      return true;
     },
     listCommits: async () => ({ success: true as const, data: commits }),
     createCommit: async (_path: string, _content: string, message: string) => ({
@@ -224,5 +224,5 @@ export function createMockGitAPIService() {
         },
       ],
     }),
-  }
+  };
 }

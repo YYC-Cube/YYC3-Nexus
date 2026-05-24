@@ -1,13 +1,7 @@
-import {
-  Eye,
-  Heart,
-  MessageSquare,
-  Shield,
-  Star,
-} from 'lucide-react'
+import { Eye, Heart, MessageSquare, Shield, Star } from 'lucide-react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 品牌管理平台 - Brand Management Platform
@@ -15,7 +9,7 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 export function BrandManagementPage() {
-  const tc = useThemeColors()
+  const tc = useThemeColors();
 
   const brandMetrics = [
     {
@@ -28,14 +22,14 @@ export function BrandManagementPage() {
     { label: '情感积极度', value: '86.5%', change: '+5.3%', icon: Heart, color: tc.success },
     { label: '品牌关注度', value: '2.4M', change: '+12.8%', icon: Eye, color: tc.secondary },
     { label: '品牌美誉度', value: '92.3', change: '+3.1%', icon: Star, color: tc.accent },
-  ]
+  ];
 
   const sentimentData = [
     { category: '产品质量', positive: 88, neutral: 10, negative: 2 },
     { category: '客户服务', positive: 82, neutral: 15, negative: 3 },
     { category: '品牌形象', positive: 92, neutral: 6, negative: 2 },
     { category: '性价比', positive: 75, neutral: 20, negative: 5 },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -58,8 +52,8 @@ export function BrandManagementPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        {brandMetrics.map((metric) => {
-          const Icon = metric.icon
+        {brandMetrics.map(metric => {
+          const Icon = metric.icon;
           return (
             <NeonCard key={metric.label} className="p-6">
               <div className="flex items-start justify-between mb-4">
@@ -78,7 +72,7 @@ export function BrandManagementPage() {
                 {metric.value}
               </p>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
@@ -87,7 +81,7 @@ export function BrandManagementPage() {
           情感分析概览
         </h2>
         <div className="space-y-4">
-          {sentimentData.map((item) => (
+          {sentimentData.map(item => (
             <div key={item.category}>
               <div className="flex items-center justify-between mb-2">
                 <span className="font-medium" style={{ color: tc.textPrimary }}>
@@ -119,5 +113,5 @@ export function BrandManagementPage() {
         </div>
       </NeonCard>
     </div>
-  )
+  );
 }

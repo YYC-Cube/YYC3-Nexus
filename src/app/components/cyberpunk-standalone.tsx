@@ -1,122 +1,214 @@
 import {
-    Activity,
-    ArrowDownRight,
-    ArrowUpRight,
-    Award,
-    BarChart3,
-    Bell,
-    Bot,
-    Brain,
-    ChevronDown,
-    ChevronRight,
-    ClipboardList,
-    Clock,
-    Code,
-    Cpu,
-    Crown,
-    Database,
-    DollarSign,
-    FileText,
-    GitBranch,
-    Handshake,
-    Heart,
-    HeartHandshake,
-    History,
-    Image,
-    Languages,
-    Layers,
-    LayoutDashboard,
-    Link,
-    Megaphone,
-    Menu,
-    MessageCircle,
-    MessageSquare,
-    Mic,
-    Package,
-    PenTool,
-    Phone,
-    PhoneCall,
-    PhoneForwarded,
-    PlayCircle,
-    Radio,
-    RefreshCw,
-    Rocket,
-    ScrollText,
-    Search,
-    Server,
-    Settings,
-    Shield,
-    ShoppingCart,
-    Star,
-    Target,
-    TrendingUp,
-    UserCircle,
-    UserPlus,
-    Users,
-    Volume2,
-    Wifi,
-    Wrench,
-    X,
-    Zap,
-} from 'lucide-react'
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
+  Activity,
+  ArrowDownRight,
+  ArrowUpRight,
+  Award,
+  BarChart3,
+  Bell,
+  Bot,
+  Brain,
+  ChevronDown,
+  ChevronRight,
+  ClipboardList,
+  Clock,
+  Code,
+  Cpu,
+  Crown,
+  Database,
+  DollarSign,
+  FileText,
+  GitBranch,
+  Handshake,
+  Heart,
+  HeartHandshake,
+  History,
+  Image,
+  Languages,
+  Layers,
+  LayoutDashboard,
+  Link,
+  Megaphone,
+  Menu,
+  MessageCircle,
+  MessageSquare,
+  Mic,
+  Package,
+  PenTool,
+  Phone,
+  PhoneCall,
+  PhoneForwarded,
+  PlayCircle,
+  Radio,
+  RefreshCw,
+  Rocket,
+  ScrollText,
+  Search,
+  Server,
+  Settings,
+  Shield,
+  ShoppingCart,
+  Star,
+  Target,
+  TrendingUp,
+  UserCircle,
+  UserPlus,
+  Users,
+  Volume2,
+  Wifi,
+  Wrench,
+  X,
+  Zap,
+} from 'lucide-react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
-import { useAIModel } from './context/ai-model-context'
-import { type PageId, useApp, useRealtimeSimulation } from './context/app-context'
-import { useI18n } from './context/i18n-context'
-import { CommandPalette, useCommandPalette } from './core/command-palette'
-import { DataExportModal } from './core/data-export-modal'
-import { GlitchText } from './core/glitch-text'
-import { NeonCard } from './core/neon-card'
-import { NotificationDrawer } from './core/notification-drawer'
-import { OnboardingTutorial } from './core/onboarding-tutorial'
-import { PageTransition } from './core/page-transition'
-import { ParticleCanvas } from './core/particle-canvas'
-import { ThemeSwitcherButtonCompact } from './core/theme-switcher-button'
-import { getThemeNavColor, useThemeColors } from './hooks/use-theme-colors'
-import { ModelSettings } from './model-settings'
-import { ChatInterface } from './pages/ai/chat-interface'
+import { useAIModel } from './context/ai-model-context';
+import { type PageId, useApp, useRealtimeSimulation } from './context/app-context';
+import { useI18n } from './context/i18n-context';
+import { CommandPalette, useCommandPalette } from './core/command-palette';
+import { DataExportModal } from './core/data-export-modal';
+import { GlitchText } from './core/glitch-text';
+import { NeonCard } from './core/neon-card';
+import { NotificationDrawer } from './core/notification-drawer';
+import { OnboardingTutorial } from './core/onboarding-tutorial';
+import { PageTransition } from './core/page-transition';
+import { ParticleCanvas } from './core/particle-canvas';
+import { ThemeSwitcherButtonCompact } from './core/theme-switcher-button';
+import { getThemeNavColor, useThemeColors } from './hooks/use-theme-colors';
+import { ModelSettings } from './model-settings';
+import { ChatInterface } from './pages/ai/chat-interface';
 
-const ActivityLogPage = lazy(() => import('./core/activity-log').then((m) => ({ default: m.ActivityLogPage })))
-const AIToolsPage = lazy(() => import('./pages/ai/ai-tools-page').then((m) => ({ default: m.AIToolsPage })))
-const AppOverviewPage = lazy(() => import('./pages/dashboard/app-overview-page').then((m) => ({ default: m.AppOverviewPage })))
-const BrandManagementPage = lazy(() => import('./pages/marketing/brand-management-page').then((m) => ({ default: m.BrandManagementPage })))
-const CampaignExecutionPage = lazy(() => import('./pages/marketing/campaign-execution-page').then((m) => ({ default: m.CampaignExecutionPage })))
-const ChannelCenterPage = lazy(() => import('./pages/integration/channel-center-page').then((m) => ({ default: m.ChannelCenterPage })))
-const CollabCreationPage = lazy(() => import('./pages/profile/collab-creation-page').then((m) => ({ default: m.CollabCreationPage })))
-const CustomerAcquisitionPage = lazy(() => import('./pages/marketing/customer-acquisition-page').then((m) => ({ default: m.CustomerAcquisitionPage })))
-const CustomerCarePage = lazy(() => import('./pages/customer/customer-care-page').then((m) => ({ default: m.CustomerCarePage })))
-const DashboardPage = lazy(() => import('./pages/dashboard/dashboard-page').then((m) => ({ default: m.DashboardPage })))
-const DataIntegrationPage = lazy(() => import('./pages/integration/data-integration-page').then((m) => ({ default: m.DataIntegrationPage })))
-const DecisionSupportPage = lazy(() => import('./pages/dashboard/decision-support-page').then((m) => ({ default: m.DecisionSupportPage })))
-const FormHistory = lazy(() => import('./form-history').then((m) => ({ default: m.FormHistory })))
-const FormTemplateBuilder = lazy(() => import('./form-template-builder').then((m) => ({ default: m.FormTemplateBuilder })))
-const InsightsEnhancedPage = lazy(() => import('./pages/customer/insights-enhanced').then((m) => ({ default: m.InsightsEnhancedPage })))
-const LeftPanelPage = lazy(() => import('./left-panel-page').then((m) => ({ default: m.LeftPanelPage })))
-const MarketingAnalyticsPage = lazy(() => import('./pages/marketing/marketing-analytics-page').then((m) => ({ default: m.MarketingAnalyticsPage })))
-const MarketingAssetsPage = lazy(() => import('./pages/marketing/marketing-assets-page').then((m) => ({ default: m.MarketingAssetsPage })))
-const MarketingStrategyPage = lazy(() => import('./pages/marketing/marketing-strategy-page').then((m) => ({ default: m.MarketingStrategyPage })))
-const NLPProcessingPage = lazy(() => import('./pages/ai/nlp-processing-page').then((m) => ({ default: m.NLPProcessingPage })))
-const NumberDatabasePage = lazy(() => import('./number-database').then((m) => ({ default: m.NumberDatabasePage })))
-const ParameterSettingsPage = lazy(() => import('./pages/settings/parameter-settings-page').then((m) => ({ default: m.ParameterSettingsPage })))
-const PlatformIntegrationPage = lazy(() => import('./pages/integration/platform-integration-page').then((m) => ({ default: m.PlatformIntegrationPage })))
-const PlatformSettingsPage = lazy(() => import('./pages/settings/platform-settings-page').then((m) => ({ default: m.PlatformSettingsPage })))
-const ProfilePage = lazy(() => import('./pages/profile/profile-page').then((m) => ({ default: m.ProfilePage })))
-const QuickActionsPage = lazy(() => import('./pages/developer/quick-actions-page').then((m) => ({ default: m.QuickActionsPage })))
-const SettingsPage = lazy(() => import('./pages/settings/settings-page-standalone').then((m) => ({ default: m.SettingsPage })))
-const SmartCreationPage = lazy(() => import('./pages/ai/smart-creation-page').then((m) => ({ default: m.SmartCreationPage })))
-const SmartFormPage = lazy(() => import('./smart-form-system').then((m) => ({ default: m.SmartFormPage })))
-const SmartMarketingEnginePage = lazy(() => import('./pages/marketing/smart-marketing-engine-page').then((m) => ({ default: m.SmartMarketingEnginePage })))
-const SmartOperationsPage = lazy(() => import('./pages/operations/smart-operations-page').then((m) => ({ default: m.SmartOperationsPage })))
-const TaskBoardPage = lazy(() => import('./pages/tasks/task-board-page').then((m) => ({ default: m.TaskBoardPage })))
-const WechatConfigPage = lazy(() => import('./pages/integration/wechat-config-page').then((m) => ({ default: m.WechatConfigPage })))
-const CompensationPage = lazy(() => import('./pages/hr-finance/compensation-page').then((m) => ({ default: m.CompensationPage })))
-const FinancePage = lazy(() => import('./pages/hr-finance/finance-page').then((m) => ({ default: m.FinancePage })))
-const ProcurementPage = lazy(() => import('./pages/supply-chain/procurement-page').then((m) => ({ default: m.ProcurementPage })))
-const InventoryPage = lazy(() => import('./pages/supply-chain/inventory-page').then((m) => ({ default: m.InventoryPage })))
+const ActivityLogPage = lazy(() =>
+  import('./core/activity-log').then(m => ({ default: m.ActivityLogPage })),
+);
+const AIToolsPage = lazy(() =>
+  import('./pages/ai/ai-tools-page').then(m => ({ default: m.AIToolsPage })),
+);
+const AppOverviewPage = lazy(() =>
+  import('./pages/dashboard/app-overview-page').then(m => ({ default: m.AppOverviewPage })),
+);
+const BrandManagementPage = lazy(() =>
+  import('./pages/marketing/brand-management-page').then(m => ({ default: m.BrandManagementPage })),
+);
+const CampaignExecutionPage = lazy(() =>
+  import('./pages/marketing/campaign-execution-page').then(m => ({
+    default: m.CampaignExecutionPage,
+  })),
+);
+const ChannelCenterPage = lazy(() =>
+  import('./pages/integration/channel-center-page').then(m => ({ default: m.ChannelCenterPage })),
+);
+const CollabCreationPage = lazy(() =>
+  import('./pages/profile/collab-creation-page').then(m => ({ default: m.CollabCreationPage })),
+);
+const CustomerAcquisitionPage = lazy(() =>
+  import('./pages/marketing/customer-acquisition-page').then(m => ({
+    default: m.CustomerAcquisitionPage,
+  })),
+);
+const CustomerCarePage = lazy(() =>
+  import('./pages/customer/customer-care-page').then(m => ({ default: m.CustomerCarePage })),
+);
+const DashboardPage = lazy(() =>
+  import('./pages/dashboard/dashboard-page').then(m => ({ default: m.DashboardPage })),
+);
+const DataIntegrationPage = lazy(() =>
+  import('./pages/integration/data-integration-page').then(m => ({
+    default: m.DataIntegrationPage,
+  })),
+);
+const DecisionSupportPage = lazy(() =>
+  import('./pages/dashboard/decision-support-page').then(m => ({ default: m.DecisionSupportPage })),
+);
+const FormHistory = lazy(() => import('./form-history').then(m => ({ default: m.FormHistory })));
+const FormTemplateBuilder = lazy(() =>
+  import('./form-template-builder').then(m => ({ default: m.FormTemplateBuilder })),
+);
+const InsightsEnhancedPage = lazy(() =>
+  import('./pages/customer/insights-enhanced').then(m => ({ default: m.InsightsEnhancedPage })),
+);
+const LeftPanelPage = lazy(() =>
+  import('./left-panel-page').then(m => ({ default: m.LeftPanelPage })),
+);
+const MarketingAnalyticsPage = lazy(() =>
+  import('./pages/marketing/marketing-analytics-page').then(m => ({
+    default: m.MarketingAnalyticsPage,
+  })),
+);
+const MarketingAssetsPage = lazy(() =>
+  import('./pages/marketing/marketing-assets-page').then(m => ({ default: m.MarketingAssetsPage })),
+);
+const MarketingStrategyPage = lazy(() =>
+  import('./pages/marketing/marketing-strategy-page').then(m => ({
+    default: m.MarketingStrategyPage,
+  })),
+);
+const NLPProcessingPage = lazy(() =>
+  import('./pages/ai/nlp-processing-page').then(m => ({ default: m.NLPProcessingPage })),
+);
+const NumberDatabasePage = lazy(() =>
+  import('./number-database').then(m => ({ default: m.NumberDatabasePage })),
+);
+const ParameterSettingsPage = lazy(() =>
+  import('./pages/settings/parameter-settings-page').then(m => ({
+    default: m.ParameterSettingsPage,
+  })),
+);
+const PlatformIntegrationPage = lazy(() =>
+  import('./pages/integration/platform-integration-page').then(m => ({
+    default: m.PlatformIntegrationPage,
+  })),
+);
+const PlatformSettingsPage = lazy(() =>
+  import('./pages/settings/platform-settings-page').then(m => ({
+    default: m.PlatformSettingsPage,
+  })),
+);
+const ProfilePage = lazy(() =>
+  import('./pages/profile/profile-page').then(m => ({ default: m.ProfilePage })),
+);
+const QuickActionsPage = lazy(() =>
+  import('./pages/developer/quick-actions-page').then(m => ({ default: m.QuickActionsPage })),
+);
+const SettingsPage = lazy(() =>
+  import('./pages/settings/settings-page-standalone').then(m => ({ default: m.SettingsPage })),
+);
+const SmartCreationPage = lazy(() =>
+  import('./pages/ai/smart-creation-page').then(m => ({ default: m.SmartCreationPage })),
+);
+const SmartFormPage = lazy(() =>
+  import('./smart-form-system').then(m => ({ default: m.SmartFormPage })),
+);
+const SmartMarketingEnginePage = lazy(() =>
+  import('./pages/marketing/smart-marketing-engine-page').then(m => ({
+    default: m.SmartMarketingEnginePage,
+  })),
+);
+const SmartOperationsPage = lazy(() =>
+  import('./pages/operations/smart-operations-page').then(m => ({
+    default: m.SmartOperationsPage,
+  })),
+);
+const TaskBoardPage = lazy(() =>
+  import('./pages/tasks/task-board-page').then(m => ({ default: m.TaskBoardPage })),
+);
+const WechatConfigPage = lazy(() =>
+  import('./pages/integration/wechat-config-page').then(m => ({ default: m.WechatConfigPage })),
+);
+const CompensationPage = lazy(() =>
+  import('./pages/hr-finance/compensation-page').then(m => ({ default: m.CompensationPage })),
+);
+const FinancePage = lazy(() =>
+  import('./pages/hr-finance/finance-page').then(m => ({ default: m.FinancePage })),
+);
+const ProcurementPage = lazy(() =>
+  import('./pages/supply-chain/procurement-page').then(m => ({ default: m.ProcurementPage })),
+);
+const InventoryPage = lazy(() =>
+  import('./pages/supply-chain/inventory-page').then(m => ({ default: m.InventoryPage })),
+);
 
 function PageLoader() {
-  const tc = useThemeColors()
+  const tc = useThemeColors();
   return (
     <div className="flex items-center justify-center h-full" style={{ background: tc.bgBase }}>
       <div className="flex flex-col items-center gap-3">
@@ -124,10 +216,12 @@ function PageLoader() {
           className="w-8 h-8 border-2 rounded-full animate-spin"
           style={{ borderColor: `${tc.primary}30`, borderTopColor: tc.primary }}
         />
-        <span className="text-xs" style={{ color: tc.textMuted }}>加载中...</span>
+        <span className="text-xs" style={{ color: tc.textMuted }}>
+          加载中...
+        </span>
       </div>
     </div>
-  )
+  );
 }
 
 const NAV_LABEL_KEYS: Record<string, string> = {
@@ -173,26 +267,26 @@ const NAV_LABEL_KEYS: Record<string, string> = {
   quickActions: 'nav.quickActions',
   taskBoard: 'nav.taskBoard',
   devWorkspace: 'nav.devWorkspace',
-}
+};
 
 const SIDEBAR_PERSONAL_KEYS: Record<string, string> = {
   history: 'nav.history',
   favorites: 'nav.favorites',
   profile: 'nav.profile',
-}
+};
 
 // --- Nav item type ---
 interface NavItem {
-  id: PageId
-  label: string
-  icon: typeof LayoutDashboard
-  color: string
-  badge?: number
+  id: PageId;
+  label: string;
+  icon: typeof LayoutDashboard;
+  color: string;
+  badge?: number;
 }
 interface NavGroup {
-  groupKey: string
-  labelKey: string
-  items: NavItem[]
+  groupKey: string;
+  labelKey: string;
+  items: NavItem[];
 }
 
 // Core features (flat — always visible)
@@ -213,7 +307,7 @@ const coreNavItems: NavItem[] = [
   { id: 'taskBoard', label: '任务看板', icon: Target, color: '#22c55e' },
   { id: 'devWorkspace', label: '开发工作台', icon: Code, color: '#3b82f6' },
   { id: 'settings', label: '设置', icon: Settings, color: '#008b9d' },
-]
+];
 
 // Collapsible nav groups
 const navGroups: NavGroup[] = [
@@ -263,16 +357,16 @@ const navGroups: NavGroup[] = [
       { id: 'intelligentOps', label: '智能运维系统', icon: Wrench, color: '#ef4444' },
     ],
   },
-]
+];
 
 // Flat list of all nav items for top bar (core only) and lookups
-const navItems = coreNavItems
+const navItems = coreNavItems;
 
 const sidebarPersonal = [
   { id: 'history', label: '历史记录', icon: History, color: '#00f0ff' },
   { id: 'favorites', label: '收藏夹', icon: Star, color: '#00ffcc' },
   { id: 'profile', label: '个人资料', icon: UserCircle, color: '#00d4ff' },
-]
+];
 
 /**
  * Full-screen standalone cyberpunk terminal layout.
@@ -292,29 +386,29 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
     theme,
     mobileSidebarOpen,
     setMobileSidebarOpen,
-  } = useApp()
-  const { t } = useI18n()
-  const { openModelSettings } = useAIModel()
-  const tc = useThemeColors()
-  const [sidebarExpanded, setSidebarExpanded] = useState(false)
-  const [sensorGlow, setSensorGlow] = useState(0)
-  const [notifDrawerOpen, setNotifDrawerOpen] = useState(false)
+  } = useApp();
+  const { t } = useI18n();
+  const { openModelSettings } = useAIModel();
+  const tc = useThemeColors();
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [sensorGlow, setSensorGlow] = useState(0);
+  const [notifDrawerOpen, setNotifDrawerOpen] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({
     platformIntegration: true,
     aiMarketing: true,
-  })
+  });
   const toggleGroup = useCallback((key: string) => {
-    setCollapsedGroups((prev) => ({ ...prev, [key]: !prev[key] }))
-  }, [])
+    setCollapsedGroups(prev => ({ ...prev, [key]: !prev[key] }));
+  }, []);
   // Auto-expand group when one of its items is active
   useEffect(() => {
     for (const g of navGroups) {
-      if (g.items.some((i) => i.id === activePage) && collapsedGroups[g.groupKey]) {
-        setCollapsedGroups((prev) => ({ ...prev, [g.groupKey]: false }))
-        break
+      if (g.items.some(i => i.id === activePage) && collapsedGroups[g.groupKey]) {
+        setCollapsedGroups(prev => ({ ...prev, [g.groupKey]: false }));
+        break;
       }
     }
-  }, [activePage]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [activePage, collapsedGroups]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // i18n-aware data arrays
   const _tools = [
@@ -329,7 +423,7 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
       icon: Database,
       color: '#00f0ff',
     },
-  ]
+  ];
 
   const _workflowNodes = [
     { label: t('workflow.inputAnalysis'), status: 'completed', color: '#00ffc8' },
@@ -337,112 +431,112 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
     { label: t('workflow.taskExec'), status: 'active', color: '#00f0ff' },
     { label: t('workflow.resultOpt'), status: 'pending', color: '#ffffff33' },
     { label: t('workflow.learnFeedback'), status: 'pending', color: '#ffffff33' },
-  ]
+  ];
 
   const _insightMetrics = [
     { label: t('insights.responseTime'), value: '12ms', change: '-18%', color: '#00f0ff' },
     { label: t('insights.taskSuccess'), value: '98.7%', change: '+2.3%', color: '#00ffc8' },
     { label: t('insights.satisfaction'), value: '4.8/5', change: '+0.3', color: '#00ffcc' },
     { label: t('insights.sysLoad'), value: '42%', change: '-5%', color: '#00d4ff' },
-  ]
-  const [exportModalOpen, setExportModalOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
-  const cmdPalette = useCommandPalette()
-  const sidebarRef = useRef<HTMLDivElement>(null)
-  const sensorZoneRef = useRef<HTMLDivElement>(null)
-  const collapseTimerRef = useRef<ReturnType<typeof setTimeout>>()
+  ];
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const cmdPalette = useCommandPalette();
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const sensorZoneRef = useRef<HTMLDivElement>(null);
+  const collapseTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Phase 4: Realtime simulation — auto-push notifications & activities
-  useRealtimeSimulation()
+  useRealtimeSimulation();
 
   // Phase 4: Global keyboard shortcuts
   useEffect(() => {
     const handleGlobalKey = (e: KeyboardEvent) => {
       // Ctrl+. → Toggle notification drawer
       if ((e.ctrlKey || e.metaKey) && e.key === '.') {
-        e.preventDefault()
-        setNotifDrawerOpen((prev) => !prev)
+        e.preventDefault();
+        setNotifDrawerOpen(prev => !prev);
       }
       // Ctrl+/ → Toggle sidebar pin
       if ((e.ctrlKey || e.metaKey) && e.key === '/') {
-        e.preventDefault()
-        setSidebarPinned(!sidebarPinned)
+        e.preventDefault();
+        setSidebarPinned(!sidebarPinned);
       }
       // Ctrl+E → Open export modal
       if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
-        e.preventDefault()
-        setExportModalOpen(true)
+        e.preventDefault();
+        setExportModalOpen(true);
       }
       // Ctrl+N → Navigate to chat (new session)
       if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
-        e.preventDefault()
-        setActivePage('chat')
+        e.preventDefault();
+        setActivePage('chat');
       }
-    }
-    window.addEventListener('keydown', handleGlobalKey)
-    return () => window.removeEventListener('keydown', handleGlobalKey)
-  }, [sidebarPinned, setSidebarPinned, setActivePage])
+    };
+    window.addEventListener('keydown', handleGlobalKey);
+    return () => window.removeEventListener('keydown', handleGlobalKey);
+  }, [sidebarPinned, setSidebarPinned, setActivePage]);
 
   // Responsive: detect mobile breakpoint
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 768px)')
-    setIsMobile(mq.matches)
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
+    const mq = window.matchMedia('(max-width: 768px)');
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   // Close mobile sidebar when navigating
   const handleNavClick = useCallback(
     (page: PageId) => {
-      setActivePage(page)
-      if (isMobile) setMobileSidebarOpen(false)
+      setActivePage(page);
+      if (isMobile) setMobileSidebarOpen(false);
     },
     [isMobile, setActivePage, setMobileSidebarOpen],
-  )
+  );
 
   // Proximity sensor: detect mouse near the sidebar edge
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (sidebarPinned) return
-      const threshold = 80 // px from left edge
-      const dist = e.clientX
+      if (sidebarPinned) return;
+      const threshold = 80; // px from left edge
+      const dist = e.clientX;
       if (dist <= threshold) {
-        const intensity = Math.max(0, 1 - dist / threshold)
-        setSensorGlow(intensity)
+        const intensity = Math.max(0, 1 - dist / threshold);
+        setSensorGlow(intensity);
         if (dist <= 60) {
-          clearTimeout(collapseTimerRef.current)
-          setSidebarExpanded(true)
+          clearTimeout(collapseTimerRef.current);
+          setSidebarExpanded(true);
         }
       } else if (!sidebarRef.current?.contains(e.target as Node)) {
-        setSensorGlow(0)
+        setSensorGlow(0);
         collapseTimerRef.current = setTimeout(() => {
-          setSidebarExpanded(false)
-        }, 400)
+          setSidebarExpanded(false);
+        }, 400);
       }
-    }
-    window.addEventListener('mousemove', handleMouseMove)
+    };
+    window.addEventListener('mousemove', handleMouseMove);
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      clearTimeout(collapseTimerRef.current)
-    }
-  }, [sidebarPinned])
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearTimeout(collapseTimerRef.current);
+    };
+  }, [sidebarPinned]);
 
   const handleSidebarEnter = () => {
-    clearTimeout(collapseTimerRef.current)
-    setSidebarExpanded(true)
-    setSensorGlow(1)
-  }
+    clearTimeout(collapseTimerRef.current);
+    setSidebarExpanded(true);
+    setSensorGlow(1);
+  };
 
   const handleSidebarLeave = () => {
-    if (sidebarPinned) return
-    setSensorGlow(0)
+    if (sidebarPinned) return;
+    setSensorGlow(0);
     collapseTimerRef.current = setTimeout(() => {
-      setSidebarExpanded(false)
-    }, 300)
-  }
+      setSidebarExpanded(false);
+    }, 300);
+  };
 
-  const isExpanded = sidebarExpanded || sidebarPinned
+  const isExpanded = sidebarExpanded || sidebarPinned;
 
   return (
     <div className="h-screen w-screen overflow-hidden relative" style={{ background: tc.bgBase }}>
@@ -473,7 +567,6 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
 
       {/* === HEADER === */}
       <header
-        role="banner"
         aria-label={t('header.ariaLabel')}
         className="relative z-50 h-14 sm:h-16 flex items-center justify-between px-3 sm:px-6"
         style={{
@@ -580,16 +673,12 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
         </div>
 
         {/* Center Nav - compact (hidden on mobile/tablet) */}
-        <nav
-          className="hidden lg:flex items-center gap-1"
-          role="navigation"
-          aria-label={t('ui.mainNav')}
-        >
-          {navItems.map((item) => {
-            const Icon = item.icon
-            const active = activePage === item.id
-            const c = getThemeNavColor(item.color, tc.isCyberpunk)
-            const navStyle = tc.navItemStyle(c, active)
+        <nav className="hidden lg:flex items-center gap-1" aria-label={t('ui.mainNav')}>
+          {navItems.map(item => {
+            const Icon = item.icon;
+            const active = activePage === item.id;
+            const c = getThemeNavColor(item.color, tc.isCyberpunk);
+            const navStyle = tc.navItemStyle(c, active);
             return (
               <button
                 key={item.id}
@@ -610,7 +699,7 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                   </span>
                 )}
               </button>
-            )
+            );
           })}
         </nav>
 
@@ -686,13 +775,13 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
               color: tc.secondary,
               background: tc.alpha(tc.secondary, 0.05),
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = `0 0 15px ${tc.alpha(tc.secondary, 0.4)}`
-              e.currentTarget.style.background = tc.alpha(tc.secondary, 0.15)
+            onMouseEnter={e => {
+              e.currentTarget.style.boxShadow = `0 0 15px ${tc.alpha(tc.secondary, 0.4)}`;
+              e.currentTarget.style.background = tc.alpha(tc.secondary, 0.15);
             }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = 'none'
-              e.currentTarget.style.background = tc.alpha(tc.secondary, 0.05)
+            onMouseLeave={e => {
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.background = tc.alpha(tc.secondary, 0.05);
             }}
           >
             {t('header.widgetMode')}
@@ -757,10 +846,10 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                 >
                   {t('nav.coreFeatures')}
                 </p>
-                {navItems.map((item) => {
-                  const Icon = item.icon
-                  const active = activePage === item.id
-                  const mc = getThemeNavColor(item.color, tc.isCyberpunk)
+                {navItems.map(item => {
+                  const Icon = item.icon;
+                  const active = activePage === item.id;
+                  const mc = getThemeNavColor(item.color, tc.isCyberpunk);
                   return (
                     <button
                       key={item.id}
@@ -801,12 +890,12 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                         </span>
                       )}
                     </button>
-                  )
+                  );
                 })}
               </div>
               {/* Nav Groups (mobile drawer) */}
-              {navGroups.map((group) => {
-                const isCollapsed = collapsedGroups[group.groupKey] ?? true
+              {navGroups.map(group => {
+                const isCollapsed = collapsedGroups[group.groupKey] ?? true;
                 return (
                   <div key={group.groupKey} className="px-3 mt-1">
                     <button
@@ -829,10 +918,10 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                     </button>
                     {!isCollapsed && (
                       <div className="space-y-0.5">
-                        {group.items.map((item) => {
-                          const GIcon = item.icon
-                          const active = activePage === item.id
-                          const mc = getThemeNavColor(item.color, tc.isCyberpunk)
+                        {group.items.map(item => {
+                          const GIcon = item.icon;
+                          const active = activePage === item.id;
+                          const mc = getThemeNavColor(item.color, tc.isCyberpunk);
                           return (
                             <button
                               key={item.id}
@@ -862,12 +951,12 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                                 {NAV_LABEL_KEYS[item.id] ? t(NAV_LABEL_KEYS[item.id]) : item.label}
                               </span>
                             </button>
-                          )
+                          );
                         })}
                       </div>
                     )}
                   </div>
-                )
+                );
               })}
               {/* Divider */}
               <div className="mx-4 my-2">
@@ -888,13 +977,13 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                 >
                   {t('nav.personal')}
                 </p>
-                {sidebarPersonal.map((item) => {
-                  const Icon = item.icon
+                {sidebarPersonal.map(item => {
+                  const Icon = item.icon;
                   return (
                     <button
                       key={item.id}
                       onClick={() => {
-                        if (item.id === 'profile') handleNavClick('profile')
+                        if (item.id === 'profile') handleNavClick('profile');
                       }}
                       className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors hover:bg-white/5"
                     >
@@ -917,7 +1006,7 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                           : item.label}
                       </span>
                     </button>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -948,7 +1037,6 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
             ref={sidebarRef}
             onMouseEnter={handleSidebarEnter}
             onMouseLeave={handleSidebarLeave}
-            role="complementary"
             aria-label={t('ui.sidebarNav')}
             className="shrink-0 border-r relative z-20 overflow-hidden"
             style={{
@@ -1024,11 +1112,11 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                   </h3>
                 )}
                 <div className="space-y-0.5 px-2">
-                  {navItems.map((item) => {
-                    const Icon = item.icon
-                    const active = activePage === item.id
-                    const label = NAV_LABEL_KEYS[item.id] ? t(NAV_LABEL_KEYS[item.id]) : item.label
-                    const c = getThemeNavColor(item.color, tc.isCyberpunk)
+                  {navItems.map(item => {
+                    const Icon = item.icon;
+                    const active = activePage === item.id;
+                    const label = NAV_LABEL_KEYS[item.id] ? t(NAV_LABEL_KEYS[item.id]) : item.label;
+                    const c = getThemeNavColor(item.color, tc.isCyberpunk);
                     return (
                       <button
                         key={item.id}
@@ -1122,16 +1210,16 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                           />
                         )}
                       </button>
-                    )
+                    );
                   })}
                 </div>
               </div>
 
               {/* === Collapsible Nav Groups (Platform Integration + AI Marketing) === */}
-              {navGroups.map((group) => {
-                const isCollapsed = collapsedGroups[group.groupKey] ?? true
-                const hasActive = group.items.some((i) => activePage === i.id)
-                const groupColor = group.items[0]?.color || tc.primary
+              {navGroups.map(group => {
+                const isCollapsed = collapsedGroups[group.groupKey] ?? true;
+                const hasActive = group.items.some(i => activePage === i.id);
+                const groupColor = group.items[0]?.color || tc.primary;
                 return (
                   <div key={group.groupKey} className="mb-1">
                     {/* Group header — clickable to toggle */}
@@ -1182,14 +1270,14 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                       >
                         {(isExpanded
                           ? group.items
-                          : group.items.filter((i) => activePage === i.id)
-                        ).map((item) => {
-                          const GIcon = item.icon
-                          const active = activePage === item.id
+                          : group.items.filter(i => activePage === i.id)
+                        ).map(item => {
+                          const GIcon = item.icon;
+                          const active = activePage === item.id;
                           const label = NAV_LABEL_KEYS[item.id]
                             ? t(NAV_LABEL_KEYS[item.id])
-                            : item.label
-                          const c = getThemeNavColor(item.color, tc.isCyberpunk)
+                            : item.label;
+                          const c = getThemeNavColor(item.color, tc.isCyberpunk);
                           return (
                             <button
                               key={item.id}
@@ -1247,12 +1335,12 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                                 />
                               )}
                             </button>
-                          )
+                          );
                         })}
                       </div>
                     )}
                   </div>
-                )
+                );
               })}
 
               {/* Divider */}
@@ -1282,17 +1370,17 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                   </h3>
                 )}
                 <div className="space-y-0.5 px-2">
-                  {sidebarPersonal.map((item) => {
-                    const Icon = item.icon
+                  {sidebarPersonal.map(item => {
+                    const Icon = item.icon;
                     const label = SIDEBAR_PERSONAL_KEYS[item.id]
                       ? t(SIDEBAR_PERSONAL_KEYS[item.id])
-                      : item.label
-                    const pc = getThemeNavColor(item.color, tc.isCyberpunk)
+                      : item.label;
+                    const pc = getThemeNavColor(item.color, tc.isCyberpunk);
                     return (
                       <button
                         key={item.id}
                         onClick={() => {
-                          if (item.id === 'profile') handleNavClick('profile')
+                          if (item.id === 'profile') handleNavClick('profile');
                         }}
                         className="w-full flex items-center rounded-xl transition-all duration-300 hover:bg-white/5 group"
                         style={{
@@ -1324,7 +1412,7 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
                           </span>
                         )}
                       </button>
-                    )
+                    );
                   })}
                 </div>
               </div>
@@ -1388,57 +1476,53 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
         )}
 
         {/* === MAIN CONTENT with Page Transition === */}
-        <main
-          className="flex-1 overflow-hidden relative"
-          role="main"
-          aria-label={t('ui.mainContent')}
-        >
+        <main className="flex-1 overflow-hidden relative" aria-label={t('ui.mainContent')}>
           <Suspense fallback={<PageLoader />}>
-          <PageTransition pageKey={activePage}>
-            {activePage === 'dashboard' && (
-              <DashboardPage onOpenExport={() => setExportModalOpen(true)} />
-            )}
-            {activePage === 'chat' && <ChatPage />}
-            {activePage === 'clm' && <CLMPage />}
-            {activePage === 'aicall' && <AICallPage />}
-            {activePage === 'customerCare' && <CustomerCarePage />}
-            {activePage === 'contacts' && <NumberDatabasePage />}
-            {activePage === 'forms' && <FormsTabPage />}
-            {activePage === 'tools' && <AIToolsPage />}
-            {activePage === 'workflow' && <WorkflowPage />}
-            {activePage === 'logs' && <ActivityLogPage />}
-            {activePage === 'collab' && <CollabCreationPage />}
-            {activePage === 'insights' && <InsightsEnhancedPage />}
-            {activePage === 'quickActions' && <QuickActionsPage />}
-            {activePage === 'taskBoard' && <TaskBoardPage />}
-            {activePage === 'devWorkspace' && <LeftPanelPage />}
-            {activePage === 'settings' && <SettingsPage />}
-            {activePage === 'profile' && <ProfilePage />}
-            {/* Platform Integration modules */}
-            {activePage === 'paramSettings' && <ParameterSettingsPage />}
-            {activePage === 'platformSettings' && <PlatformSettingsPage />}
-            {activePage === 'wechatConfig' && <WechatConfigPage />}
-            {activePage === 'channelCenter' && <ChannelCenterPage />}
-            {activePage === 'dataIntegration' && <DataIntegrationPage />}
-            {activePage === 'compensation' && <CompensationPage />}
-            {activePage === 'finance' && <FinancePage />}
-            {activePage === 'procurement' && <ProcurementPage />}
-            {activePage === 'inventory' && <InventoryPage />}
-            {/* AI Marketing modules */}
-            {activePage === 'marketingPlan' && <MarketingStrategyPage />}
-            {activePage === 'promotionExec' && <CampaignExecutionPage />}
-            {activePage === 'marketingAnalytics' && <MarketingAnalyticsPage />}
-            {activePage === 'marketingAssets' && <MarketingAssetsPage />}
-            {activePage === 'customerAcquisition' && <CustomerAcquisitionPage />}
-            {activePage === 'brandMgmt' && <BrandManagementPage />}
-            {activePage === 'intelligentOps' && <SmartOperationsPage />}
-            {activePage === 'platformHub' && <PlatformIntegrationPage />}
-            {activePage === 'aiCreativeTools' && <SmartCreationPage />}
-            {activePage === 'aiMarketingEngine' && <SmartMarketingEnginePage />}
-            {activePage === 'appOverview' && <AppOverviewPage />}
-            {activePage === 'aiDecisionSupport' && <DecisionSupportPage />}
-            {activePage === 'nlpProcessing' && <NLPProcessingPage />}
-          </PageTransition>
+            <PageTransition pageKey={activePage}>
+              {activePage === 'dashboard' && (
+                <DashboardPage onOpenExport={() => setExportModalOpen(true)} />
+              )}
+              {activePage === 'chat' && <ChatPage />}
+              {activePage === 'clm' && <CLMPage />}
+              {activePage === 'aicall' && <AICallPage />}
+              {activePage === 'customerCare' && <CustomerCarePage />}
+              {activePage === 'contacts' && <NumberDatabasePage />}
+              {activePage === 'forms' && <FormsTabPage />}
+              {activePage === 'tools' && <AIToolsPage />}
+              {activePage === 'workflow' && <WorkflowPage />}
+              {activePage === 'logs' && <ActivityLogPage />}
+              {activePage === 'collab' && <CollabCreationPage />}
+              {activePage === 'insights' && <InsightsEnhancedPage />}
+              {activePage === 'quickActions' && <QuickActionsPage />}
+              {activePage === 'taskBoard' && <TaskBoardPage />}
+              {activePage === 'devWorkspace' && <LeftPanelPage />}
+              {activePage === 'settings' && <SettingsPage />}
+              {activePage === 'profile' && <ProfilePage />}
+              {/* Platform Integration modules */}
+              {activePage === 'paramSettings' && <ParameterSettingsPage />}
+              {activePage === 'platformSettings' && <PlatformSettingsPage />}
+              {activePage === 'wechatConfig' && <WechatConfigPage />}
+              {activePage === 'channelCenter' && <ChannelCenterPage />}
+              {activePage === 'dataIntegration' && <DataIntegrationPage />}
+              {activePage === 'compensation' && <CompensationPage />}
+              {activePage === 'finance' && <FinancePage />}
+              {activePage === 'procurement' && <ProcurementPage />}
+              {activePage === 'inventory' && <InventoryPage />}
+              {/* AI Marketing modules */}
+              {activePage === 'marketingPlan' && <MarketingStrategyPage />}
+              {activePage === 'promotionExec' && <CampaignExecutionPage />}
+              {activePage === 'marketingAnalytics' && <MarketingAnalyticsPage />}
+              {activePage === 'marketingAssets' && <MarketingAssetsPage />}
+              {activePage === 'customerAcquisition' && <CustomerAcquisitionPage />}
+              {activePage === 'brandMgmt' && <BrandManagementPage />}
+              {activePage === 'intelligentOps' && <SmartOperationsPage />}
+              {activePage === 'platformHub' && <PlatformIntegrationPage />}
+              {activePage === 'aiCreativeTools' && <SmartCreationPage />}
+              {activePage === 'aiMarketingEngine' && <SmartMarketingEnginePage />}
+              {activePage === 'appOverview' && <AppOverviewPage />}
+              {activePage === 'aiDecisionSupport' && <DecisionSupportPage />}
+              {activePage === 'nlpProcessing' && <NLPProcessingPage />}
+            </PageTransition>
           </Suspense>
         </main>
       </div>
@@ -1515,7 +1599,7 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
       {/* AI Model Settings Modal */}
       <ModelSettings />
     </div>
-  )
+  );
 }
 
 /* ======================================================================
@@ -1523,14 +1607,14 @@ export function CyberpunkStandalone({ onSwitchMode }: { onSwitchMode: () => void
    ====================================================================== */
 
 function ChatPage() {
-  const { t } = useI18n()
+  const { t } = useI18n();
   const sessions = [
     t('chat.session1'),
     t('chat.session2'),
     t('chat.session3'),
     t('chat.session4'),
     t('chat.session5'),
-  ]
+  ];
 
   return (
     <div className="h-full flex" style={{ animation: 'spring-in 0.4s var(--spring-easing) both' }}>
@@ -1580,7 +1664,7 @@ function ChatPage() {
         <ChatInterface />
       </div>
     </div>
-  )
+  );
 }
 
 /* =========================================================
@@ -1588,8 +1672,8 @@ function ChatPage() {
    ========================================================= */
 
 function CLMPage() {
-  const { t } = useI18n()
-  const [selectedStage, setSelectedStage] = useState<string | null>(null)
+  const { t } = useI18n();
+  const [selectedStage, setSelectedStage] = useState<string | null>(null);
 
   const clmStages = [
     {
@@ -1632,7 +1716,7 @@ function CLMPage() {
       count: 267,
       trend: '+22%',
     },
-  ]
+  ];
 
   const clmCustomers = [
     {
@@ -1680,11 +1764,11 @@ function CLMPage() {
       color: '#00ffc8',
       lastContact: t('clm.mock.time.hoursAgo', { n: 5 }),
     },
-  ]
+  ];
 
   const filtered = selectedStage
-    ? clmCustomers.filter((c) => c.stage === selectedStage)
-    : clmCustomers
+    ? clmCustomers.filter(c => c.stage === selectedStage)
+    : clmCustomers;
 
   return (
     <div
@@ -1721,8 +1805,8 @@ function CLMPage() {
           <h3 className="text-xs text-white/40 mb-5 uppercase tracking-wider">{t('clm.funnel')}</h3>
           <div className="flex items-stretch gap-3">
             {clmStages.map((stage, i) => {
-              const Icon = stage.icon
-              const isSelected = selectedStage === stage.label
+              const Icon = stage.icon;
+              const isSelected = selectedStage === stage.label;
               return (
                 <div key={i} className="contents">
                   <button
@@ -1790,7 +1874,7 @@ function CLMPage() {
                     </div>
                   )}
                 </div>
-              )
+              );
             })}
           </div>
         </NeonCard>
@@ -1828,7 +1912,7 @@ function CLMPage() {
             change: '+18%',
           },
         ].map((m, i) => {
-          const Icon = m.icon
+          const Icon = m.icon;
           return (
             <NeonCard key={i} color={m.color}>
               <div className="flex items-start justify-between">
@@ -1854,7 +1938,7 @@ function CLMPage() {
                 <ArrowUpRight className="w-3 h-3 inline" /> {m.change}
               </p>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
@@ -1886,13 +1970,13 @@ function CLMPage() {
                 borderColor: 'rgba(255,255,255,0.04)',
                 animation: `spring-in 0.3s var(--spring-easing) ${i * 0.05}s both`,
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(0,212,255,0.2)'
-                e.currentTarget.style.boxShadow = '0 0 15px rgba(0,212,255,0.08)'
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = 'rgba(0,212,255,0.2)';
+                e.currentTarget.style.boxShadow = '0 0 15px rgba(0,212,255,0.08)';
               }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.04)'
-                e.currentTarget.style.boxShadow = 'none'
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.04)';
+                e.currentTarget.style.boxShadow = 'none';
               }}
             >
               {/* Avatar */}
@@ -1913,9 +1997,9 @@ function CLMPage() {
                 <span
                   className="text-[9px] px-2 py-0.5 rounded-full"
                   style={{
-                    background: clmStages.find((s) => s.label === c.stage)?.color + '15',
-                    color: clmStages.find((s) => s.label === c.stage)?.color,
-                    border: `1px solid ${clmStages.find((s) => s.label === c.stage)?.color}30`,
+                    background: `${clmStages.find(s => s.label === c.stage)?.color}15`,
+                    color: clmStages.find(s => s.label === c.stage)?.color,
+                    border: `1px solid ${clmStages.find(s => s.label === c.stage)?.color}30`,
                   }}
                 >
                   {c.stage}
@@ -1955,7 +2039,7 @@ function CLMPage() {
         </div>
       </NeonCard>
     </div>
-  )
+  );
 }
 
 /* =========================================================
@@ -1963,7 +2047,7 @@ function CLMPage() {
    ========================================================= */
 
 function AICallPage() {
-  const { t } = useI18n()
+  const { t } = useI18n();
 
   const callStats = [
     { label: t('call.todayCalls'), value: '247', icon: PhoneCall, color: '#00ffcc', change: '+34' },
@@ -1976,7 +2060,7 @@ function AICallPage() {
     },
     { label: t('call.avgDuration'), value: '4:32', icon: Clock, color: '#00f0ff', change: '-0:18' },
     { label: t('call.aiConversion'), value: '23.7%', icon: Bot, color: '#00d4ff', change: '+8.1%' },
-  ]
+  ];
 
   const callQueue = [
     {
@@ -2024,7 +2108,7 @@ function AICallPage() {
       aiScore: 88,
       color: '#00ffc8',
     },
-  ]
+  ];
 
   const callFlowSteps = [
     { label: t('call.scheduling'), icon: Clock, status: 'done' },
@@ -2033,7 +2117,7 @@ function AICallPage() {
     { label: t('call.realtimeAnalysis'), icon: Activity, status: 'pending' },
     { label: t('call.aiSummary'), icon: FileText, status: 'pending' },
     { label: t('call.feedbackLearn'), icon: RefreshCw, status: 'pending' },
-  ]
+  ];
   return (
     <div
       className="h-full overflow-y-auto p-6"
@@ -2079,7 +2163,7 @@ function AICallPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
         {callStats.map((s, i) => {
-          const Icon = s.icon
+          const Icon = s.icon;
           return (
             <NeonCard key={i} color={s.color}>
               <div className="flex items-start justify-between">
@@ -2113,7 +2197,7 @@ function AICallPage() {
                 {s.change}
               </p>
             </NeonCard>
-          )
+          );
         })}
       </div>
 
@@ -2124,13 +2208,13 @@ function AICallPage() {
         </h3>
         <div className="flex items-center justify-between gap-2 overflow-x-auto pb-2">
           {callFlowSteps.map((step, i) => {
-            const Icon = step.icon
+            const Icon = step.icon;
             const statusColor =
               step.status === 'done'
                 ? '#00ffc8'
                 : step.status === 'active'
                   ? '#00ffcc'
-                  : 'rgba(255,255,255,0.15)'
+                  : 'rgba(255,255,255,0.15)';
             return (
               <div key={i} className="contents">
                 <div className="flex flex-col items-center gap-2 shrink-0">
@@ -2179,7 +2263,7 @@ function AICallPage() {
                   </div>
                 )}
               </div>
-            )
+            );
           })}
         </div>
       </NeonCard>
@@ -2378,11 +2462,11 @@ function AICallPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function WorkflowPage() {
-  const { t } = useI18n()
+  const { t } = useI18n();
 
   // Define workflowNodes inside the component
   const workflowNodes = [
@@ -2391,7 +2475,7 @@ function WorkflowPage() {
     { label: t('workflow.taskExec'), status: 'active', color: '#00f0ff' },
     { label: t('workflow.resultOpt'), status: 'pending', color: '#ffffff33' },
     { label: t('workflow.learnFeedback'), status: 'pending', color: '#ffffff33' },
-  ]
+  ];
 
   return (
     <div
@@ -2482,27 +2566,27 @@ function WorkflowPage() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 // ==========================================
 // Phase 8: Forms Tab Page (sub-tabs wrapper)
 // ==========================================
 function FormsTabPage() {
-  const { t } = useI18n()
-  const [tab, setTab] = useState<'fill' | 'history' | 'builder'>('fill')
+  const { t } = useI18n();
+  const [tab, setTab] = useState<'fill' | 'history' | 'builder'>('fill');
   const tabs = [
     { id: 'fill' as const, label: t('forms.fillForm'), icon: ClipboardList, color: '#008b9d' },
     { id: 'history' as const, label: t('forms.history'), icon: History, color: '#00f0ff' },
     { id: 'builder' as const, label: t('forms.builder'), icon: Layers, color: '#00d4ff' },
-  ]
+  ];
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Tab bar */}
       <div className="flex items-center gap-1 px-6 pt-4 pb-0 shrink-0">
-        {tabs.map((t) => {
-          const Icon = t.icon
-          const active = tab === t.id
+        {tabs.map(t => {
+          const Icon = t.icon;
+          const active = tab === t.id;
           return (
             <button
               key={t.id}
@@ -2517,7 +2601,7 @@ function FormsTabPage() {
               <Icon className="w-3.5 h-3.5" />
               {t.label}
             </button>
-          )
+          );
         })}
       </div>
       <div className="flex-1 overflow-hidden">
@@ -2534,7 +2618,7 @@ function FormsTabPage() {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 // FormInsightsSection and InsightsPage moved to insights-enhanced.tsx

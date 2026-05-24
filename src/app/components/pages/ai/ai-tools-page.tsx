@@ -22,13 +22,13 @@ import {
   Sparkles,
   Terminal,
   Zap,
-} from 'lucide-react'
-import { useCallback, useEffect, useRef, useState } from 'react'
+} from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useApp } from '../../context/app-context'
-import { useI18n } from '../../context/i18n-context'
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { useApp } from '../../context/app-context';
+import { useI18n } from '../../context/i18n-context';
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ AI 工具矩阵 — Interactive Tool Page
@@ -36,27 +36,27 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 // ==========================================
 
 /** Execution status of an AI tool task. */
-type ToolStatus = 'idle' | 'running' | 'success' | 'error'
+type ToolStatus = 'idle' | 'running' | 'success' | 'error';
 
 /** A single log entry from an AI tool execution. */
 interface ToolLogEntry {
-  timestamp: string
-  message: string
-  type: 'info' | 'success' | 'warning' | 'error'
+  timestamp: string;
+  message: string;
+  type: 'info' | 'success' | 'warning' | 'error';
 }
 
 /** Configuration for each AI tool with simulation data. */
 interface ToolConfig {
-  id: string
-  nameKey: string
-  descKey: string
-  icon: typeof Cpu
-  color: string
-  detailIcon: typeof Code
-  metrics: { label: string; value: string; change: string; positive: boolean }[]
-  capabilities: string[]
-  simulationLogs: string[]
-  resultSummary: string
+  id: string;
+  nameKey: string;
+  descKey: string;
+  icon: typeof Cpu;
+  color: string;
+  detailIcon: typeof Code;
+  metrics: { label: string; value: string; change: string; positive: boolean }[];
+  capabilities: string[];
+  simulationLogs: string[];
+  resultSummary: string;
 }
 
 const toolConfigs: ToolConfig[] = [
@@ -252,7 +252,7 @@ const toolConfigs: ToolConfig[] = [
     resultSummary:
       '数据仓库集群 16 节点全部在线，总数据量 2.4TB。优化 4 个低效索引后查询延迟降至 45ms，可用性 99.99%。',
   },
-]
+];
 
 /**
  * Enhanced AI Tools page with interactive tool panels.
@@ -260,29 +260,29 @@ const toolConfigs: ToolConfig[] = [
  * real-time log streaming, metrics dashboard, and result summary.
  */
 export function AIToolsPage() {
-  const { t } = useI18n()
-  const { addNotification, addActivity } = useApp()
-  const tc = useThemeColors()
-  const [selectedTool, setSelectedTool] = useState<string | null>(null)
-  const [toolStates, setToolStates] = useState<Record<string, ToolStatus>>({})
-  const [toolLogs, setToolLogs] = useState<Record<string, ToolLogEntry[]>>({})
-  const [copiedResult, setCopiedResult] = useState(false)
-  const logEndRef = useRef<HTMLDivElement>(null)
+  const { t } = useI18n();
+  const { addNotification, addActivity } = useApp();
+  const tc = useThemeColors();
+  const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [toolStates, setToolStates] = useState<Record<string, ToolStatus>>({});
+  const [toolLogs, setToolLogs] = useState<Record<string, ToolLogEntry[]>>({});
+  const [copiedResult, setCopiedResult] = useState(false);
+  const logEndRef = useRef<HTMLDivElement>(null);
 
-  const activeTool = toolConfigs.find((tc) => tc.id === selectedTool)
+  const activeTool = toolConfigs.find(tc => tc.id === selectedTool);
 
   // Auto-scroll log
   useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [toolLogs])
+    logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
 
   const runTool = useCallback(
     (toolId: string) => {
-      const config = toolConfigs.find((tc) => tc.id === toolId)
-      if (!config) return
+      const config = toolConfigs.find(tc => tc.id === toolId);
+      if (!config) return;
 
-      setToolStates((prev) => ({ ...prev, [toolId]: 'running' }))
-      setToolLogs((prev) => ({ ...prev, [toolId]: [] }))
+      setToolStates(prev => ({ ...prev, [toolId]: 'running' }));
+      setToolLogs(prev => ({ ...prev, [toolId]: [] }));
 
       // Simulate log streaming
       config.simulationLogs.forEach((msg, i) => {
@@ -292,42 +292,42 @@ export function AIToolsPage() {
               timestamp: new Date().toISOString().slice(11, 23),
               message: msg,
               type: i === config.simulationLogs.length - 1 ? 'success' : 'info',
-            }
-            setToolLogs((prev) => ({
+            };
+            setToolLogs(prev => ({
               ...prev,
               [toolId]: [...(prev[toolId] || []), entry],
-            }))
+            }));
 
             // Final log → mark success
             if (i === config.simulationLogs.length - 1) {
               setTimeout(() => {
-                setToolStates((prev) => ({ ...prev, [toolId]: 'success' }))
+                setToolStates(prev => ({ ...prev, [toolId]: 'success' }));
                 addNotification({
                   title: `${t(config.nameKey)} 执行完成`,
-                  message: config.resultSummary.slice(0, 60) + '…',
+                  message: `${config.resultSummary.slice(0, 60)}…`,
                   type: 'success',
                   color: config.color,
-                })
+                });
                 addActivity({
                   action: 'AI 工具执行',
                   target: `${t(config.nameKey)} · 执行成功`,
                   type: 'ai',
                   color: config.color,
-                })
-              }, 300)
+                });
+              }, 300);
             }
           },
           (i + 1) * 600,
-        )
-      })
+        );
+      });
     },
     [t, addNotification, addActivity],
-  )
+  );
 
   const resetTool = useCallback((toolId: string) => {
-    setToolStates((prev) => ({ ...prev, [toolId]: 'idle' }))
-    setToolLogs((prev) => ({ ...prev, [toolId]: [] }))
-  }, [])
+    setToolStates(prev => ({ ...prev, [toolId]: 'idle' }));
+    setToolLogs(prev => ({ ...prev, [toolId]: [] }));
+  }, []);
 
   // Grid view
   if (!activeTool) {
@@ -377,10 +377,10 @@ export function AIToolsPage() {
               sub: '近 7 天',
             },
             { label: '平均耗时', value: '4.8s', icon: Zap, color: '#00d4ff', sub: '-1.2s 优化' },
-          ].map((m, i) => {
-            const Icon = m.icon
+          ].map(m => {
+            const Icon = m.icon;
             return (
-              <NeonCard key={i} color={m.color}>
+              <NeonCard key={m.label} color={m.color}>
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-[10px] text-white/25 uppercase tracking-wider mb-1">
@@ -402,15 +402,15 @@ export function AIToolsPage() {
                 </div>
                 <p className="text-[10px] mt-2 text-white/20">{m.sub}</p>
               </NeonCard>
-            )
+            );
           })}
         </div>
 
         {/* Tool Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {toolConfigs.map((tool, _i) => {
-            const Icon = tool.icon
-            const status = toolStates[tool.id] || 'idle'
+            const Icon = tool.icon;
+            const status = toolStates[tool.id] || 'idle';
             return (
               <NeonCard key={tool.id} color={tool.color}>
                 <div className="flex items-start gap-4 mb-3">
@@ -439,9 +439,9 @@ export function AIToolsPage() {
 
                 {/* Capabilities */}
                 <div className="flex flex-wrap gap-1.5 mb-4">
-                  {tool.capabilities.slice(0, 3).map((cap, j) => (
+                  {tool.capabilities.slice(0, 3).map(cap => (
                     <span
-                      key={j}
+                      key={cap}
                       className="text-[9px] px-2 py-0.5 rounded-full"
                       style={{
                         background: `${tool.color}08`,
@@ -497,6 +497,7 @@ export function AIToolsPage() {
                   </div>
                   <div className="flex gap-2">
                     <button
+                      type="button"
                       onClick={() => setSelectedTool(tool.id)}
                       className="px-3 py-1.5 rounded-xl text-[10px] transition-all duration-300 flex items-center gap-1"
                       style={{
@@ -508,9 +509,10 @@ export function AIToolsPage() {
                       详情 <ChevronRight className="w-3 h-3" />
                     </button>
                     <button
+                      type="button"
                       onClick={() => {
-                        setSelectedTool(tool.id)
-                        runTool(tool.id)
+                        setSelectedTool(tool.id);
+                        runTool(tool.id);
                       }}
                       disabled={status === 'running'}
                       className="px-3 py-1.5 rounded-xl text-[10px] transition-all duration-300 flex items-center gap-1 disabled:opacity-40"
@@ -526,18 +528,18 @@ export function AIToolsPage() {
                   </div>
                 </div>
               </NeonCard>
-            )
+            );
           })}
         </div>
       </div>
-    )
+    );
   }
 
   // Detail view
-  const ToolIcon = activeTool.icon
-  const DetailIcon = activeTool.detailIcon
-  const status = toolStates[activeTool.id] || 'idle'
-  const logs = toolLogs[activeTool.id] || []
+  const ToolIcon = activeTool.icon;
+  const DetailIcon = activeTool.detailIcon;
+  const status = toolStates[activeTool.id] || 'idle';
+  const logs = toolLogs[activeTool.id] || [];
 
   return (
     <div
@@ -548,6 +550,7 @@ export function AIToolsPage() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <button
+            type="button"
             onClick={() => setSelectedTool(null)}
             className="p-2 rounded-xl transition-colors hover:bg-white/5"
             style={{ border: '1px solid rgba(255,255,255,0.06)' }}
@@ -577,6 +580,7 @@ export function AIToolsPage() {
         <div className="flex items-center gap-2">
           {status === 'success' && (
             <button
+              type="button"
               onClick={() => resetTool(activeTool.id)}
               className="px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition-all duration-300"
               style={{
@@ -589,6 +593,7 @@ export function AIToolsPage() {
             </button>
           )}
           <button
+            type="button"
             onClick={() =>
               status === 'idle' || status === 'success' ? runTool(activeTool.id) : undefined
             }
@@ -620,8 +625,8 @@ export function AIToolsPage() {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-        {activeTool.metrics.map((m, i) => (
-          <NeonCard key={i} color={activeTool.color}>
+        {activeTool.metrics.map(m => (
+          <NeonCard key={m.label} color={activeTool.color}>
             <p className="text-[10px] text-white/25 uppercase tracking-wider mb-1">{m.label}</p>
             <p
               className="text-xl"
@@ -691,9 +696,9 @@ export function AIToolsPage() {
                 </div>
               ) : (
                 <>
-                  {logs.map((log, i) => (
+                  {logs.map((log, _logIndex) => (
                     <div
-                      key={i}
+                      key={`${log.timestamp}-${log.message}`}
                       className="flex items-start gap-2 mb-1.5"
                       style={{ animation: `spring-in 0.2s var(--spring-easing) both` }}
                     >
@@ -773,10 +778,11 @@ export function AIToolsPage() {
                     <span className="text-xs text-[#00ffc8]">执行完成 · Result Summary</span>
                   </div>
                   <button
+                    type="button"
                     onClick={() => {
-                      navigator.clipboard.writeText(activeTool.resultSummary)
-                      setCopiedResult(true)
-                      setTimeout(() => setCopiedResult(false), 2000)
+                      navigator.clipboard.writeText(activeTool.resultSummary);
+                      setCopiedResult(true);
+                      setTimeout(() => setCopiedResult(false), 2000);
                     }}
                     className="text-[9px] px-2 py-1 rounded-lg flex items-center gap-1 transition-all"
                     style={{
@@ -806,14 +812,14 @@ export function AIToolsPage() {
               功能列表 · Capabilities
             </h3>
             <div className="space-y-2">
-              {activeTool.capabilities.map((cap, i) => (
+              {activeTool.capabilities.map((cap, capIndex) => (
                 <div
-                  key={i}
+                  key={cap}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all duration-300"
                   style={{
                     background: `${activeTool.color}05`,
                     border: `1px solid ${activeTool.color}10`,
-                    animation: `spring-in 0.3s var(--spring-easing) ${i * 0.05}s both`,
+                    animation: `spring-in 0.3s var(--spring-easing) ${capIndex * 0.05}s both`,
                   }}
                 >
                   <div
@@ -900,5 +906,5 @@ export function AIToolsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

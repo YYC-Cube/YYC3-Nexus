@@ -26,11 +26,11 @@ import {
   TrendingUp,
   Type,
   Users,
-} from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+} from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 智创协同 — Creative Collaboration Platform
@@ -40,24 +40,24 @@ import { useThemeColors } from '../../hooks/use-theme-colors'
 
 // ---------- Animated counter ----------
 function AnimatedNumber({ value, duration = 800 }: { value: number; duration?: number }) {
-  const [display, setDisplay] = useState(0)
-  const ref = useRef<number>(0)
+  const [display, setDisplay] = useState(0);
+  const ref = useRef<number>(0);
   useEffect(() => {
-    const start = ref.current
-    const diff = value - start
-    const startTime = performance.now()
+    const start = ref.current;
+    const diff = value - start;
+    const startTime = performance.now();
     const animate = (now: number) => {
-      const elapsed = now - startTime
-      const progress = Math.min(elapsed / duration, 1)
-      const eased = 1 - Math.pow(1 - progress, 3)
-      const current = Math.round(start + diff * eased)
-      setDisplay(current)
-      if (progress < 1) requestAnimationFrame(animate)
-      else ref.current = value
-    }
-    requestAnimationFrame(animate)
-  }, [value, duration])
-  return <>{display.toLocaleString()}</>
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - (1 - progress) ** 3;
+      const current = Math.round(start + diff * eased);
+      setDisplay(current);
+      if (progress < 1) requestAnimationFrame(animate);
+      else ref.current = value;
+    };
+    requestAnimationFrame(animate);
+  }, [value, duration]);
+  return <>{display.toLocaleString()}</>;
 }
 
 // ---------- Progress bar ----------
@@ -66,9 +66,9 @@ function ProgressBar({
   color,
   tc,
 }: {
-  value: number
-  color: string
-  tc: ReturnType<typeof useThemeColors>
+  value: number;
+  color: string;
+  tc: ReturnType<typeof useThemeColors>;
 }) {
   return (
     <div className="flex items-center gap-2">
@@ -86,7 +86,7 @@ function ProgressBar({
         {value}%
       </span>
     </div>
-  )
+  );
 }
 
 // ---------- Avatar circle ----------
@@ -96,10 +96,10 @@ function AvatarCircle({
   size = 32,
   online,
 }: {
-  name: string
-  color: string
-  size?: number
-  online?: boolean
+  name: string;
+  color: string;
+  size?: number;
+  online?: boolean;
 }) {
   return (
     <div className="relative inline-flex" style={{ width: size, height: size }}>
@@ -126,7 +126,7 @@ function AvatarCircle({
         />
       )}
     </div>
-  )
+  );
 }
 
 // ---------- Tag badge ----------
@@ -135,9 +135,9 @@ function Tag({
   color,
   tc,
 }: {
-  label: string
-  color: string
-  tc: ReturnType<typeof useThemeColors>
+  label: string;
+  color: string;
+  tc: ReturnType<typeof useThemeColors>;
 }) {
   return (
     <span
@@ -150,7 +150,7 @@ function Tag({
     >
       {label}
     </span>
-  )
+  );
 }
 
 // ==========================================
@@ -203,7 +203,7 @@ const MOCK_PROJECTS = [
     ],
     tags: ['AI', '客服', '优化'],
   },
-]
+];
 
 const MOCK_IDEAS = [
   {
@@ -258,7 +258,7 @@ const MOCK_IDEAS = [
     comments: 3,
     aiGenerated: true,
   },
-]
+];
 
 const MOCK_TEAM = [
   { name: '张设计师', role: 'UI设计', color: '#8b5cf6', online: true },
@@ -266,7 +266,7 @@ const MOCK_TEAM = [
   { name: '王策划', role: '市场策划', color: '#06b6d4', online: true },
   { name: '陈美工', role: '视觉设计', color: '#f97316', online: true },
   { name: '刘总监', role: '创意总监', color: '#14b8a6', online: true },
-]
+];
 
 const MOCK_ACTIVITIES = [
   {
@@ -279,7 +279,7 @@ const MOCK_ACTIVITIES = [
   { actor: 'AI助手', actorColor: '#3b82f6', action: '生成了3个新的营销创意', time: '10分钟前' },
   { actor: '王策划', actorColor: '#06b6d4', action: '完成了市场调研报告', time: '15分钟前' },
   { actor: '陈美工', actorColor: '#f97316', action: '上传了品牌VI手册初稿', time: '30分钟前' },
-]
+];
 
 const MOCK_AI_TOOLS = [
   {
@@ -354,7 +354,7 @@ const MOCK_AI_TOOLS = [
     btnIcon: Target,
     gradient: ['#06b6d4', '#0ea5e9'],
   },
-]
+];
 
 // ==========================================
 // TAB CONTENT COMPONENTS
@@ -362,8 +362,8 @@ const MOCK_AI_TOOLS = [
 
 // ---------- Tab 1: 创意项目 ----------
 function TabProjects({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
-  const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState('全部状态')
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('全部状态');
 
   return (
     <div style={{ animation: 'spring-in 0.4s var(--spring-easing) both' }}>
@@ -373,20 +373,20 @@ function TabProjects({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/20" />
           <input
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
             placeholder="搜索项目..."
             className="w-full pl-9 pr-4 py-2 rounded-xl text-[12px] text-white/70 placeholder-white/20 outline-none transition-all"
             style={{
               background: tc.alpha(tc.primary, 0.03),
               border: `1px solid ${tc.alpha(tc.primary, 0.08)}`,
             }}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = tc.alpha(tc.primary, 0.3)
-              e.currentTarget.style.boxShadow = `0 0 0 3px ${tc.alpha(tc.primary, 0.06)}`
+            onFocus={e => {
+              e.currentTarget.style.borderColor = tc.alpha(tc.primary, 0.3);
+              e.currentTarget.style.boxShadow = `0 0 0 3px ${tc.alpha(tc.primary, 0.06)}`;
             }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = tc.alpha(tc.primary, 0.08)
-              e.currentTarget.style.boxShadow = 'none'
+            onBlur={e => {
+              e.currentTarget.style.borderColor = tc.alpha(tc.primary, 0.08);
+              e.currentTarget.style.boxShadow = 'none';
             }}
           />
         </div>
@@ -397,7 +397,7 @@ function TabProjects({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
             border: `1px solid ${tc.alpha(tc.primary, 0.08)}`,
           }}
           onClick={() =>
-            setStatusFilter((s) =>
+            setStatusFilter(s =>
               s === '全部状态'
                 ? '进行中'
                 : s === '进行中'
@@ -503,7 +503,7 @@ function TabProjects({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 // ---------- Tab 2: 创意库 ----------
@@ -587,7 +587,7 @@ function TabIdeas({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 // ---------- Tab 3: 团队协作 ----------
@@ -612,11 +612,11 @@ function TabTeam({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
                 animation: `spring-in 0.3s var(--spring-easing) ${idx * 0.04}s both`,
                 border: `1px solid transparent`,
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = tc.alpha(member.color, 0.1)
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = tc.alpha(member.color, 0.1);
               }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'transparent'
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = 'transparent';
               }}
             >
               <AvatarCircle
@@ -668,7 +668,7 @@ function TabTeam({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
         </div>
       </NeonCard>
     </div>
-  )
+  );
 }
 
 // ---------- Tab 4: AI工具 ----------
@@ -679,8 +679,8 @@ function TabAITools({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
       style={{ animation: 'spring-in 0.4s var(--spring-easing) both' }}
     >
       {MOCK_AI_TOOLS.map((tool, idx) => {
-        const Icon = tool.icon
-        const BtnIcon = tool.btnIcon
+        const Icon = tool.icon;
+        const BtnIcon = tool.btnIcon;
         return (
           <NeonCard key={tool.id} color={tool.gradient[0]}>
             <div style={{ animation: `spring-in 0.35s var(--spring-easing) ${idx * 0.05}s both` }}>
@@ -729,10 +729,10 @@ function TabAITools({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
               </button>
             </div>
           </NeonCard>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
 // ---------- Tab 5: 数据分析 ----------
@@ -741,17 +741,17 @@ function TabAnalytics({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
     { label: '创意采用率', value: 78, color: tc.primary },
     { label: '平均评分', value: 92, display: '4.6/5.0', color: tc.secondary },
     { label: '实施成功率', value: 85, color: tc.accent },
-  ]
+  ];
   const metrics2 = [
     { label: '项目按时完成率', value: 91, color: '#22c55e' },
     { label: '团队满意度', value: 96, display: '4.8/5.0', color: '#3b82f6' },
     { label: '沟通效率提升', value: 45, display: '+45%', color: '#8b5cf6' },
-  ]
+  ];
   const aiStats = [
     { label: '创意生成效率提升', value: '40%', color: '#22c55e' },
     { label: '设计时间节省', value: '65%', color: '#3b82f6' },
     { label: '用户满意度', value: '85%', color: '#8b5cf6' },
-  ]
+  ];
 
   return (
     <div className="space-y-4" style={{ animation: 'spring-in 0.4s var(--spring-easing) both' }}>
@@ -828,14 +828,14 @@ function TabAnalytics({ tc }: { tc: ReturnType<typeof useThemeColors> }) {
         </div>
       </NeonCard>
     </div>
-  )
+  );
 }
 
 // ==========================================
 // Main Page
 // ==========================================
 
-type TabKey = 'projects' | 'ideas' | 'team' | 'tools' | 'analytics'
+type TabKey = 'projects' | 'ideas' | 'team' | 'tools' | 'analytics';
 
 const TAB_CONFIG: { key: TabKey; label: string }[] = [
   { key: 'projects', label: '创意项目' },
@@ -843,51 +843,60 @@ const TAB_CONFIG: { key: TabKey; label: string }[] = [
   { key: 'team', label: '团队协作' },
   { key: 'tools', label: 'AI工具' },
   { key: 'analytics', label: '数据分析' },
-]
+];
 
 export function CollabCreationPage() {
-  const tc = useThemeColors()
-  const [activeTab, setActiveTab] = useState<TabKey>('projects')
+  const tc = useThemeColors();
+  const [activeTab, setActiveTab] = useState<TabKey>('projects');
 
   // Overview cards data
   const overviewCards = useMemo(
-    () => [
-      {
-        title: '活跃项目',
-        value: 12,
-        trend: '+15% 本月',
-        trendUp: true,
-        icon: Rocket,
-        color: '#8b5cf6',
-      },
-      {
-        title: '创意想法',
-        value: 156,
-        trend: '+8 今日新增',
-        trendUp: true,
-        icon: Lightbulb,
-        color: '#22c55e',
-      },
-      {
-        title: '协作成员',
-        value: 28,
-        trend: '15人在线',
-        trendUp: null,
-        icon: Users,
-        color: '#3b82f6',
-      },
-      {
-        title: 'AI辅助率',
-        value: 85,
-        isPercent: true,
-        trend: '效率提升40%',
-        trendUp: true,
-        icon: Brain,
-        color: '#22c55e',
-      },
-    ],
+    () =>
+      [
+        {
+          title: '活跃项目',
+          value: 12,
+          trend: '+15% 本月',
+          trendUp: true as boolean | null,
+          icon: Rocket,
+          color: '#8b5cf6',
+        },
+        {
+          title: '创意想法',
+          value: 156,
+          trend: '+8 今日新增',
+          trendUp: true as boolean | null,
+          icon: Lightbulb,
+          color: '#22c55e',
+        },
+        {
+          title: '协作成员',
+          value: 28,
+          trend: '15人在线',
+          trendUp: null as boolean | null,
+          icon: Users,
+          color: '#3b82f6',
+        },
+        {
+          title: 'AI辅助率',
+          value: 85,
+          isPercent: true,
+          trend: '效率提升40%',
+          trendUp: true as boolean | null,
+          icon: Brain,
+          color: '#22c55e',
+        },
+      ] as Array<{
+        title: string;
+        value: number;
+        trend?: string;
+        trendUp: boolean | null;
+        icon: typeof Rocket;
+        color: string;
+        isPercent?: boolean;
+      }>,
     [],
-  )
+  );
 
   return (
     <div className="h-full overflow-y-auto" style={{ scrollbarWidth: 'none' }}>
@@ -957,7 +966,7 @@ export function CollabCreationPage() {
       <div className="px-6 pb-5">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {overviewCards.map((card, idx) => {
-            const Icon = card.icon
+            const Icon = card.icon;
             return (
               <NeonCard key={idx} color={card.color}>
                 <div
@@ -982,7 +991,7 @@ export function CollabCreationPage() {
                     }}
                   >
                     <AnimatedNumber value={card.value} />
-                    {(card as any).isPercent && <span className="text-lg">%</span>}
+                    {card.isPercent && <span className="text-lg">%</span>}
                   </p>
                   <div className="flex items-center gap-1">
                     {card.trendUp !== null &&
@@ -1008,7 +1017,7 @@ export function CollabCreationPage() {
                   </div>
                 </div>
               </NeonCard>
-            )
+            );
           })}
         </div>
       </div>
@@ -1022,8 +1031,8 @@ export function CollabCreationPage() {
             border: `1px solid ${tc.alpha(tc.primary, 0.06)}`,
           }}
         >
-          {TAB_CONFIG.map((tab) => {
-            const isActive = activeTab === tab.key
+          {TAB_CONFIG.map(tab => {
+            const isActive = activeTab === tab.key;
             return (
               <button
                 key={tab.key}
@@ -1047,7 +1056,7 @@ export function CollabCreationPage() {
                   />
                 )}
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -1061,5 +1070,5 @@ export function CollabCreationPage() {
         {activeTab === 'analytics' && <TabAnalytics tc={tc} />}
       </div>
     </div>
-  )
+  );
 }

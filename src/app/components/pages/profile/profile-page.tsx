@@ -21,32 +21,32 @@ import {
   Users,
   X,
   Zap,
-} from 'lucide-react'
-import { useCallback, useMemo, useState } from 'react'
+} from 'lucide-react';
+import { useCallback, useMemo, useState } from 'react';
 
-import { useApp } from '../../context/app-context'
-import { useI18n } from '../../context/i18n-context'
-import { NeonCard } from '../../core/neon-card'
-import { useThemeColors } from '../../hooks/use-theme-colors'
+import { useApp } from '../../context/app-context';
+import { useI18n } from '../../context/i18n-context';
+import { NeonCard } from '../../core/neon-card';
+import { useThemeColors } from '../../hooks/use-theme-colors';
 
 // ==========================================
 // YYC³ 个人中心 — Profile & Personal Center
 // Phase 2A: 用户档案 · 偏好设置 · 使用统计
 // ==========================================
 
-const PROFILE_STORAGE_KEY = 'yyc3_user_profile'
+const PROFILE_STORAGE_KEY = 'yyc3_user_profile';
 
 /** User profile data stored in localStorage. */
 interface UserProfile {
-  name: string
-  email: string
-  role: string
-  department: string
-  location: string
-  website: string
-  bio: string
-  avatar: string
-  joinDate: string
+  name: string;
+  email: string;
+  role: string;
+  department: string;
+  location: string;
+  website: string;
+  bio: string;
+  avatar: string;
+  joinDate: string;
 }
 
 const defaultProfile: UserProfile = {
@@ -56,24 +56,24 @@ const defaultProfile: UserProfile = {
   department: 'AI 智能营销部',
   location: '中国 · 上海',
   website: 'https://yyc3.ai',
-  bio: 'YYC³ 言语智能系统管理员，负责 AI 营销自动化终端的运营与管理。',
+  bio: 'YYC³ 言语智能系统管理员，负责 AI 营销智能中枢的运营与管理。',
   avatar: '',
   joinDate: '2024-06-15',
-}
+};
 
 function loadProfile(): UserProfile {
   try {
-    const raw = localStorage.getItem(PROFILE_STORAGE_KEY)
-    if (raw) return { ...defaultProfile, ...JSON.parse(raw) }
+    const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
+    if (raw) return { ...defaultProfile, ...JSON.parse(raw) };
   } catch {
     /* ignore */
   }
-  return { ...defaultProfile }
+  return { ...defaultProfile };
 }
 
 function saveProfile(profile: UserProfile) {
   try {
-    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile))
+    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
   } catch {
     /* ignore */
   }
@@ -85,22 +85,22 @@ function saveProfile(profile: UserProfile) {
  * and system preferences with editable profile fields.
  */
 export function ProfilePage() {
-  const { t: _t } = useI18n()
-  const { recentActivities, notifications, setActivePage, theme } = useApp()
-  const tc = useThemeColors()
-  const [profile, setProfile] = useState<UserProfile>(loadProfile)
-  const [isEditing, setIsEditing] = useState(false)
-  const [editForm, setEditForm] = useState<UserProfile>(profile)
+  const { t: _t } = useI18n();
+  const { recentActivities, notifications, setActivePage, theme } = useApp();
+  const tc = useThemeColors();
+  const [profile, setProfile] = useState<UserProfile>(loadProfile);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState<UserProfile>(profile);
   const [activeTab, setActiveTab] = useState<'overview' | 'activity' | 'stats' | 'preferences'>(
     'overview',
-  )
+  );
 
   // Usage stats from localStorage
   const usageStats = useMemo(() => {
-    let formCount = 0
+    let formCount = 0;
     try {
-      const raw = localStorage.getItem('yyc3_form_submissions')
-      if (raw) formCount = JSON.parse(raw).length
+      const raw = localStorage.getItem('yyc3_form_submissions');
+      if (raw) formCount = JSON.parse(raw).length;
     } catch {
       /* */
     }
@@ -112,26 +112,26 @@ export function ProfilePage() {
       formSubmissions: formCount,
       loginStreak: 12,
       aiInteractions: 1892,
-    }
-  }, [profile.joinDate, recentActivities.length, notifications.length])
+    };
+  }, [profile.joinDate, recentActivities.length, notifications.length]);
 
   const handleSave = useCallback(() => {
-    setProfile(editForm)
-    saveProfile(editForm)
-    setIsEditing(false)
-  }, [editForm])
+    setProfile(editForm);
+    saveProfile(editForm);
+    setIsEditing(false);
+  }, [editForm]);
 
   const handleCancel = useCallback(() => {
-    setEditForm(profile)
-    setIsEditing(false)
-  }, [profile])
+    setEditForm(profile);
+    setIsEditing(false);
+  }, [profile]);
 
   const tabs = [
     { id: 'overview' as const, label: '概览', icon: UserCircle, color: tc.primary },
     { id: 'activity' as const, label: '活动', icon: Activity, color: tc.success },
     { id: 'stats' as const, label: '统计', icon: BarChart3, color: tc.secondary },
     { id: 'preferences' as const, label: '偏好', icon: Settings, color: tc.accent },
-  ]
+  ];
 
   return (
     <div
@@ -222,8 +222,8 @@ export function ProfilePage() {
 
           <button
             onClick={() => {
-              setIsEditing(true)
-              setEditForm(profile)
+              setIsEditing(true);
+              setEditForm(profile);
             }}
             className="w-full mt-4 py-2 rounded-xl text-xs flex items-center justify-center gap-2 transition-all duration-300 hover:opacity-80"
             style={{
@@ -282,7 +282,7 @@ export function ProfilePage() {
               sub: '条',
             },
           ].map((stat, i) => {
-            const Icon = stat.icon
+            const Icon = stat.icon;
             return (
               <NeonCard key={i} color={stat.color}>
                 <div className="flex items-start justify-between">
@@ -317,16 +317,16 @@ export function ProfilePage() {
                   </div>
                 </div>
               </NeonCard>
-            )
+            );
           })}
         </div>
       </div>
 
       {/* Tabs */}
       <div className="flex items-center gap-1 mb-5">
-        {tabs.map((tab) => {
-          const Icon = tab.icon
-          const active = activeTab === tab.id
+        {tabs.map(tab => {
+          const Icon = tab.icon;
+          const active = activeTab === tab.id;
           return (
             <button
               key={tab.id}
@@ -341,7 +341,7 @@ export function ProfilePage() {
               <Icon className="w-3.5 h-3.5" />
               {tab.label}
             </button>
-          )
+          );
         })}
       </div>
 
@@ -411,7 +411,7 @@ export function ProfilePage() {
                   unlocked: true,
                 },
               ].map((badge, i) => {
-                const Icon = badge.icon
+                const Icon = badge.icon;
                 return (
                   <div
                     key={i}
@@ -440,7 +440,7 @@ export function ProfilePage() {
                       {badge.desc}
                     </p>
                   </div>
-                )
+                );
               })}
             </div>
           </NeonCard>
@@ -462,7 +462,7 @@ export function ProfilePage() {
                 { label: '客户管理', icon: Users, color: tc.accent, page: 'clm' as const },
                 { label: '系统设置', icon: Settings, color: tc.muted, page: 'settings' as const },
               ].map((action, i) => {
-                const Icon = action.icon
+                const Icon = action.icon;
                 return (
                   <button
                     key={i}
@@ -489,7 +489,7 @@ export function ProfilePage() {
                     </div>
                     <ChevronRight className="w-3 h-3" style={{ color: tc.textMuted }} />
                   </button>
-                )
+                );
               })}
             </div>
           </NeonCard>
@@ -623,7 +623,7 @@ export function ProfilePage() {
                   icon: Brain,
                 },
               ].map((item, i) => {
-                const Icon = item.icon
+                const Icon = item.icon;
                 return (
                   <div key={i} className="flex items-center gap-3">
                     <div
@@ -655,7 +655,7 @@ export function ProfilePage() {
                       </p>
                     </div>
                   </div>
-                )
+                );
               })}
             </div>
           </NeonCard>
@@ -761,8 +761,8 @@ export function ProfilePage() {
                   icon: Globe,
                   placeholder: '输入网站 URL',
                 },
-              ].map((field) => {
-                const Icon = field.icon
+              ].map(field => {
+                const Icon = field.icon;
                 return (
                   <div key={field.key}>
                     <label
@@ -774,8 +774,8 @@ export function ProfilePage() {
                     <input
                       type="text"
                       value={editForm[field.key]}
-                      onChange={(e) =>
-                        setEditForm((prev) => ({ ...prev, [field.key]: e.target.value }))
+                      onChange={e =>
+                        setEditForm(prev => ({ ...prev, [field.key]: e.target.value }))
                       }
                       placeholder={field.placeholder}
                       className="w-full px-3 py-2 text-sm rounded-xl bg-transparent"
@@ -784,17 +784,17 @@ export function ProfilePage() {
                         outline: 'none',
                         color: tc.textPrimary,
                       }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = tc.borderActive
-                        e.currentTarget.style.boxShadow = tc.neonGlow(tc.secondary, 0.5)
+                      onFocus={e => {
+                        e.currentTarget.style.borderColor = tc.borderActive;
+                        e.currentTarget.style.boxShadow = tc.neonGlow(tc.secondary, 0.5);
                       }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = tc.borderDefault
-                        e.currentTarget.style.boxShadow = 'none'
+                      onBlur={e => {
+                        e.currentTarget.style.borderColor = tc.borderDefault;
+                        e.currentTarget.style.boxShadow = 'none';
                       }}
                     />
                   </div>
-                )
+                );
               })}
 
               <div>
@@ -803,7 +803,7 @@ export function ProfilePage() {
                 </label>
                 <textarea
                   value={editForm.bio}
-                  onChange={(e) => setEditForm((prev) => ({ ...prev, bio: e.target.value }))}
+                  onChange={e => setEditForm(prev => ({ ...prev, bio: e.target.value }))}
                   placeholder="介绍自己…"
                   rows={3}
                   className="w-full px-3 py-2 text-sm rounded-xl bg-transparent resize-none"
@@ -813,11 +813,11 @@ export function ProfilePage() {
                     scrollbarWidth: 'none',
                     color: tc.textPrimary,
                   }}
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = tc.borderActive
+                  onFocus={e => {
+                    e.currentTarget.style.borderColor = tc.borderActive;
                   }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = tc.borderDefault
+                  onBlur={e => {
+                    e.currentTarget.style.borderColor = tc.borderDefault;
                   }}
                 />
               </div>
@@ -855,7 +855,7 @@ export function ProfilePage() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // ---- Helper Components ----
@@ -866,12 +866,12 @@ function InfoRow({
   value,
   color,
 }: {
-  icon: typeof Mail
-  label: string
-  value: string
-  color: string
+  icon: typeof Mail;
+  label: string;
+  value: string;
+  color: string;
 }) {
-  const tc = useThemeColors()
+  const tc = useThemeColors();
   return (
     <div className="flex items-center gap-2.5">
       <Icon className="w-3.5 h-3.5 shrink-0" style={{ color: tc.alpha(color, 0.6) }} />
@@ -882,7 +882,7 @@ function InfoRow({
         {value}
       </span>
     </div>
-  )
+  );
 }
 
 function PreferenceToggle({
@@ -891,13 +891,13 @@ function PreferenceToggle({
   defaultEnabled,
   color,
 }: {
-  label: string
-  desc: string
-  defaultEnabled: boolean
-  color: string
+  label: string;
+  desc: string;
+  defaultEnabled: boolean;
+  color: string;
 }) {
-  const tc = useThemeColors()
-  const [enabled, setEnabled] = useState(defaultEnabled)
+  const tc = useThemeColors();
+  const [enabled, setEnabled] = useState(defaultEnabled);
   return (
     <div
       className="flex items-center justify-between px-3 py-2.5 rounded-xl"
@@ -931,25 +931,25 @@ function PreferenceToggle({
         />
       </button>
     </div>
-  )
+  );
 }
 
 function formatDate(dateStr: string): string {
   try {
-    const d = new Date(dateStr)
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+    const d = new Date(dateStr);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   } catch {
-    return dateStr
+    return dateStr;
   }
 }
 
 function formatTimeAgo(date: Date): string {
-  const diff = Date.now() - date.getTime()
-  const s = Math.floor(diff / 1000)
-  if (s < 60) return `${s}秒前`
-  const m = Math.floor(s / 60)
-  if (m < 60) return `${m}分钟前`
-  const h = Math.floor(m / 60)
-  if (h < 24) return `${h}小时前`
-  return `${Math.floor(h / 24)}天前`
+  const diff = Date.now() - date.getTime();
+  const s = Math.floor(diff / 1000);
+  if (s < 60) return `${s}秒前`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m}分钟前`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}小时前`;
+  return `${Math.floor(h / 24)}天前`;
 }

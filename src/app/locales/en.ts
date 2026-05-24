@@ -892,7 +892,7 @@ export const enMessages: Record<string, string> = {
 
   // ---- Customer Care Center ----
   'care.title': 'Customer Care Center',
-  'care.subtitle': 'Customer Care Center — AI Smart Marketing Automation Terminal',
+  'care.subtitle': 'Customer Care Center — YYC³ Nexus AI Marketing Intelligence Hub',
 
   // Dashboard Overview
   'care.totalCustomers': 'Total Customers',
@@ -1131,4 +1131,4 @@ export const enMessages: Record<string, string> = {
   'care.reset': 'Reset',
   'care.refresh': 'Refresh',
   'care.more': 'More',
-}
+};

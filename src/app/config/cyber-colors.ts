@@ -33,7 +33,7 @@ export const CYBER_COLORS = {
   accentAlpha10: 'rgba(0, 255, 204, 0.1)',
   accentAlpha20: 'rgba(0, 255, 204, 0.2)',
   accentAlpha40: 'rgba(0, 255, 204, 0.4)',
-} as const
+} as const;
 
 /**
  * Color Mapping - Old Multi-Color to New Unified Cyan
@@ -46,7 +46,7 @@ export const COLOR_MIGRATION = {
   '#ff8c00': CYBER_COLORS.highlight, // 橙色 → 高亮青绿
   '#ff0040': CYBER_COLORS.destructive, // 保留红色
   '#00f0ff': CYBER_COLORS.primary, // 主青色保持
-} as const
+} as const;
 
 /**
  * Gradient Presets (渐变预设)
@@ -56,7 +56,7 @@ export const CYBER_GRADIENTS = {
   secondary: `linear-gradient(135deg, ${CYBER_COLORS.secondary}, ${CYBER_COLORS.accent})`,
   accent: `linear-gradient(135deg, ${CYBER_COLORS.accent}, ${CYBER_COLORS.highlight})`,
   brand: `linear-gradient(135deg, ${CYBER_COLORS.primary}, ${CYBER_COLORS.accent})`,
-} as const
+} as const;
 
 /**
  * Shadow Presets (阴影预设)
@@ -66,4 +66,4 @@ export const CYBER_SHADOWS = {
   secondary: `0 0 15px ${CYBER_COLORS.secondaryAlpha40}`,
   accent: `0 0 15px ${CYBER_COLORS.accentAlpha40}`,
   glow: `0 0 20px ${CYBER_COLORS.primaryAlpha60}, 0 0 40px ${CYBER_COLORS.primaryAlpha40}`,
-} as const
+} as const;

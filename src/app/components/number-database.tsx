@@ -1,77 +1,77 @@
 import {
-    Activity,
-    AlertTriangle,
-    ArrowDownRight,
-    ArrowUpRight,
-    Award,
-    BarChart3,
-    Bell,
-    BookOpen,
-    Brain,
-    CalendarDays,
-    Check,
-    ChevronRight,
-    Clock,
-    Crown,
-    Database,
-    Download,
-    Edit3,
-    Eye,
-    FileText,
-    Flame,
-    Gauge,
-    Globe,
-    Handshake,
-    HeartHandshake,
-    Layers,
-    Lightbulb,
-    Mail,
-    MapPin,
-    Megaphone,
-    MessageSquare,
-    Phone,
-    Plus,
-    Radio,
-    Repeat,
-    Search,
-    Send,
-    Shield,
-    Sparkles,
-    Star,
-    StarOff,
-    Target,
-    Ticket,
-    Trash2,
-    TrendingUp,
-    Undo2,
-    UserPlus,
-    Users,
-    X,
-    Zap,
-} from 'lucide-react'
-import { memo, useCallback, useMemo, useState } from 'react'
+  Activity,
+  AlertTriangle,
+  ArrowDownRight,
+  ArrowUpRight,
+  Award,
+  BarChart3,
+  Bell,
+  BookOpen,
+  Brain,
+  CalendarDays,
+  Check,
+  ChevronRight,
+  Clock,
+  Crown,
+  Database,
+  Download,
+  Edit3,
+  Eye,
+  FileText,
+  Flame,
+  Gauge,
+  Globe,
+  Handshake,
+  HeartHandshake,
+  Layers,
+  Lightbulb,
+  Mail,
+  MapPin,
+  Megaphone,
+  MessageSquare,
+  Phone,
+  Plus,
+  Radio,
+  Repeat,
+  Search,
+  Send,
+  Shield,
+  Sparkles,
+  Star,
+  StarOff,
+  Target,
+  Ticket,
+  Trash2,
+  TrendingUp,
+  Undo2,
+  UserPlus,
+  Users,
+  X,
+  Zap,
+} from 'lucide-react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import {
-    Area,
-    AreaChart,
-    Bar,
-    BarChart,
-    CartesianGrid,
-    Cell,
-    Pie,
-    PolarAngleAxis,
-    PolarGrid,
-    PolarRadiusAxis,
-    Radar,
-    RadarChart,
-    PieChart as RechartsPieChart,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-} from 'recharts'
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Pie,
+  PolarAngleAxis,
+  PolarGrid,
+  PolarRadiusAxis,
+  Radar,
+  RadarChart,
+  PieChart as RechartsPieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
-import { type SharedContact, useContacts } from './context/contacts-context'
-import { useI18n } from './context/i18n-context'
+import { type SharedContact, useContacts } from './context/contacts-context';
+import { useI18n } from './context/i18n-context';
 
 // ==========================================
 // YYC³ 号码库 — Number Database Hub
@@ -87,14 +87,14 @@ type TabId =
   | 'value'
   | 'service'
   | 'knowledge'
-  | 'monitor'
+  | 'monitor';
 
 const TABS: {
-  id: TabId
-  label: string
-  sublabel: string
-  icon: React.ComponentType<{ className?: string }>
-  color: string
+  id: TabId;
+  label: string;
+  sublabel: string;
+  icon: React.ComponentType<{ className?: string }>;
+  color: string;
 }[] = [
   { id: 'overview', label: '总览', sublabel: 'Overview', icon: Gauge, color: '#00f0ff' },
   { id: 'contacts', label: '客户信息', sublabel: 'Contacts', icon: Users, color: '#00d4ff' },
@@ -104,10 +104,10 @@ const TABS: {
   { id: 'service', label: '服务运营', sublabel: 'Service', icon: HeartHandshake, color: '#00f0ff' },
   { id: 'knowledge', label: '知识赋能', sublabel: 'Knowledge', icon: BookOpen, color: '#00d4ff' },
   { id: 'monitor', label: '效能监控', sublabel: 'Monitor', icon: Radio, color: '#005f73' },
-]
+];
 
 // ---- Contact type alias from shared context ----
-type Contact = SharedContact
+type Contact = SharedContact;
 
 const STAGE_META: Record<
   string,
@@ -118,7 +118,7 @@ const STAGE_META: Record<
   成交: { icon: Handshake, color: '#00ffcc' },
   服务: { icon: HeartHandshake, color: '#00ffc8' },
   忠诚: { icon: Crown, color: '#008b9d' },
-}
+};
 
 const TAG_COLORS: Record<string, string> = {
   VIP: '#00d4ff',
@@ -130,7 +130,7 @@ const TAG_COLORS: Record<string, string> = {
   决策人: '#41ffdd',
   技术对接: '#00b4d8',
   战略合作: '#80ffea',
-}
+};
 
 // ---- Data now comes from shared ContactsContext ----
 
@@ -143,7 +143,7 @@ const weeklyTrend = [
   { day: '周五', 新客户: 72, 跟进: 91, 成交: 28 },
   { day: '周六', 新客户: 45, 跟进: 42, 成交: 14 },
   { day: '周日', 新客户: 52, 跟进: 55, 成交: 16 },
-]
+];
 
 const stagePieData = [
   { name: '获客', value: 342, color: '#00f0ff' },
@@ -151,7 +151,7 @@ const stagePieData = [
   { name: '成交', value: 89, color: '#00ffcc' },
   { name: '服务', value: 534, color: '#00ffc8' },
   { name: '忠诚', value: 267, color: '#008b9d' },
-]
+];
 
 const channelData = [
   { channel: '官网', value: 320, color: '#00f0ff' },
@@ -160,7 +160,7 @@ const channelData = [
   { channel: '搜索', value: 156, color: '#00ffc8' },
   { channel: '社媒', value: 132, color: '#008b9d' },
   { channel: '线下', value: 98, color: '#005f73' },
-]
+];
 
 const funnelData = [
   { name: '曝光', value: 5200, fill: '#00f0ff' },
@@ -168,7 +168,7 @@ const funnelData = [
   { name: '注册', value: 2100, fill: '#00ffcc' },
   { name: '转化', value: 890, fill: '#00ffc8' },
   { name: '成交', value: 420, fill: '#008b9d' },
-]
+];
 
 const monthlyRevenue = [
   { month: '1月', revenue: 245, target: 300 },
@@ -177,7 +177,7 @@ const monthlyRevenue = [
   { month: '4月', revenue: 378, target: 350 },
   { month: '5月', revenue: 425, target: 380 },
   { month: '6月', revenue: 398, target: 400 },
-]
+];
 
 const radarData = [
   { dim: '响应速度', value: 92 },
@@ -186,25 +186,25 @@ const radarData = [
   { dim: '服务质量', value: 95 },
   { dim: '团队协作', value: 82 },
   { dim: '数据利用', value: 71 },
-]
+];
 
 // ---- Neon Tooltip ----
 /** Recharts tooltip props interface */
 interface TooltipPayloadEntry {
-  name: string
-  value: number | string
-  color: string
+  name: string;
+  value: number | string;
+  color: string;
 }
 const NeonTooltip = ({
   active,
   payload,
   label,
 }: {
-  active?: boolean
-  payload?: TooltipPayloadEntry[]
-  label?: string
+  active?: boolean;
+  payload?: TooltipPayloadEntry[];
+  label?: string;
 }) => {
-  if (!active || !payload?.length) return null
+  if (!active || !payload?.length) return null;
   return (
     <div
       className="rounded-xl px-3 py-2 border"
@@ -221,8 +221,8 @@ const NeonTooltip = ({
         </p>
       ))}
     </div>
-  )
-}
+  );
+};
 
 // ---- Stat Card ----
 const StatCard = memo(
@@ -234,23 +234,23 @@ const StatCard = memo(
     change,
     trend,
   }: {
-    label: string
-    value: string
-    icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>
-    color: string
-    change: string
-    trend?: 'up' | 'down'
+    label: string;
+    value: string;
+    icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+    color: string;
+    change: string;
+    trend?: 'up' | 'down';
   }) => (
     <div
       className="rounded-xl p-4 border transition-all duration-300 group"
       style={{ background: 'rgba(10,10,10,0.5)', borderColor: `${color}20` }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = `${color}40`
-        e.currentTarget.style.boxShadow = `0 0 15px ${color}15`
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = `${color}40`;
+        e.currentTarget.style.boxShadow = `0 0 15px ${color}15`;
       }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = `${color}20`
-        e.currentTarget.style.boxShadow = 'none'
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = `${color}20`;
+        e.currentTarget.style.boxShadow = 'none';
       }}
     >
       <div className="flex items-center justify-between">
@@ -285,19 +285,19 @@ const StatCard = memo(
       </div>
     </div>
   ),
-)
+);
 
 // ===========================================================
 // Tab: Overview
 // ===========================================================
 function OverviewTab({ contacts }: { contacts: Contact[] }) {
-  const { t } = useI18n()
-  const totalValue = contacts.reduce((s, c) => s + c.totalValue, 0)
+  const { t } = useI18n();
+  const totalValue = contacts.reduce((s, c) => s + c.totalValue, 0);
   const avgAI = contacts.length
     ? Math.round(contacts.reduce((s, c) => s + c.aiScore, 0) / contacts.length)
-    : 0
-  const highRisk = contacts.filter((c) => c.riskLevel === 'high').length
-  const todayFollowUp = contacts.filter((c) => c.tags.includes('待跟进')).length
+    : 0;
+  const highRisk = contacts.filter(c => c.riskLevel === 'high').length;
+  const todayFollowUp = contacts.filter(c => c.tags.includes('待跟进')).length;
 
   return (
     <div className="space-y-6">
@@ -428,7 +428,7 @@ function OverviewTab({ contacts }: { contacts: Contact[] }) {
             </RechartsPieChart>
           </ResponsiveContainer>
           <div className="flex flex-wrap gap-2 mt-2 justify-center">
-            {stagePieData.map((s) => (
+            {stagePieData.map(s => (
               <span
                 key={s.name}
                 className="text-[9px] flex items-center gap-1"
@@ -575,7 +575,7 @@ function OverviewTab({ contacts }: { contacts: Contact[] }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ===========================================================
@@ -586,51 +586,51 @@ function ContactsTab({
   setContacts: _setContacts,
   onEdit,
 }: {
-  contacts: Contact[]
-  setContacts: React.Dispatch<React.SetStateAction<Contact[]>>
-  onEdit?: (c: Contact) => void
+  contacts: Contact[];
+  setContacts: React.Dispatch<React.SetStateAction<Contact[]>>;
+  onEdit?: (c: Contact) => void;
 }) {
-  const { t } = useI18n()
-  const { deleteContact, toggleStar: ctxToggleStar } = useContacts()
-  const [search, setSearch] = useState('')
-  const [filterStage, setFilterStage] = useState<string | null>(null)
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [batchMode, setBatchMode] = useState(false)
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
-  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const { t } = useI18n();
+  const { deleteContact, toggleStar: ctxToggleStar } = useContacts();
+  const [search, setSearch] = useState('');
+  const [filterStage, setFilterStage] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [batchMode, setBatchMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
-    let r = contacts
+    let r = contacts;
     if (search) {
-      const q = search.toLowerCase()
+      const q = search.toLowerCase();
       r = r.filter(
-        (c) =>
+        c =>
           c.name.toLowerCase().includes(q) ||
           c.company.toLowerCase().includes(q) ||
           c.phone.includes(q) ||
-          c.tags.some((t) => t.includes(q)),
-      )
+          c.tags.some(t => t.includes(q)),
+      );
     }
-    if (filterStage) r = r.filter((c) => c.stage === filterStage)
-    return r.sort((a, b) => b.aiScore - a.aiScore)
-  }, [contacts, search, filterStage])
+    if (filterStage) r = r.filter(c => c.stage === filterStage);
+    return r.sort((a, b) => b.aiScore - a.aiScore);
+  }, [contacts, search, filterStage]);
 
-  const selected = useMemo(() => contacts.find((c) => c.id === selectedId), [contacts, selectedId])
+  const selected = useMemo(() => contacts.find(c => c.id === selectedId), [contacts, selectedId]);
 
   const toggleBatchSelect = useCallback((id: string) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
-  }, [])
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
 
   const handleBatchDelete = useCallback(() => {
-    selectedIds.forEach((id) => deleteContact(id))
-    setSelectedIds(new Set())
-    setBatchMode(false)
-  }, [selectedIds, deleteContact])
+    selectedIds.forEach(id => deleteContact(id));
+    setSelectedIds(new Set());
+    setBatchMode(false);
+  }, [selectedIds, deleteContact]);
 
   return (
     <div className="flex h-full gap-4">
@@ -642,21 +642,21 @@ function ContactsTab({
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
             <input
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={e => setSearch(e.target.value)}
               className="w-full pl-9 pr-3 py-2.5 rounded-xl text-sm text-white/70 outline-none transition-all"
               style={{
                 background: 'rgba(255,255,255,0.04)',
                 border: '1px solid rgba(0,240,255,0.12)',
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.3)')}
-              onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.12)')}
+              onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.3)')}
+              onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.12)')}
               placeholder={t('ndb.searchPlaceholder')}
             />
           </div>
           <div className="flex gap-1">
-            {(['获客', '转化', '成交', '服务', '忠诚'] as const).map((s) => {
-              const active = filterStage === s
-              const col = STAGE_META[s].color
+            {(['获客', '转化', '成交', '服务', '忠诚'] as const).map(s => {
+              const active = filterStage === s;
+              const col = STAGE_META[s].color;
               return (
                 <button
                   key={s}
@@ -670,14 +670,14 @@ function ContactsTab({
                 >
                   {s}
                 </button>
-              )
+              );
             })}
           </div>
           {/* Batch mode toggle */}
           <button
             onClick={() => {
-              setBatchMode(!batchMode)
-              setSelectedIds(new Set())
+              setBatchMode(!batchMode);
+              setSelectedIds(new Set());
             }}
             className="px-2.5 py-1.5 rounded-lg text-[10px] transition-all border"
             style={{
@@ -717,8 +717,8 @@ function ContactsTab({
             </button>
             <button
               onClick={() => {
-                setBatchMode(false)
-                setSelectedIds(new Set())
+                setBatchMode(false);
+                setSelectedIds(new Set());
               }}
               className="text-[10px] text-white/30 hover:text-white/50 transition-colors"
             >
@@ -733,9 +733,9 @@ function ContactsTab({
             {t('ndb.recordCount', { count: filtered.length })}
           </p>
           {filtered.map((c, i) => {
-            const sm = STAGE_META[c.stage]
-            const isActive = selectedId === c.id
-            const isBatchSelected = selectedIds.has(c.id)
+            const sm = STAGE_META[c.stage];
+            const isActive = selectedId === c.id;
+            const isBatchSelected = selectedIds.has(c.id);
             return (
               <div
                 key={c.id}
@@ -769,9 +769,9 @@ function ContactsTab({
                   </div>
                 ) : (
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      ctxToggleStar(c.id)
+                    onClick={e => {
+                      e.stopPropagation();
+                      ctxToggleStar(c.id);
                     }}
                     className="shrink-0"
                   >
@@ -791,7 +791,7 @@ function ContactsTab({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-white/80 truncate">{c.name}</span>
-                    {c.tags.slice(0, 1).map((t) => (
+                    {c.tags.slice(0, 1).map(t => (
                       <span
                         key={t}
                         className="text-[8px] px-1.5 py-0.5 rounded-full hidden sm:inline"
@@ -830,9 +830,9 @@ function ContactsTab({
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                     {onEdit && (
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          onEdit(c)
+                        onClick={e => {
+                          e.stopPropagation();
+                          onEdit(c);
                         }}
                         className="p-1 rounded-lg hover:bg-white/5 transition-colors"
                         title={t('common.edit')}
@@ -841,9 +841,9 @@ function ContactsTab({
                       </button>
                     )}
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setConfirmDeleteId(c.id)
+                      onClick={e => {
+                        e.stopPropagation();
+                        setConfirmDeleteId(c.id);
                       }}
                       className="p-1 rounded-lg hover:bg-white/5 transition-colors"
                       title={t('ndb.deleteContact')}
@@ -853,7 +853,7 @@ function ContactsTab({
                   </div>
                 )}
               </div>
-            )
+            );
           })}
         </div>
 
@@ -871,9 +871,9 @@ function ContactsTab({
             <span className="text-[10px] text-[#005f73] flex-1">{t('ndb.confirmDelete')}</span>
             <button
               onClick={() => {
-                deleteContact(confirmDeleteId)
-                setConfirmDeleteId(null)
-                if (selectedId === confirmDeleteId) setSelectedId(null)
+                deleteContact(confirmDeleteId);
+                setConfirmDeleteId(null);
+                if (selectedId === confirmDeleteId) setSelectedId(null);
               }}
               className="text-[10px] px-2.5 py-1 rounded-lg transition-all"
               style={{
@@ -999,14 +999,14 @@ function ContactsTab({
         </div>
       )}
     </div>
-  )
+  );
 }
 
 // ===========================================================
 // Tab: Analytics (智能分析中心)
 // ===========================================================
 function AnalyticsTab() {
-  const { t } = useI18n()
+  const { t } = useI18n();
   return (
     <div className="space-y-6">
       {/* Top metrics */}
@@ -1215,15 +1215,15 @@ function AnalyticsTab() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ===========================================================
 // Tab: Collaboration (智能协同管理)
 // ===========================================================
 function CollaborationTab() {
-  const { t } = useI18n()
-  const [selectedTask, setSelectedTask] = useState<number | null>(null)
+  const { t } = useI18n();
+  const [selectedTask, setSelectedTask] = useState<number | null>(null);
 
   const tasks = [
     {
@@ -1286,7 +1286,7 @@ function CollaborationTab() {
       deadline: '2026-03-22',
       color: '#00f0ff',
     },
-  ]
+  ];
 
   const progressData = [
     { person: '张伟', completed: 12, total: 15 },
@@ -1295,7 +1295,7 @@ function CollaborationTab() {
     { person: '陈静', completed: 14, total: 16 },
     { person: '赵明', completed: 10, total: 10 },
     { person: '刘洋', completed: 7, total: 11 },
-  ]
+  ];
 
   return (
     <div className="space-y-6">
@@ -1416,9 +1416,9 @@ function CollaborationTab() {
           </h3>
           <div className="space-y-4">
             {progressData.map((p, i) => {
-              const pct = Math.round((p.completed / p.total) * 100)
+              const pct = Math.round((p.completed / p.total) * 100);
               const color =
-                pct >= 90 ? '#00ffc8' : pct >= 70 ? '#00f0ff' : pct >= 50 ? '#00ffcc' : '#008b9d'
+                pct >= 90 ? '#00ffc8' : pct >= 70 ? '#00f0ff' : pct >= 50 ? '#00ffcc' : '#008b9d';
               return (
                 <div key={i}>
                   <div className="flex items-center justify-between mb-1">
@@ -1438,13 +1438,13 @@ function CollaborationTab() {
                     />
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ===========================================================
@@ -1465,10 +1465,10 @@ function ValueTab({ contacts: _contacts }: { contacts: Contact[] }) {
           </h3>
           <div className="space-y-2">
             {funnelData.map((stage, i) => {
-              const maxVal = funnelData[0].value
-              const widthPct = Math.max(20, (stage.value / maxVal) * 100)
+              const maxVal = funnelData[0].value;
+              const widthPct = Math.max(20, (stage.value / maxVal) * 100);
               const convRate =
-                i > 0 ? ((stage.value / funnelData[i - 1].value) * 100).toFixed(1) : '100'
+                i > 0 ? ((stage.value / funnelData[i - 1].value) * 100).toFixed(1) : '100';
               return (
                 <div
                   key={stage.name}
@@ -1501,7 +1501,7 @@ function ValueTab({ contacts: _contacts }: { contacts: Contact[] }) {
                     )}
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
@@ -1676,14 +1676,14 @@ function ValueTab({ contacts: _contacts }: { contacts: Contact[] }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ===========================================================
 // Tab: Service (服务体验升级)
 // ===========================================================
 function ServiceTab() {
-  const { t } = useI18n()
+  const { t } = useI18n();
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
@@ -1915,14 +1915,14 @@ function ServiceTab() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ===========================================================
 // Tab: Knowledge (知识赋能平台)
 // ===========================================================
 function KnowledgeTab() {
-  const { t } = useI18n()
+  const { t } = useI18n();
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
@@ -2124,14 +2124,14 @@ function KnowledgeTab() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ===========================================================
 // Tab: Monitor (效能监控大屏)
 // ===========================================================
 function MonitorTab() {
-  const { t } = useI18n()
+  const { t } = useI18n();
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
@@ -2336,13 +2336,13 @@ function MonitorTab() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ---- AI Score Badge ----
 const AIBadge = memo(({ score }: { score: number }) => {
   const color =
-    score >= 90 ? '#00ffc8' : score >= 70 ? '#00ffcc' : score >= 50 ? '#008b9d' : '#005f73'
+    score >= 90 ? '#00ffc8' : score >= 70 ? '#00ffcc' : score >= 50 ? '#008b9d' : '#005f73';
   return (
     <div className="flex items-center gap-1">
       <div className="relative w-6 h-6">
@@ -2370,8 +2370,8 @@ const AIBadge = memo(({ score }: { score: number }) => {
         </span>
       </div>
     </div>
-  )
-})
+  );
+});
 
 // ===========================================================
 // Main Export
@@ -2389,19 +2389,19 @@ const ALL_TAGS = [
   '决策人',
   '技术对接',
   '战略合作',
-]
+];
 
 function ContactFormModal({
   contact,
   onSave,
   onClose,
 }: {
-  contact: Contact | null
-  onSave: (c: Contact) => void
-  onClose: () => void
+  contact: Contact | null;
+  onSave: (c: Contact) => void;
+  onClose: () => void;
 }) {
-  const { t } = useI18n()
-  const isEdit = !!contact
+  const { t } = useI18n();
+  const isEdit = !!contact;
   const [form, setForm] = useState<Contact>(
     contact || {
       id: `c${Date.now()}`,
@@ -2424,22 +2424,22 @@ function ContactFormModal({
       notes: '',
       riskLevel: 'medium',
     },
-  )
+  );
 
   const updateField = (key: keyof Contact, value: string | number | string[]) =>
-    setForm((prev) => ({ ...prev, [key]: value }))
+    setForm(prev => ({ ...prev, [key]: value }));
 
   const toggleTag = (tag: string) => {
-    setForm((prev) => ({
+    setForm(prev => ({
       ...prev,
-      tags: prev.tags.includes(tag) ? prev.tags.filter((t) => t !== tag) : [...prev.tags, tag],
-    }))
-  }
+      tags: prev.tags.includes(tag) ? prev.tags.filter(t => t !== tag) : [...prev.tags, tag],
+    }));
+  };
 
   // ---- Conditional field visibility based on stage ----
-  const showValueField = form.stage !== '获客' // Value only visible after acquisition
-  const showRenewalField = form.stage === '服务' || form.stage === '忠诚' // Renewal notes for service/loyalty
-  const showRiskField = form.stage !== '忠诚' // Risk not relevant for loyal customers
+  const showValueField = form.stage !== '获客'; // Value only visible after acquisition
+  const showRenewalField = form.stage === '服务' || form.stage === '忠诚'; // Renewal notes for service/loyalty
+  const showRiskField = form.stage !== '忠诚'; // Risk not relevant for loyal customers
 
   return (
     <div
@@ -2481,14 +2481,14 @@ function ContactFormModal({
               <label className="text-[10px] text-white/30 mb-1 block">姓名 *</label>
               <input
                 value={form.name}
-                onChange={(e) => updateField('name', e.target.value)}
+                onChange={e => updateField('name', e.target.value)}
                 className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none transition-all"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(0,240,255,0.15)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+                onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
                 placeholder="联系人姓名"
               />
             </div>
@@ -2496,14 +2496,14 @@ function ContactFormModal({
               <label className="text-[10px] text-white/30 mb-1 block">{t('ndb.phone')} *</label>
               <input
                 value={form.phone}
-                onChange={(e) => updateField('phone', e.target.value)}
+                onChange={e => updateField('phone', e.target.value)}
                 className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none transition-all"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(0,240,255,0.15)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+                onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
                 placeholder="138-0000-0000"
               />
             </div>
@@ -2515,14 +2515,14 @@ function ContactFormModal({
               <label className="text-[10px] text-white/30 mb-1 block">{t('ndb.email')}</label>
               <input
                 value={form.email}
-                onChange={(e) => updateField('email', e.target.value)}
+                onChange={e => updateField('email', e.target.value)}
                 className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none transition-all"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(0,240,255,0.15)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+                onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
                 placeholder="email@example.com"
               />
             </div>
@@ -2530,14 +2530,14 @@ function ContactFormModal({
               <label className="text-[10px] text-white/30 mb-1 block">公司</label>
               <input
                 value={form.company}
-                onChange={(e) => updateField('company', e.target.value)}
+                onChange={e => updateField('company', e.target.value)}
                 className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none transition-all"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(0,240,255,0.15)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+                onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
                 placeholder="公司名称"
               />
             </div>
@@ -2547,9 +2547,9 @@ function ContactFormModal({
           <div>
             <label className="text-[10px] text-white/30 mb-2 block">生命周期阶段</label>
             <div className="flex gap-2">
-              {(['获客', '转化', '成交', '服务', '忠诚'] as const).map((stage) => {
-                const meta = STAGE_META[stage]
-                const active = form.stage === stage
+              {(['获客', '转化', '成交', '服务', '忠诚'] as const).map(stage => {
+                const meta = STAGE_META[stage];
+                const active = form.stage === stage;
                 return (
                   <button
                     key={stage}
@@ -2563,7 +2563,7 @@ function ContactFormModal({
                   >
                     {stage}
                   </button>
-                )
+                );
               })}
             </div>
             {/* Conditional hint */}
@@ -2581,14 +2581,14 @@ function ContactFormModal({
               <input
                 type="number"
                 value={form.totalValue}
-                onChange={(e) => updateField('totalValue', Number(e.target.value))}
+                onChange={e => updateField('totalValue', Number(e.target.value))}
                 className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none transition-all"
                 style={{
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(0,240,255,0.15)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+                onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
               />
             </div>
           )}
@@ -2598,15 +2598,15 @@ function ContactFormModal({
             <div style={{ animation: 'spring-in 0.3s var(--spring-easing) both' }}>
               <label className="text-[10px] text-white/30 mb-2 block">{t('ndb.risk')}</label>
               <div className="flex gap-2">
-                {(['low', 'medium', 'high'] as const).map((r) => {
-                  const active = form.riskLevel === r
-                  const color = r === 'low' ? '#00ffc8' : r === 'medium' ? '#00ffcc' : '#005f73'
+                {(['low', 'medium', 'high'] as const).map(r => {
+                  const active = form.riskLevel === r;
+                  const color = r === 'low' ? '#00ffc8' : r === 'medium' ? '#00ffcc' : '#005f73';
                   const label =
                     r === 'low'
                       ? t('ndb.riskLow')
                       : r === 'medium'
                         ? t('ndb.riskMedium')
-                        : t('ndb.riskHigh')
+                        : t('ndb.riskHigh');
                   return (
                     <button
                       key={r}
@@ -2620,7 +2620,7 @@ function ContactFormModal({
                     >
                       {label}
                     </button>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -2630,9 +2630,9 @@ function ContactFormModal({
           <div>
             <label className="text-[10px] text-white/30 mb-2 block">标签</label>
             <div className="flex flex-wrap gap-1.5">
-              {ALL_TAGS.map((tag) => {
-                const active = form.tags.includes(tag)
-                const color = TAG_COLORS[tag] || '#00f0ff'
+              {ALL_TAGS.map(tag => {
+                const active = form.tags.includes(tag);
+                const color = TAG_COLORS[tag] || '#00f0ff';
                 return (
                   <button
                     key={tag}
@@ -2647,7 +2647,7 @@ function ContactFormModal({
                     {active && <Check className="w-2.5 h-2.5 inline mr-0.5" />}
                     {tag}
                   </button>
-                )
+                );
               })}
             </div>
           </div>
@@ -2657,15 +2657,15 @@ function ContactFormModal({
             <label className="text-[10px] text-white/30 mb-1 block">{t('ndb.notes')}</label>
             <textarea
               value={form.notes}
-              onChange={(e) => updateField('notes', e.target.value)}
+              onChange={e => updateField('notes', e.target.value)}
               rows={2}
               className="w-full px-3 py-2 rounded-xl text-sm text-white/80 outline-none resize-none transition-all"
               style={{
                 background: 'rgba(255,255,255,0.04)',
                 border: '1px solid rgba(0,240,255,0.15)',
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
-              onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
+              onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.4)')}
+              onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,240,255,0.15)')}
               placeholder="客户备注信息…"
             />
           </div>
@@ -2682,8 +2682,8 @@ function ContactFormModal({
                   background: 'rgba(0,255,200,0.04)',
                   border: '1px solid rgba(0,255,200,0.15)',
                 }}
-                onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(0,255,200,0.4)')}
-                onBlur={(e) => (e.currentTarget.style.borderColor = 'rgba(0,255,200,0.15)')}
+                onFocus={e => (e.currentTarget.style.borderColor = 'rgba(0,255,200,0.4)')}
+                onBlur={e => (e.currentTarget.style.borderColor = 'rgba(0,255,200,0.15)')}
                 placeholder="续约周期、服务等级…"
               />
             </div>
@@ -2704,7 +2704,7 @@ function ContactFormModal({
           </button>
           <button
             onClick={() => {
-              if (form.name && form.phone) onSave(form)
+              if (form.name && form.phone) onSave(form);
             }}
             className="px-5 py-2 rounded-xl text-xs transition-all duration-300"
             style={{
@@ -2721,16 +2721,16 @@ function ContactFormModal({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // ===========================================================
 // Recycle Bin Panel (deleted contacts recovery)
 // ===========================================================
 function RecycleBinPanel({ onClose }: { onClose: () => void }) {
-  const { t } = useI18n()
+  const { t } = useI18n();
   const { deletedContacts, recoverContact, recoverAllContacts, clearDeletedContacts } =
-    useContacts()
+    useContacts();
 
   return (
     <div
@@ -2806,7 +2806,7 @@ function RecycleBinPanel({ onClose }: { onClose: () => void }) {
         ) : (
           <div className="space-y-2">
             {deletedContacts.map((d, i) => {
-              const sm = STAGE_META[d.contact.stage]
+              const sm = STAGE_META[d.contact.stage];
               return (
                 <div
                   key={d.contact.id}
@@ -2846,13 +2846,13 @@ function RecycleBinPanel({ onClose }: { onClose: () => void }) {
                     {t('ndb.recover')}
                   </button>
                 </div>
-              )
+              );
             })}
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }
 
 /**
@@ -2862,7 +2862,7 @@ function RecycleBinPanel({ onClose }: { onClose: () => void }) {
  * Integrates with {@link ContactsContext} for shared contact state.
  */
 export function NumberDatabasePage() {
-  const { t } = useI18n()
+  const { t } = useI18n();
   const {
     contacts,
     deletedContacts,
@@ -2871,24 +2871,24 @@ export function NumberDatabasePage() {
     deleteContact: _deleteContact,
     toggleStar: _toggleStar,
     setContacts,
-  } = useContacts()
-  const [activeTab, setActiveTab] = useState<TabId>('overview')
-  const [showAddModal, setShowAddModal] = useState(false)
-  const [editContact, setEditContact] = useState<Contact | null>(null)
-  const [showRecycleBin, setShowRecycleBin] = useState(false)
+  } = useContacts();
+  const [activeTab, setActiveTab] = useState<TabId>('overview');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editContact, setEditContact] = useState<Contact | null>(null);
+  const [showRecycleBin, setShowRecycleBin] = useState(false);
 
   const handleSaveContact = useCallback(
     (c: Contact) => {
       if (editContact) {
-        updateContact(c.id, c)
+        updateContact(c.id, c);
       } else {
-        addContact(c)
+        addContact(c);
       }
-      setShowAddModal(false)
-      setEditContact(null)
+      setShowAddModal(false);
+      setEditContact(null);
     },
     [editContact, updateContact, addContact],
-  )
+  );
 
   // Tab label/sublabel via i18n
   const tabLabels: Record<TabId, { label: string; sublabel: string }> = {
@@ -2900,7 +2900,7 @@ export function NumberDatabasePage() {
     service: { label: t('ndb.tab.service'), sublabel: t('ndb.tab.serviceSub') },
     knowledge: { label: t('ndb.tab.knowledge'), sublabel: t('ndb.tab.knowledgeSub') },
     monitor: { label: t('ndb.tab.monitor'), sublabel: t('ndb.tab.monitorSub') },
-  }
+  };
 
   return (
     <div
@@ -2953,8 +2953,8 @@ export function NumberDatabasePage() {
             </button>
             <button
               onClick={() => {
-                setEditContact(null)
-                setShowAddModal(true)
+                setEditContact(null);
+                setShowAddModal(true);
               }}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] transition-all"
               style={{
@@ -2971,10 +2971,10 @@ export function NumberDatabasePage() {
 
         {/* Tab Bar */}
         <div className="flex gap-1 overflow-x-auto pb-3" style={{ scrollbarWidth: 'none' }}>
-          {TABS.map((tab) => {
-            const Icon = tab.icon
-            const active = activeTab === tab.id
-            const labels = tabLabels[tab.id]
+          {TABS.map(tab => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.id;
+            const labels = tabLabels[tab.id];
             return (
               <button
                 key={tab.id}
@@ -2991,7 +2991,7 @@ export function NumberDatabasePage() {
                 {labels.label}
                 <span className="text-[8px] opacity-40 hidden lg:inline">{labels.sublabel}</span>
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -3003,9 +3003,9 @@ export function NumberDatabasePage() {
           <ContactsTab
             contacts={contacts}
             setContacts={setContacts}
-            onEdit={(c) => {
-              setEditContact(c)
-              setShowAddModal(true)
+            onEdit={c => {
+              setEditContact(c);
+              setShowAddModal(true);
             }}
           />
         )}
@@ -3023,12 +3023,12 @@ export function NumberDatabasePage() {
           contact={editContact}
           onSave={handleSaveContact}
           onClose={() => {
-            setShowAddModal(false)
-            setEditContact(null)
+            setShowAddModal(false);
+            setEditContact(null);
           }}
         />
       )}
       {showRecycleBin && <RecycleBinPanel onClose={() => setShowRecycleBin(false)} />}
     </div>
-  )
+  );
 }

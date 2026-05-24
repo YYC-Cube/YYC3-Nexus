@@ -21,45 +21,45 @@ export type EmotionType =
   | 'surprised' // 惊讶
   | 'disgusted' // 厌恶
   | 'neutral' // 中性
-  | 'anxious' // 焦虑
+  | 'anxious'; // 焦虑
 
-export type EmotionIntensity = 'low' | 'medium' | 'high' | 'extreme'
+export type EmotionIntensity = 'low' | 'medium' | 'high' | 'extreme';
 
 export interface EmotionState {
-  primary: EmotionType
-  secondary?: EmotionType
-  intensity: EmotionIntensity
-  confidence: number // 0-1
-  timestamp: Date
-  source: 'text' | 'voice' | 'facial' | 'behavioral' | 'physiological'
-  context?: string
+  primary: EmotionType;
+  secondary?: EmotionType;
+  intensity: EmotionIntensity;
+  confidence: number; // 0-1
+  timestamp: Date;
+  source: 'text' | 'voice' | 'facial' | 'behavioral' | 'physiological';
+  context?: string;
 }
 
 export interface EmployeeEmotionProfile {
-  employeeId: string
-  baselineEmotion: EmotionType
-  emotionHistory: EmotionState[]
-  currentMood: MoodIndicator
-  riskLevel: 'normal' | 'attention' | 'warning' | 'critical'
-  careRecommendations: CareRecommendation[]
+  employeeId: string;
+  baselineEmotion: EmotionType;
+  emotionHistory: EmotionState[];
+  currentMood: MoodIndicator;
+  riskLevel: 'normal' | 'attention' | 'warning' | 'critical';
+  careRecommendations: CareRecommendation[];
 }
 
 export interface MoodIndicator {
-  score: number // -100 (极度消极) to +100 (极度积极)
-  trend: 'improving' | 'stable' | 'declining'
-  volatility: number // 0-1, 情绪波动程度
-  lastUpdated: Date
+  score: number; // -100 (极度消极) to +100 (极度积极)
+  trend: 'improving' | 'stable' | 'declining';
+  volatility: number; // 0-1, 情绪波动程度
+  lastUpdated: Date;
 }
 
 export interface CareRecommendation {
-  type: 'immediate' | 'scheduled' | 'preventive'
-  priority: 'low' | 'medium' | 'high' | 'urgent'
-  category: 'family' | 'health' | 'career' | 'social' | 'financial'
-  title: string
-  description: string
-  suggestedActions: string[]
-  resources?: string[]
-  estimatedImpact: string
+  type: 'immediate' | 'scheduled' | 'preventive';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  category: 'family' | 'health' | 'career' | 'social' | 'financial';
+  title: string;
+  description: string;
+  suggestedActions: string[];
+  resources?: string[];
+  estimatedImpact: string;
 }
 
 // ==========================================
@@ -67,15 +67,15 @@ export interface CareRecommendation {
 // ==========================================
 
 export class Yyc3EmotionEngine {
-  private static instance: Yyc3EmotionEngine
+  private static instance: Yyc3EmotionEngine;
 
   private constructor() {}
 
   public static getInstance(): Yyc3EmotionEngine {
     if (!Yyc3EmotionEngine.instance) {
-      Yyc3EmotionEngine.instance = new Yyc3EmotionEngine()
+      Yyc3EmotionEngine.instance = new Yyc3EmotionEngine();
     }
-    return Yyc3EmotionEngine.instance
+    return Yyc3EmotionEngine.instance;
   }
 
   /**
@@ -94,19 +94,19 @@ export class Yyc3EmotionEngine {
       disgusted: ['讨厌', '恶心', '烦躁', '厌烦', '受不了'],
       neutral: ['一般', '还好', '正常', '普通', '可以'],
       anxious: ['压力', '焦虑', '失眠', '疲惫', '透支', '崩溃'],
-    }
+    };
 
-    let detectedEmotion: EmotionType = 'neutral'
-    let maxMatches = 0
-    let totalIntensity = 0
+    let detectedEmotion: EmotionType = 'neutral';
+    let maxMatches = 0;
+    let totalIntensity = 0;
 
     for (const [emotion, keywords] of Object.entries(emotionKeywords)) {
-      const matches = keywords.filter((keyword) => text.includes(keyword)).length
+      const matches = keywords.filter(keyword => text.includes(keyword)).length;
       if (matches > maxMatches) {
-        maxMatches = matches
-        detectedEmotion = emotion as EmotionType
+        maxMatches = matches;
+        detectedEmotion = emotion as EmotionType;
       }
-      totalIntensity += matches
+      totalIntensity += matches;
     }
 
     const intensity: EmotionIntensity =
@@ -116,7 +116,7 @@ export class Yyc3EmotionEngine {
           ? 'high'
           : totalIntensity >= 2
             ? 'medium'
-            : 'low'
+            : 'low';
 
     return {
       primary: detectedEmotion,
@@ -125,7 +125,7 @@ export class Yyc3EmotionEngine {
       timestamp: new Date(),
       source: 'text',
       context: text.slice(0, 100),
-    }
+    };
   }
 
   /**
@@ -135,13 +135,13 @@ export class Yyc3EmotionEngine {
     employeeId: string,
     newState: EmotionState,
   ): Promise<EmployeeEmotionProfile> {
-    const existingProfile = await this.getEmployeeProfile(employeeId)
+    const existingProfile = await this.getEmployeeProfile(employeeId);
 
-    const updatedHistory = [...existingProfile.emotionHistory, newState].slice(-50) // 保留最近50条
+    const updatedHistory = [...existingProfile.emotionHistory, newState].slice(-50); // 保留最近50条
 
-    const moodScore = this.calculateMoodScore(updatedHistory)
-    const riskLevel = this.assessRiskLevel(newState, moodScore)
-    const recommendations = await this.generateCareRecommendations(employeeId, newState, riskLevel)
+    const moodScore = this.calculateMoodScore(updatedHistory);
+    const riskLevel = this.assessRiskLevel(newState, moodScore);
+    const recommendations = await this.generateCareRecommendations(employeeId, newState, riskLevel);
 
     return {
       employeeId,
@@ -150,7 +150,7 @@ export class Yyc3EmotionEngine {
       currentMood: moodScore,
       riskLevel,
       careRecommendations: recommendations,
-    }
+    };
   }
 
   /**
@@ -163,7 +163,7 @@ export class Yyc3EmotionEngine {
         trend: 'stable',
         volatility: 0,
         lastUpdated: new Date(),
-      }
+      };
     }
 
     const emotionScores: Record<EmotionType, number> = {
@@ -175,39 +175,38 @@ export class Yyc3EmotionEngine {
       disgusted: -40,
       neutral: 0,
       anxious: -55,
-    }
+    };
 
-    const recentScores = history.slice(-10).map((state) => ({
+    const recentScores = history.slice(-10).map(state => ({
       score:
         emotionScores[state.primary] *
         (state.intensity === 'extreme' ? 1.5 : state.intensity === 'high' ? 1.2 : 1),
       timestamp: state.timestamp,
-    }))
+    }));
 
-    const avgScore = recentScores.reduce((sum, s) => sum + s.score, 0) / recentScores.length
+    const avgScore = recentScores.reduce((sum, s) => sum + s.score, 0) / recentScores.length;
 
-    let trend: 'improving' | 'stable' | 'declining' = 'stable'
+    let trend: 'improving' | 'stable' | 'declining' = 'stable';
     if (recentScores.length >= 2) {
-      const recentAvg = recentScores.slice(-3).reduce((sum, s) => sum + s.score, 0) / 3
+      const recentAvg = recentScores.slice(-3).reduce((sum, s) => sum + s.score, 0) / 3;
       const olderAvg =
         recentScores.slice(0, -3).reduce((sum, s) => sum + s.score, 0) /
-        Math.max(1, recentScores.length - 3)
+        Math.max(1, recentScores.length - 3);
 
-      if (recentAvg > olderAvg + 10) trend = 'improving'
-      else if (recentAvg < olderAvg - 10) trend = 'declining'
+      if (recentAvg > olderAvg + 10) trend = 'improving';
+      else if (recentAvg < olderAvg - 10) trend = 'declining';
     }
 
     const variance =
-      recentScores.reduce((sum, s) => sum + Math.pow(s.score - avgScore, 2), 0) /
-      recentScores.length
-    const volatility = Math.min(1, variance / 5000)
+      recentScores.reduce((sum, s) => sum + (s.score - avgScore) ** 2, 0) / recentScores.length;
+    const volatility = Math.min(1, variance / 5000);
 
     return {
       score: Math.round(avgScore),
       trend,
       volatility: Math.round(volatility * 100) / 100,
       lastUpdated: new Date(),
-    }
+    };
   }
 
   /**
@@ -217,32 +216,32 @@ export class Yyc3EmotionEngine {
     emotion: EmotionState,
     mood: MoodIndicator,
   ): 'normal' | 'attention' | 'warning' | 'critical' {
-    const negativeEmotions: EmotionType[] = ['sad', 'angry', 'fearful', 'anxious']
+    const negativeEmotions: EmotionType[] = ['sad', 'angry', 'fearful', 'anxious'];
 
     if (negativeEmotions.includes(emotion.primary) && emotion.intensity === 'extreme') {
-      return 'critical'
+      return 'critical';
     }
 
     if (negativeEmotions.includes(emotion.primary) && emotion.intensity === 'high') {
-      return 'warning'
+      return 'warning';
     }
 
     if (mood.score < -30 || mood.volatility > 0.7) {
-      return 'attention'
+      return 'attention';
     }
 
-    return 'normal'
+    return 'normal';
   }
 
   /**
    * 生成关怀建议
    */
   private async generateCareRecommendations(
-    employeeId: string,
+    _employeeId: string,
     emotion: EmotionState,
     riskLevel: 'normal' | 'attention' | 'warning' | 'critical',
   ): Promise<CareRecommendation[]> {
-    const recommendations: CareRecommendation[] = []
+    const recommendations: CareRecommendation[] = [];
 
     if (riskLevel === 'critical' || riskLevel === 'warning') {
       recommendations.push({
@@ -259,7 +258,7 @@ export class Yyc3EmotionEngine {
         ],
         resources: ['心理援助热线：400-XXX-XXXX', 'EAP服务预约系统'],
         estimatedImpact: '预防潜在危机事件',
-      })
+      });
     }
 
     if (emotion.primary === 'anxious' || emotion.primary === 'fearful') {
@@ -276,7 +275,7 @@ export class Yyc3EmotionEngine {
           '组织团队建设活动',
         ],
         estimatedImpact: '提升工作满意度和效率30%+',
-      })
+      });
     }
 
     if (emotion.primary === 'sad' && emotion.intensity !== 'low') {
@@ -293,7 +292,7 @@ export class Yyc3EmotionEngine {
           '安排定期回访',
         ],
         estimatedImpact: '增强员工归属感和忠诚度',
-      })
+      });
     }
 
     if (recommendations.length === 0 && emotion.primary === 'happy') {
@@ -305,10 +304,10 @@ export class Yyc3EmotionEngine {
         description: '员工当前情绪良好，适合进行正向激励',
         suggestedActions: ['公开表扬或表彰', '提供发展机会', '邀请分享经验', '考虑晋升或加薪'],
         estimatedImpact: '巩固积极情绪，提升团队氛围',
-      })
+      });
     }
 
-    return recommendations
+    return recommendations;
   }
 
   private async getEmployeeProfile(employeeId: string): Promise<EmployeeEmotionProfile> {
@@ -325,54 +324,54 @@ export class Yyc3EmotionEngine {
       },
       riskLevel: 'normal',
       careRecommendations: [],
-    }
+    };
   }
 
   /**
    * 批量分析团队情绪
    */
   async analyzeTeamEmotion(teamMemberIds: string[]): Promise<{
-    teamMood: MoodIndicator
-    individualProfiles: Map<string, EmployeeEmotionProfile>
-    teamDynamics: TeamDynamicsReport
+    teamMood: MoodIndicator;
+    individualProfiles: Map<string, EmployeeEmotionProfile>;
+    teamDynamics: TeamDynamicsReport;
   }> {
-    const individualProfiles = new Map<string, EmployeeEmotionProfile>()
+    const individualProfiles = new Map<string, EmployeeEmotionProfile>();
 
     for (const id of teamMemberIds) {
-      const profile = await this.getEmployeeProfile(id)
-      individualProfiles.set(id, profile)
+      const profile = await this.getEmployeeProfile(id);
+      individualProfiles.set(id, profile);
     }
 
-    const allMoods = Array.from(individualProfiles.values()).map((p) => p.currentMood)
-    const avgScore = allMoods.reduce((sum, m) => sum + m.score, 0) / allMoods.length
+    const allMoods = Array.from(individualProfiles.values()).map(p => p.currentMood);
+    const avgScore = allMoods.reduce((sum, m) => sum + m.score, 0) / allMoods.length;
 
     const teamMood: MoodIndicator = {
       score: Math.round(avgScore),
       trend: this.determineTeamTrend(allMoods),
       volatility: this.calculateTeamVolatility(allMoods),
       lastUpdated: new Date(),
-    }
+    };
 
     return {
       teamMood,
       individualProfiles,
       teamDynamics: this.generateTeamDynamicsReport(individualProfiles),
-    }
+    };
   }
 
   private determineTeamTrend(moods: MoodIndicator[]): 'improving' | 'stable' | 'declining' {
     // 简化的团队趋势判断逻辑
-    const improvingCount = moods.filter((m) => m.trend === 'improving').length
-    const decliningCount = moods.filter((m) => m.trend === 'declining').length
+    const improvingCount = moods.filter(m => m.trend === 'improving').length;
+    const decliningCount = moods.filter(m => m.trend === 'declining').length;
 
-    if (improvingCount > decliningCount + 2) return 'improving'
-    if (decliningCount > improvingCount + 2) return 'declining'
-    return 'stable'
+    if (improvingCount > decliningCount + 2) return 'improving';
+    if (decliningCount > improvingCount + 2) return 'declining';
+    return 'stable';
   }
 
   private calculateTeamVolatility(moods: MoodIndicator[]): number {
-    const avgVolatility = moods.reduce((sum, m) => sum + m.volatility, 0) / moods.length
-    return Math.round(avgVolatility * 100) / 100
+    const avgVolatility = moods.reduce((sum, m) => sum + m.volatility, 0) / moods.length;
+    return Math.round(avgVolatility * 100) / 100;
   }
 
   private generateTeamDynamicsReport(
@@ -380,11 +379,11 @@ export class Yyc3EmotionEngine {
   ): TeamDynamicsReport {
     const atRiskMembers = Array.from(profiles.entries())
       .filter(([_, profile]) => profile.riskLevel !== 'normal')
-      .map(([id, _]) => id)
+      .map(([id, _]) => id);
 
     const positiveMembers = Array.from(profiles.values()).filter(
-      (p) => p.currentMood.score > 50,
-    ).length
+      p => p.currentMood.score > 50,
+    ).length;
 
     return {
       totalMembers: profiles.size,
@@ -394,41 +393,41 @@ export class Yyc3EmotionEngine {
         atRiskMembers.length,
         positiveMembers / profiles.size,
       ),
-    }
+    };
   }
 
   private generateTeamActions(atRiskCount: number, positiveRatio: number): string[] {
-    const actions: string[] = []
+    const actions: string[] = [];
 
     if (atRiskCount > 0) {
-      actions.push(`立即关注 ${atRiskCount} 名高风险成员`)
+      actions.push(`立即关注 ${atRiskCount} 名高风险成员`);
     }
 
     if (positiveRatio < 0.3) {
-      actions.push('团队整体士气偏低，建议组织团建活动')
+      actions.push('团队整体士气偏低，建议组织团建活动');
     } else if (positiveRatio > 0.7) {
-      actions.push('团队士气高涨，可考虑启动挑战性项目')
+      actions.push('团队士气高涨，可考虑启动挑战性项目');
     }
 
     if (actions.length === 0) {
-      actions.push('团队状态良好，继续保持')
+      actions.push('团队状态良好，继续保持');
     }
 
-    return actions
+    return actions;
   }
 }
 
 interface TeamDynamicsReport {
-  totalMembers: number
-  atRiskMemberCount: number
-  positiveMemberRatio: number
-  recommendedActions: string[]
+  totalMembers: number;
+  atRiskMemberCount: number;
+  positiveMemberRatio: number;
+  recommendedActions: string[];
 }
 
 // ==========================================
 // 导出单例实例
 // ==========================================
 
-export const yyc3EmotionEngine = Yyc3EmotionEngine.getInstance()
+export const yyc3EmotionEngine = Yyc3EmotionEngine.getInstance();
 
-export default Yyc3EmotionEngine
+export default Yyc3EmotionEngine;

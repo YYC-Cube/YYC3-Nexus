@@ -48,41 +48,74 @@ export default defineConfig({
             output: {
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
+                        // React ecosystem
                         if (id.includes('react-dom') || id.includes('scheduler')) {
                             return 'vendor-react-dom';
                         }
                         if (id.includes('/react/') || id.includes('react@')) {
                             return 'vendor-react';
                         }
+                        
+                        // Data visualization
                         if (id.includes('recharts') || id.includes('d3-')) {
                             return 'vendor-charts';
                         }
+                        
+                        // Icons
                         if (id.includes('lucide-react')) {
                             return 'vendor-icons';
                         }
+                        
+                        // Animation
                         if (id.includes('motion') || id.includes('framer')) {
                             return 'vendor-motion';
                         }
+                        
+                        // UI components
                         if (id.includes('@radix-ui')) {
                             return 'vendor-radix';
                         }
                         if (id.includes('@mui') || id.includes('@emotion')) {
                             return 'vendor-mui';
                         }
+                        
+                        // Editor
                         if (id.includes('monaco-editor') || id.includes('@monaco-editor')) {
                             return 'vendor-monaco';
                         }
+                        
+                        // Drag and drop
                         if (id.includes('react-dnd')) {
                             return 'vendor-dnd';
                         }
+                        
+                        // Routing
                         if (id.includes('react-router') || id.includes('@remix')) {
                             return 'vendor-router';
                         }
+                        
+                        // State management
                         if (id.includes('zustand') || id.includes('immer')) {
                             return 'vendor-state';
                         }
+                        
+                        // Date utilities
                         if (id.includes('recharts') === false && (id.includes('date-fns') || id.includes('dayjs'))) {
                             return 'vendor-date';
+                        }
+                    } else {
+                        // Split large page components into separate chunks
+                        if (id.includes('left-panel-page')) {
+                            return 'page-left-panel';
+                        }
+                        if (id.includes('dashboard-page')) {
+                            return 'page-dashboard';
+                        }
+                        if (id.includes('task-board-page')) {
+                            return 'page-task-board';
+                        }
+                        if (id.includes('smart-form-system')) {
+                            return 'page-smart-forms';
                         }
                     }
                 },
