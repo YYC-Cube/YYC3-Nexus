@@ -51,8 +51,8 @@ jobs:
       - name: Test Summary
         if: always()
         run: |
-          echo "## ✅ Test Results" >> $GITHUB_STEP_SUMMARY
-          echo "**38 test files · 906 test cases · 0 failures**" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "**38 test files / 906 test cases / 0 failures**" >> $GITHUB_STEP_SUMMARY
 
   build:
     name: Build (Vite)
@@ -72,7 +72,7 @@ jobs:
       - name: Bundle Analysis
         if: always()
         run: |
-          echo "## 📦 Bundle Size" >> $GITHUB_STEP_SUMMARY
+          echo "## Bundle Size" >> $GITHUB_STEP_SUMMARY
           echo "| File | Size | Gzipped |" >> $GITHUB_STEP_SUMMARY
           echo "|------|------|---------|" >> $GITHUB_STEP_SUMMARY
           if [ -d dist/assets ]; then
@@ -108,6 +108,6 @@ jobs:
       - uses: actions/deploy-pages@v4
       - name: Deploy Summary
         run: |
-          echo "## 🚀 Deployed" >> $GITHUB_STEP_SUMMARY
+          echo "## Deployed" >> $GITHUB_STEP_SUMMARY
           echo "**URL**: https://nexus.yyc3.top" >> $GITHUB_STEP_SUMMARY
           echo "**SHA**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
