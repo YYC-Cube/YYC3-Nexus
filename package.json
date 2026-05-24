@@ -111,7 +111,7 @@
     "monaco-editor": "^0.55.1",
     "tailwindcss": "4.3.0",
     "typescript": "^5.3.3",
-    "vite": "6.3.5",
+    "vite": "6.4.2",
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
@@ -128,7 +128,7 @@
   },
   "pnpm": {
     "overrides": {
-      "vite": "6.3.5"
+      "vite": "6.4.2"
     }
   },
   "lint-staged": {
